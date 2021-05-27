@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frame_layout_add_meeting"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".controller.activities.AddMeetingActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Veuillez saisir les dates, la salle et les participants"
+        android:textStyle="italic"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="20dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/SujetBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/Sujet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sujet de la réunion" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <EditText
+        android:id="@+id/DateHeureDebut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="datetime"
+        android:hint="Heure de début"
+        android:layout_margin="10dp"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/SujetBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:drawableStart="@drawable/ic_baseline_access_time_24"/>
+
+
+    <EditText
+        android:id="@+id/DateHeureFin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="datetime"
+        android:hint="Heure de fin"
+        android:layout_margin="10dp"
+        android:clickable="false"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/DateHeureDebut"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/frame_salle"
+        android:drawableStart="@drawable/ic_baseline_access_time_24"/>
+
+    <LinearLayout
+        android:id="@+id/frame_salle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/DateHeureFin"
+        app:layout_constraintBottom_toTopOf="@id/multiAutoCompleteTextView">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:layout_marginStart="20dp"
+            android:hint="Choisir la salle"
+            android:layout_weight="5"
+            android:backgroundTint="@color/purple_200"
+            android:drawableStart="@drawable/ic_baseline_room_24"
+            android:drawablePadding="10dp"
+            android:gravity="bottom"/>
+
+        <ImageView
+            android:id="@+id/Couleur"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginVertical="20dp"
+            android:layout_weight="1"
+            app:layout_constraintBottom_toTopOf="@id/multiAutoCompleteTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/autoCompleteTextView"
+            app:layout_constraintTop_toBottomOf="@id/DateHeureFin" />
+
+    </LinearLayout>
+
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/multiAutoCompleteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Choisir les participants"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frame_salle"
+        android:layout_margin="20dp"
+        android:drawableStart="@drawable/ic_baseline_people_24"
+        android:drawablePadding="10dp"
+        android:gravity="bottom"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:hint="Choisir l'organisateur"
+        android:gravity="bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/multiAutoCompleteTextView"
+        android:drawableStart="@drawable/ic_baseline_person_24"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
