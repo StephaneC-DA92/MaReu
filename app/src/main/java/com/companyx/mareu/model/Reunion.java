@@ -11,16 +11,16 @@ public class Reunion implements Serializable {
     Salle mSalle;
     String mSujet;
     List<Collaborateur> mParticipants;
-    Date mHeureDebut;
-    Date mHeureFin;
+    Date mDateHeureDebut;
+    Date mDateHeureFin;
     Collaborateur mOrganisateur;
 
-    public Reunion(Salle salle, String sujet, List<Collaborateur> participants, Date heureDebut, Date heureFin, Collaborateur organisateur) {
+    public Reunion(Salle salle, String sujet, List<Collaborateur> participants,Date dateHeureDebut, Date dateHeureFin, Collaborateur organisateur) {
         mSalle = salle;
         mSujet = sujet;
         mParticipants = participants;
-        mHeureDebut = heureDebut;
-        mHeureFin = heureFin;
+        mDateHeureDebut = dateHeureDebut;
+        mDateHeureFin = dateHeureFin;
         mOrganisateur = organisateur;
     }
 
@@ -48,11 +48,11 @@ public class Reunion implements Serializable {
     }
 
     public Date getHeureDebut() {
-        return mHeureDebut;
+        return mDateHeureDebut;
     }
 
     public Date getHeureFin() {
-        return mHeureFin;
+        return mDateHeureFin;
     }
 
     public Collaborateur getOrganisateur() {

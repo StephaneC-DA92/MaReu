@@ -1,26 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".FragmentAccueil">
+        android:id="@+id/frame_accueil"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".controller.fragments.FragmentAccueil"
+    tools:listitem="@layout/reunion_item">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
+        android:id="@+id/room_green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bienvenue"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:gravity="center"/>
+        android:src="@drawable/ic_baseline_circle_green_48"
+        android:layout_above="@id/room_orange"
+        android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:id="@+id/message_accueil"
+
+    <ImageView
+        android:id="@+id/room_orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:textStyle="italic"
-        android:layout_gravity="bottom|center"
-        android:gravity="center"/>
+        android:src="@drawable/ic_baseline_circle_orange_48"
+        android:layout_above="@id/texte_accueil"
+        android:layout_centerHorizontal="true"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/texte_accueil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:text="@string/app_name"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_people_24"
+        android:layout_below="@id/texte_accueil"/>
+
+</RelativeLayout>

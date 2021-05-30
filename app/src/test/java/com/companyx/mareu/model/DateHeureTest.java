@@ -2,14 +2,8 @@ package com.companyx.mareu.model;
 
 import org.junit.Test;
 
-import java.text.DateFormat;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import static org.junit.Assert.*;
 
@@ -19,34 +13,60 @@ import static org.junit.Assert.*;
 public class DateHeureTest {
 
     @Test
-    public void printDate() {
+    public void formatParseDateHeure() {
+        DateHeure dh = new DateHeure("22/05/2021", "01h02");
+        Date date1 = dh.formatParseDateHeure();
 
-        DateHeure dateHeure = new DateHeure("22/05/2021", "11h30");
+        Calendar mCalendrier = Calendar.getInstance();
+        mCalendrier.clear();
+        mCalendrier.set(Calendar.YEAR,2021);
+        mCalendrier.set(Calendar.MONTH,5-1);
+        mCalendrier.set(Calendar.DAY_OF_MONTH,22);
+        mCalendrier.set(Calendar.HOUR_OF_DAY, 1);
+        mCalendrier.set(Calendar.MINUTE,2);
+        Date date2 = mCalendrier.getTime();
 
-        Date date = dateHeure.formatParse();
-
-//        String string = dateHeure.concateneStringforPrint();
-
-        String string2 = dateHeure.convertDatetoString(date);
-
-//        Date date2 = dateHeure.convertStringtoDate(string);
-/*        String str = "22/05/2021"+" "+"11h30";
-        Date date2 = dateHeure.convertStringtoDateHeure(str);
-        Date date3 = dateHeure.convertStringtoDateHeure("22/05/2021 11h30");*/
-
-/*        Locale loc = new Locale("fr","FR");
-        DateTimeFormatter form = DateTimeFormatter.ofPattern("dd/MM/yyyy HH'h'mm",loc);
-        LocalDateTime ldt = LocalDateTime.parse(string,form);*/
-
-        System.out.println("Date : "+date);
-/*        System.out.println("Date : "+date2); //null
-        System.out.println("Date : "+date3); //null*/
-//        System.out.println("Date : "+ldt);
-//        System.out.println("String : "+string);
-        System.out.println("String2 : "+string2);
-
-//        assertEquals(string,string2);
-        assertTrue(true);
+        assertTrue(date1.compareTo(date2)==0);
     }
 
+    @Test
+    public void formatParseDate() {
+        DateHeure dh2 = new DateHeure("22/05/2021");
+        Date date1 = dh2.formatParseDate();
+
+        Calendar mCalendrier = Calendar.getInstance();
+        mCalendrier.clear();
+        mCalendrier.set(Calendar.YEAR,2021);
+        mCalendrier.set(Calendar.MONTH,5-1);
+        mCalendrier.set(Calendar.DAY_OF_MONTH,22);
+        Date date2 = mCalendrier.getTime();
+
+        assertTrue(date1.compareTo(date2)==0);
+    }
+
+    @Test
+    public void convertirDateHeureEnString() {
+        DateHeure dh = new DateHeure("22/05/2021", "01h02");
+        Date date1 = dh.formatParseDateHeure();
+        String str1 = dh.convertirDateHeureEnString(date1);
+
+        assertEquals(str1,"22/05/2021 01h02");
+    }
+
+    @Test
+    public void convertirDateHeureEnDateString() {
+        DateHeure dh = new DateHeure("22/05/2021", "01h02");
+        Date date1 = dh.formatParseDateHeure();
+        String str2 = dh.convertirDateHeureEnDateString(date1);
+
+        assertEquals(str2,"22/05/2021");
+    }
+
+    @Test
+    public void concateneStringforPrint() {
+        DateHeure dh = new DateHeure("22/05/2021", "01h02");
+        String str3 = dh.concateneStringforPrint();
+
+        assertEquals(str3,"22/05/2021 01h02");
+    }
 }

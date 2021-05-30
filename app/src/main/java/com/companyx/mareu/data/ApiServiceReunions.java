@@ -18,13 +18,11 @@ public interface ApiServiceReunions {
 
     void deleteReunionItem(Reunion reunion);
 
-    int getNombreReunions();
-
     List<Reunion> filtrerLieu(List<Reunion> reunions, List<Salle> salles);
 
-    List<Reunion> filtrerHeure(List<Reunion> reunions, Date datedebut, Date datefin);
+    List<Reunion> filtrerDate(List<Reunion> reunions, Date date);
 
-    List<Reunion> filtrerLieuEtHeure(List<Reunion> reunions, List<Salle> salles, Date datedebut, Date datefin);
+    List<Reunion> filtrerLieuEtDate(List<Reunion> reunions, List<Salle> salles, Date date);
 
     List<Reunion> trierLieuCroissant(List<Reunion> reunions);
     List<Reunion> trierLieuDecroissant(List<Reunion> reunions);

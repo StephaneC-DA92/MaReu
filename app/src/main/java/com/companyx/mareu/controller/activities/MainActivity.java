@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.companyx.mareu.R;
-import com.companyx.mareu.controller.MeetingListAdapter;
 import com.companyx.mareu.controller.fragments.MainFragment;
 import com.companyx.mareu.data.DummyApiServiceSalles;
 import com.companyx.mareu.model.DateHeure;
@@ -28,26 +27,19 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MainFragment mMainFragment;
-    private MainFragment mMainFragment2;
     private FloatingActionButton mButton;
 
     private boolean roomFilterEnabled,timeFilterEnabled;
 
     public static final int NEW_MEETING_ACTIVITY_CODE = 98;
     public static final int FILTER_ACTIVITY_CODE = 90;
-    public static final int FILTER_ACTIVITY_ROOM_CODE = 91;
-    public static final int FILTER_ACTIVITY_START_DATE_CODE = 92;
-    public static final int FILTER_ACTIVITY_START_HOUR_CODE = 93;
-    public static final int FILTER_ACTIVITY_END_DATE_CODE = 94;
-    public static final int FILTER_ACTIVITY_END_HOUR_CODE = 95;
 
-    Date mDateDebutFiltre, mDateFinFiltre;
+    public static final String BUNDLE_FILTER_REUNIONS = "BUNDLE_FILTER_REUNIONS";
+
+    Date mDateDebutFiltre;
     List<Salle> sallesFiltre;
 
-    String param1, param2;
-    String methodeFiltreTriParametree;
-
-    String ListeLieux, dateDebut, dateFin, heureDebut, heureFin ;
+    String listeLieux, dateDebut ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,17 +81,32 @@ public class MainActivity extends AppCompatActivity {
 //        montrer menu contextuel avec choix de filtre;
         switch(item.getItemId()){
             case R.id.filtrerSalleHeure :
-                FilteringActivity.navigateToFilteringActivity(MainActivity.this,FILTER_ACTIVITY_CODE);
+                FilteringActivity.navigateToFilteringActivity(MainActivity.this,FILTER_ACTIVITY_CODE,BUNDLE_FILTER_REUNIONS,mMainFragment.mDates);
+                break;
+
             case R.id.sansFiltre :
+                mMainFragment.sansFiltrer();
+                break;
 
             case R.id.tri_lieu_croissant:
                 mMainFragment.trierLieuCroissant();
+                break;
+
             case R.id.tri_lieu_decroissant:
                 mMainFragment.trierLieuDecroissant();
+                break;
+
             case R.id.tri_heure_croissante:
                 mMainFragment.trierHeureCroissant();
+                break;
+
             case R.id.tri_heure_decroissante:
                 mMainFragment.trierHeureDecroissant();
+                break;
+
+            case R.id.sans_tri:
+                mMainFragment.sansTrier();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -113,67 +120,13 @@ public class MainActivity extends AppCompatActivity {
             mMainFragment.ajouterNouvelleReunion(reunion);
         }
         if(requestCode==FILTER_ACTIVITY_CODE && resultCode == RESULT_OK){
-            ListeLieux = data.getStringExtra(FilteringActivity.BUNDLE_FILTER_ROOM);
+            listeLieux = data.getStringExtra(FilteringActivity.BUNDLE_FILTER_ROOM);
             dateDebut = data.getStringExtra(FilteringActivity.BUNDLE_FILTER_DATE_START);
-/*            dateFin = data.getStringExtra(FilteringActivity.BUNDLE_FILTER_DATE_END);
-            heureDebut = data.getStringExtra(FilteringActivity.BUNDLE_FILTER_HOUR_START);
-            heureFin = data.getStringExtra(FilteringActivity.BUNDLE_FILTER_HOUR_END);*/
-
-            if(ListeLieux!=""){
-                sallesFiltre = getListeSallesFromLieuxSequence(ListeLieux);
-                if(dateDebut!=null && heureDebut!=null){
-                    mDateDebutFiltre= new DateHeure(dateDebut,dateFin).formatParse();
-                        if(dateFin!=null && heureFin!=null){
-                            roomFilterEnabled=true;
-                            timeFilterEnabled=true;
-                            mDateFinFiltre= new DateHeure(heureDebut,heureFin).formatParse();
-                            mMainFragment.filterAvecSallesEtDateHeure(sallesFiltre,mDateDebutFiltre,mDateFinFiltre);
-                        } else {
-                            roomFilterEnabled=true;
-                            timeFilterEnabled=true;
-                            mDateFinFiltre = mMainFragment.dateMax();
-                            mMainFragment.filterAvecSallesEtDateHeure(sallesFiltre,mDateDebutFiltre, mDateFinFiltre);
-                        }
-                } else {
-                        if(dateFin!=null && heureFin!=null){
-                            roomFilterEnabled=true;
-                            timeFilterEnabled=true;
-                            mDateDebutFiltre = mMainFragment.dateMin();
-                            mMainFragment.filterAvecSallesEtDateHeure(sallesFiltre,mDateDebutFiltre, mDateFinFiltre);
-                        } else {
-                            roomFilterEnabled=true;
-                            mMainFragment.filterAvecSalles(sallesFiltre);
-                        }
-                }
-            } else {
-//               TODO : à factoriser
-                if(dateDebut!=null && heureDebut!=null){
-                    mDateDebutFiltre= new DateHeure(dateDebut,dateFin).formatParse();
-                    if(dateFin!=null && heureFin!=null){
-                        timeFilterEnabled=true;
-                        mDateFinFiltre= new DateHeure(heureDebut,heureFin).formatParse();
-                        mMainFragment.filterAvecDateHeure(mDateDebutFiltre,mDateFinFiltre);
-                    } else {
-                        timeFilterEnabled=true;
-                        mDateFinFiltre = mMainFragment.dateMax();
-                        mMainFragment.filterAvecDateHeure(mDateDebutFiltre, mDateFinFiltre);
-                    }
-                } else {
-                    if(dateFin!=null && heureFin!=null){
-                        timeFilterEnabled=true;
-                        mDateDebutFiltre = mMainFragment.dateMin();
-                        mMainFragment.filterAvecDateHeure(mDateDebutFiltre, mDateFinFiltre);
-                    } else {
-                    Log.e("ERROR_FILTRE","Pas de critères de filtre reçus");
-                    }
-                }
-            }
+            filtrerDansMainFragment(listeLieux,dateDebut);
         }
-
-//        rafraichirMainFragment(methodeFiltreTriParametree);
     }
 
-    //Copie de com/companyx/mareu/controller/fragments/AddMeetingFragment.java:240
+    //Inspiré de com/companyx/mareu/controller/fragments/AddMeetingFragment.java:179
 
     private List<Salle> getListeSallesFromLieuxSequence(String ListeLieuxAvecVirgule){
         List<Salle> listeSalles = new ArrayList<Salle>();
@@ -193,6 +146,22 @@ public class MainActivity extends AppCompatActivity {
         return listeSalles;
     }
 
+/*    private List<Object> getListofObjectsFromSequence(Object object, String SequenceWithComma, Map<String,Object> catalogue){
+        List<Object> listObjects = new ArrayList<Object>();
+        List<String> listObjectFields = Arrays.asList(SequenceWithComma.split(", "));
+
+        for (String objectField : listObjectFields){
+            if(objectField==""){
+                listObjectFields.remove(objectField);
+            }
+        }
+
+        for (String objectField : listObjectFields){
+            listObjects.add(catalogue.get(objectField));
+        }
+        return listObjects;
+    }*/
+
 // --------------
     // FRAGMENTS
     // --------------
@@ -209,17 +178,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void rafraichirMainFragment(String methodeFiltreTri){
-        mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout_main);
-        if (mMainFragment != null) {
-//           fermer/remplacer fragment
-//            voir getSupportFragmentManager().getFragmentFactory();
-
-            //    TODO : évaluer besoin de new instance : conflit pour new DummyApiServiceReunions
-            mMainFragment2 = mMainFragment.newInstance(ListeLieux, dateDebut, dateFin, heureDebut, heureFin);
-            methodeFiltreTri="à faire";
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_main,mMainFragment2).commit();
+    private void filtrerDansMainFragment(String listeLieux,String dateDebut){
+        if(listeLieux.compareTo("")!= 0){
+            sallesFiltre = getListeSallesFromLieuxSequence(listeLieux);
+            if(dateDebut.compareTo("")!= 0){
+                mDateDebutFiltre= new DateHeure(dateDebut).formatParseDate();
+                roomFilterEnabled=true;
+                timeFilterEnabled=true;
+                mMainFragment.filtrerAvecSallesEtDateHeure(sallesFiltre,mDateDebutFiltre);
+            } else {
+                roomFilterEnabled=true;
+                mMainFragment.filtrerAvecSalles(sallesFiltre);
+            }
+        } else {
+//               TODO : à factoriser
+            if(dateDebut.compareTo("")!= 0){
+                mDateDebutFiltre= new DateHeure(dateDebut).formatParseDate();
+                timeFilterEnabled=true;
+                mMainFragment.filtrerAvecDate(mDateDebutFiltre);
+            } else {
+                Log.d("ERROR_FILTRE","Pas de critères de filtre reçus");
+            }
         }
     }
 }

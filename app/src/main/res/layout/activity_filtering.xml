@@ -36,39 +36,31 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <EditText
-        android:id="@+id/FiltreDateHeureDebut"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/FiltreDateSpinner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="datetime"
+        android:inputType="text"
+        android:layout_marginHorizontal="40dp"
         android:hint="Heure de début"
-        android:layout_marginVertical="40dp"
-        android:clickable="false"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
+        android:gravity="center"
+        android:layout_marginVertical="80dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/filter_action_bar"
         app:layout_constraintEnd_toEndOf="parent"
-        android:drawableStart="@drawable/ic_baseline_access_time_24"/>
+        android:drawableStart="@drawable/ic_baseline_access_time_24"
+        />
 
-
-    <EditText
-        android:id="@+id/FiltreDateHeureFin"
+    <TextView
+        android:id="@+id/label_spinner"
+        android:text="Choisir une date de réunion existante"
+        android:textStyle="italic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="datetime"
-        android:hint="Heure de fin"
-        android:layout_marginVertical="40dp"
-        android:clickable="false"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
+        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/FiltreDateHeureDebut"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/FiltreSalles"
-        android:drawableStart="@drawable/ic_baseline_access_time_24"/>
+        app:layout_constraintTop_toBottomOf="@id/FiltreDateSpinner"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <MultiAutoCompleteTextView
         android:id="@+id/FiltreSalles"
@@ -81,8 +73,7 @@
         android:gravity="bottom"
         android:hint="Choisir les salles"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/FiltreDateHeureFin" />
+        app:layout_constraintTop_toBottomOf="@id/label_spinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

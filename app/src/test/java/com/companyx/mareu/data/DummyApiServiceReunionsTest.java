@@ -29,34 +29,6 @@ public class DummyApiServiceReunionsTest {
     }
 
     @Test
-    public void filtrerHeure() {
-        DummyApiServiceReunions service = new DummyApiServiceReunions();
-        service.initialisationData();
-        Date datedebut = new DateHeure("22/05/2021", "1h30").formatParse();
-        Date datefin = new DateHeure("22/05/2021", "11h30").formatParse();
-        List<Reunion> reunions = service.getListeReunions();
-        List<Reunion> reunionsf = service.filtrerHeure(reunions,datedebut, datefin);
-        assertEquals(reunionsf.size(),1);
-    }
-
-    @Test
-    public void filtrerLieuEtHeure() {
-        DummyApiServiceReunions service = new DummyApiServiceReunions();
-        service.initialisationData();
-        List<Salle> salles = Arrays.asList(
-                new Salle("Peach","France",5, Salle.Couleur.Vert, Salle.Icone.Vert));
-        List<Salle> salleso = Arrays.asList(
-                new Salle("Mario","France",20, Salle.Couleur.Orange, Salle.Icone.Orange));
-        Date datedebut = new DateHeure("22/05/2021", "1h30").formatParse();
-        Date datefin = new DateHeure("22/05/2021", "11h30").formatParse();
-        List<Reunion> reunions = service.getListeReunions();
-        List<Reunion> reunionsf = service.filtrerLieuEtHeure(reunions,salles,datedebut, datefin);
-        assertEquals(reunionsf.size(),0);
-        List<Reunion> reunionsfo = service.filtrerLieuEtHeure(reunions,salleso,datedebut, datefin);
-        assertEquals(reunionsfo.size(),1);
-    }
-
-    @Test
     public void trierLieuCroissant() {
         DummyApiServiceReunions service = new DummyApiServiceReunions();
         service.initialisationData();
@@ -80,7 +52,13 @@ public class DummyApiServiceReunionsTest {
 
     @Test
     public void trierHeureCroissant() {
-
+        DummyApiServiceReunions service = new DummyApiServiceReunions();
+        service.initialisationData();
+        List<Reunion> reunions = service.getListeReunions();
+        assertEquals(service.getListeDate(reunions).length,1);
     }
 
+    @Test
+    public void getListeDate() {
+    }
 }

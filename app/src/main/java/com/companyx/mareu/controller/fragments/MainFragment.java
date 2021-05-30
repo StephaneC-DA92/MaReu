@@ -26,12 +26,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.Date;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MainFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-
 //Pattern création : Factory, voir FragmentFactory
 public class MainFragment extends Fragment
 //        implements MeetingListAdapter.OnDeleteButtonClick
@@ -39,134 +33,60 @@ public class MainFragment extends Fragment
 
     //    https://guides.codepath.com/android/using-the-recyclerview
     private RecyclerView mRecyclerView;
-    private List<Reunion> mReunionsAffichees;
+    public List<Reunion> mReunionsAffichees,mReunionsTriees;
     public DummyApiServiceReunions mDummyApiServiceReunions;
     private int mNombreReunionsAffichees;
 
-    TextView mTextViewMessage;
+    private TextView mTextViewMessage;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_FILTER_ROOM = "filter_room";
-    private static final String ARG_FILTER_DATE_START = "date_start";
-    private static final String ARG_FILTER_DATE_END = "date_end";
-    private static final String ARG_FILTER_FILTER_HOUR_START = "hour_start";
-    private static final String ARG_FILTER_FILTER_HOUR_END = "hour_end";
+    public String[] mDates;
 
-    // TODO: Rename and change types of parameters
-    private String mFiltreSalles;
-    private String mFiltreDateDebut;
-    private String mFiltreDateFin;
-    private String mFiltreHeureDebut;
-    private String mFiltreHeureFin;
-
-    private Status mFragmentStatus;
+    private Statut mFragmentStatut;
 
     public MainFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param FiltreSalles Parameter 1.
-     * @param FiltreDateDebut Parameter 2.
-     *
-     * @return A new instance of fragment MainFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance(String FiltreSalles, String FiltreDateDebut, String FiltreHeureDebut, String FiltreDateFin, String FiltreHeureFin) {
-        MainFragment fragment = new MainFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_FILTER_ROOM, FiltreSalles);
-        args.putString(ARG_FILTER_DATE_START, FiltreDateDebut);
-        args.putString(ARG_FILTER_FILTER_HOUR_START, FiltreHeureDebut);
-        args.putString(ARG_FILTER_DATE_END, FiltreDateFin);
-        args.putString(ARG_FILTER_FILTER_HOUR_END, FiltreHeureFin);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    private enum Status{
-        SansFiltre, FiltreTri;
+    private enum Statut {
+        SansFiltre,
+        FiltreSalle,FiltreDate,FiltreSalleEtDate;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("ON_CREATE","new MainFragment");
-        mFragmentStatus = Status.SansFiltre;
-
-        if (getArguments() != null) {
-            mFiltreSalles = getArguments().getString(ARG_FILTER_ROOM);
-            mFiltreDateDebut = getArguments().getString(ARG_FILTER_DATE_START);
-/*            mFiltreHeureDebut = getArguments().getString(ARG_FILTER_FILTER_HOUR_START);
-            mFiltreDateFin = getArguments().getString(ARG_FILTER_DATE_END);
-            mFiltreHeureFin = getArguments().getString(ARG_FILTER_FILTER_HOUR_END);*/
-
-            mFragmentStatus = Status.FiltreTri;
-        }
+        Log.d("ON_CREATE","new MainFragment");
 
         mDummyApiServiceReunions = new DummyApiServiceReunions();
-        //Pour developpement
+        //TODO : à supprimer après developpement
         mDummyApiServiceReunions.initialisationData();
 
-        mNombreReunionsAffichees = mDummyApiServiceReunions.getNombreReunions();
+        mFragmentStatut = Statut.SansFiltre;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("ON_CREATEVIEW","Recycler");
-        //TODO : revoir le cas 0. onResume seulement avec Toast ou Dialog
-        switch (mNombreReunionsAffichees) {
-            case 0: {
-                View view = inflater.inflate(R.layout.fragment_accueil, container, false);
-                mTextViewMessage = (TextView) view.findViewById(R.id.message_accueil);
-            }
-            default: {
-                // Inflate the layout for this fragment
-                View view = inflater.inflate(R.layout.fragment_main, container, false);
-                    //mRecyclerView = (RecyclerView) findViewById(R.id.meeting_item_list);
-                Context context = view.getContext();
-                mRecyclerView = (RecyclerView) view;
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    //Séparateur vertical
-                    //mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
-                return view;
-            }
-        }
+        Log.d("ON_CREATEVIEW","Recycler");
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+//                View view = inflater.inflate(R.layout.fragment_main, container, false);
+        Context context = view.getContext();
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.meeting_item_list);
+//                mRecyclerView = (RecyclerView) view;
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+            //Séparateur vertical
+            //mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        mTextViewMessage = (TextView) view.findViewById(R.id.message_accueil);
+
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//Faire Reset
-        //Boucle if
-        switch (mNombreReunionsAffichees) {
-            case 0: {
-                mTextViewMessage.setText(R.string.message_accueil);
-            }
-            default: {
-                //Pattern Etat
-                switch(mFragmentStatus) {
-                    case SansFiltre:
-//        Initialisation de la liste de réunions : post-rafraichissement écran
-                    mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
-                    initialisationAdapterListeReunions(mReunionsAffichees, "ADAPTER_INIT");
-                    case FiltreTri:
-                    initialisationAdapterListeReunions(mReunionsAffichees,"ADAPTER_FILTRE_SALLE");
-                }
-            }
-        }
-    }
+            rafraichirAffichage(mFragmentStatut);
+        Log.d("ON_RESUME", "Rafraîchissement");
 
-    private void initialisationAdapterListeReunions(List<Reunion> reunions, String tag){
-        MeetingListAdapter adapter = new MeetingListAdapter(reunions);
-        mRecyclerView.setAdapter(adapter);
-//        adapter.setOnDeleteButtonClickListener(this);
-        Log.e(tag,"Nombre items : "+adapter.getItemCount());
     }
 
 /*    @Override
@@ -199,60 +119,108 @@ public class MainFragment extends Fragment
         mDummyApiServiceReunions.deleteReunionItem(event.reunion);
 //        TODO : utilité à vérifier
         mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
-        initialisationAdapterListeReunions(mReunionsAffichees,"ADAPTER_DELETION");
+        initialisationAdapterListeReunions("ADAPTER_DELETION",mReunionsAffichees);
     }
 
     public void ajouterNouvelleReunion(Reunion reunion){
         mDummyApiServiceReunions.addReunionItem(reunion);
-//        Inutile. TODO : réfléchir à new Fragment
+//        Inutile.
         mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
-        initialisationAdapterListeReunions(mReunionsAffichees,"ADAPTER_ADDING");
+        initialisationAdapterListeReunions("ADAPTER_ADDING",mReunionsAffichees);
     }
 
     //Pattern comportement : Strategy ?
-    public void filterAvecSalles(List<Salle> sallesFiltre){
-        mFragmentStatus = Status.FiltreTri;
+    public void sansFiltrer(){
+        mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
+        initialisationAdapterListeReunions("ADAPTER_REINIT",mReunionsAffichees);
+    }
+
+    public void filtrerAvecSalles(List<Salle> sallesFiltre){
+        mFragmentStatut = Statut.FiltreSalle;
         mReunionsAffichees =mDummyApiServiceReunions.filtrerLieu(mDummyApiServiceReunions.getListeReunions(),sallesFiltre);
-//        initialisationAdapterListeReunions(mReunions,"ADAPTER_FILTRE_SALLE");
     }
 
-    public void filterAvecDateHeure(Date mDateHeureDebutFiltre, Date mDateHeureFinFiltre){
-        mReunionsAffichees =mDummyApiServiceReunions.filtrerHeure(mDummyApiServiceReunions.getListeReunions(),mDateHeureDebutFiltre,mDateHeureFinFiltre);
-        initialisationAdapterListeReunions(mReunionsAffichees,"ADAPTER_FILTRE_DATE");
+    public void filtrerAvecDate(Date mDate){
+        mFragmentStatut = Statut.FiltreDate;
+        mReunionsAffichees =mDummyApiServiceReunions.filtrerDate(mDummyApiServiceReunions.getListeReunions(),mDate);
     }
 
+    public void filtrerAvecSallesEtDateHeure(List<Salle> sallesFiltre, Date mDate){
+        mFragmentStatut = Statut.FiltreSalleEtDate;
+        mReunionsAffichees =mDummyApiServiceReunions.filtrerLieuEtDate(mDummyApiServiceReunions.getListeReunions(),sallesFiltre,mDate);
+    }
 
-    public void filterAvecSallesEtDateHeure(List<Salle> sallesFiltre, Date mDateHeureDebutFiltre, Date mDateHeureFinFiltre){
-        mReunionsAffichees =mDummyApiServiceReunions.filtrerLieuEtHeure(mDummyApiServiceReunions.getListeReunions(),sallesFiltre,mDateHeureDebutFiltre,mDateHeureFinFiltre);
-        initialisationAdapterListeReunions(mReunionsAffichees,"ADAPTER_SALLE_HEURE");
+    private void initialisationAdapterListeReunions(String tag,List<Reunion> reunions){
+        MeetingListAdapter adapter = new MeetingListAdapter(reunions);
+        mRecyclerView.setAdapter(adapter);
+//        adapter.setOnDeleteButtonClickListener(this);
+
+//        Log.d(tag, "Nombre items : " + adapter.getItemCount());
+
+        mDates = mDummyApiServiceReunions.getListeDate(mReunionsAffichees);
+        mNombreReunionsAffichees = mReunionsAffichees.size();
+
+        if (mNombreReunionsAffichees==0) {
+            mTextViewMessage.setText(R.string.message_accueil);
+        }
+    }
+
+    private void rafraichirAffichage(Statut mFragmentStatus) {
+        //Pattern Etat
+        switch (mFragmentStatus) {
+            case SansFiltre:
+                mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
+                initialisationAdapterListeReunions("ADAPTER_INIT",mReunionsAffichees);
+                break;
+            case FiltreSalle:
+                initialisationAdapterListeReunions("ADAPTER_FILTRE_SALLE",mReunionsAffichees);
+                break;
+            case FiltreDate:
+                initialisationAdapterListeReunions("ADAPTER_FILTRE_DATE",mReunionsAffichees);
+                break;
+            case FiltreSalleEtDate:
+                initialisationAdapterListeReunions("ADAPTER_SALLE_HEURE",mReunionsAffichees);
+                break;
+           /* case SalleCroissante:
+                initialisationAdapterListeReunions("TRI_SALLE_CR",mReunionsTriees);
+                break;
+            case SalleDécroissante:
+                initialisationAdapterListeReunions("TRI_SALLE_DECR",mReunionsTriees);
+                break;
+            case HeureCroissante:
+                initialisationAdapterListeReunions("TRI_HEURE_CR",mReunionsTriees);
+                break;
+            case HeureDécroissante:
+                initialisationAdapterListeReunions("TRI_HEURE_DECR",mReunionsTriees);
+                break;*/
+           /* default :
+                mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
+                initialisationAdapterListeReunions("ADAPTER_DEFAULT");*/
+        }
     }
 
     public void trierLieuCroissant(){
-        mReunionsAffichees = mDummyApiServiceReunions.trierLieuCroissant(mDummyApiServiceReunions.getListeReunions());
-        initialisationAdapterListeReunions(mReunionsAffichees,"TRI_SALLE_CR");
+        mReunionsTriees = mDummyApiServiceReunions.trierLieuCroissant(mReunionsAffichees);
+        initialisationAdapterListeReunions("TRI_SALLE_CR",mReunionsTriees);
     }
 
     public void trierLieuDecroissant(){
-        mReunionsAffichees = mDummyApiServiceReunions.trierLieuDecroissant(mDummyApiServiceReunions.getListeReunions());
-        initialisationAdapterListeReunions(mReunionsAffichees,"TRI_SALLE_DECR");
+        mReunionsTriees = mDummyApiServiceReunions.trierLieuDecroissant(mReunionsAffichees);
+        initialisationAdapterListeReunions("TRI_SALLE_DECR",mReunionsTriees);
     }
 
     public void trierHeureCroissant(){
-        mReunionsAffichees = mDummyApiServiceReunions.trierHeureCroissant(mDummyApiServiceReunions.getListeReunions());
-        initialisationAdapterListeReunions(mReunionsAffichees,"TRI_HEURE_CR");
-
-
+        mReunionsTriees = mDummyApiServiceReunions.trierHeureCroissant(mReunionsAffichees);
+        initialisationAdapterListeReunions("TRI_HEURE_CR",mReunionsTriees);
     }
+
     public void trierHeureDecroissant(){
-        mReunionsAffichees = mDummyApiServiceReunions.trierHeureDecroissant(mDummyApiServiceReunions.getListeReunions());
-        initialisationAdapterListeReunions(mReunionsAffichees,"TRI_HEURE_DECR");
+        mReunionsTriees = mDummyApiServiceReunions.trierHeureDecroissant(mReunionsAffichees);
+        initialisationAdapterListeReunions("TRI_HEURE_DECR",mReunionsTriees);
     }
 
-    public Date dateMax(){
-        return mDummyApiServiceReunions.valeurDateMax();
-    }
-
-    public Date dateMin(){
-        return mDummyApiServiceReunions.valeurDateMin();
+    public void sansTrier(){
+        mReunionsTriees = mReunionsAffichees;
+        initialisationAdapterListeReunions("SANS_TRI",mReunionsTriees);
     }
 }

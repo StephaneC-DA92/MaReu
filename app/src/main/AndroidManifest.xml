@@ -10,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaReuNoBar">
         <activity android:name=".controller.activities.FilteringActivity"></activity>
-        <activity android:name=".controller.activities.DetailActivity" />
         <activity android:name=".controller.activities.AddMeetingActivity" />
         <activity android:name=".controller.activities.MainActivity">
             <intent-filter>

@@ -13,13 +13,13 @@
         <menu>
             <item
                 android:id="@+id/filtrerSalleHeure"
-                android:title="Filtre par lieu ou par heure"
+                android:title="Filtre par lieu ou par date"
                 app:showAsAction="withText"
                 ></item>
 
             <item
                 android:id="@+id/sansFiltre"
-                android:title="Filtre par heure"
+                android:title="Supprimer les filtres"
                 app:showAsAction="withText"></item>
         </menu>
 
@@ -49,6 +49,10 @@
             <item
                 android:id="@+id/tri_heure_decroissante"
                 android:title="Heure par ordre décroissant"
+                app:showAsAction="withText"/>
+            <item
+                android:id="@+id/sans_tri"
+                android:title="Tri par défaut"
                 app:showAsAction="withText"/>
 
         </menu>

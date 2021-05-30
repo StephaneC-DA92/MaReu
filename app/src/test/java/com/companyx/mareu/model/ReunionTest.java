@@ -1,5 +1,7 @@
 package com.companyx.mareu.model;
 
+import android.util.Log;
+
 import com.companyx.mareu.data.DummyApiServiceReunions;
 
 import org.junit.Test;
@@ -21,5 +23,13 @@ public class ReunionTest {
         assertEquals(2,reunions.get(1).getParticipants().size());
         assertEquals(3,reunions.get(2).getParticipants().size());
 
+    }
+
+    @Test
+    public void listeDates() {
+        DummyApiServiceReunions mDummyApiServiceReunions= new DummyApiServiceReunions();
+        List<Reunion> reunions = mDummyApiServiceReunions.creerListeDeReunions(3);
+        String[] dates = mDummyApiServiceReunions.getListeDate(reunions);
+        assertEquals(dates.length,3);
     }
 }
