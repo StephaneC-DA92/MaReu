@@ -12,6 +12,9 @@ import java.util.List;
  * Created by CodeurSteph on 17/05/2021
  */
 public interface ApiServiceReunions {
+
+    void initialisationData();
+
     List<Reunion> getListeReunions();
 
     void addReunionItem(Reunion reunion);
@@ -29,4 +32,6 @@ public interface ApiServiceReunions {
 
     List<Reunion> trierHeureCroissant(List<Reunion> reunions);
     List<Reunion> trierHeureDecroissant(List<Reunion> reunions);
+
+    String[] getListeDate(List<Reunion> reunions);
 }

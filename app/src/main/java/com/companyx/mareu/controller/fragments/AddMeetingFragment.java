@@ -16,10 +16,12 @@ import android.widget.DatePicker;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TimePicker;
 
+import com.companyx.mareu.R;
+import com.companyx.mareu.controller.activities.AddMeetingActivity;
+import com.companyx.mareu.data.ApiServiceSalles;
 import com.companyx.mareu.data.DummyApiServiceCollaborateurs;
-import com.companyx.mareu.data.DummyApiServiceReunions;
-import com.companyx.mareu.data.DummyApiServiceSalles;
 import com.companyx.mareu.databinding.FragmentAddMeetingBinding;
+import com.companyx.mareu.di.DI_Salles;
 import com.companyx.mareu.model.Collaborateur;
 import com.companyx.mareu.model.DateHeure;
 import com.companyx.mareu.model.Reunion;
@@ -34,33 +36,28 @@ import java.util.List;
 public class AddMeetingFragment extends Fragment {
 
     private FragmentAddMeetingBinding mBinding;
-
-    private DummyApiServiceSalles mDummyApiServiceSalles;
-    private DummyApiServiceCollaborateurs mDummyApiServiceCollaborateurs;
-    private DummyApiServiceReunions mReunions;
-
-/*    public TextInputLayout mSujetInputEditText;
-    public EditText mHeureDebutEditText, mHeureFinEditText;
-    public AutoCompleteTextView mSalletextview, mOrganisateurTextView;
-    public ImageView mSalleIcone;
-    public MultiAutoCompleteTextView mParticipantsTextview;*/
-
     private View mView;
 
+    private ApiServiceSalles mDummyApiServiceSalles;
+    private DummyApiServiceCollaborateurs mDummyApiServiceCollaborateurs;
+
+    private String mSujet;
+    private Date mDateHeureDebut, mDateHeureFin;
+    private Salle mSalleDeReunion;
     private List<Collaborateur> mParticipants;
     private Collaborateur mOrganisateur;
-    private String mSujet;
 
-    private List<String> emailList;
-
-    private Salle salleDeReunion;
+    private List<String> mEmailList;
+    private String[] mLieux;
 
     private final Calendar mCalendrier = Calendar.getInstance();
     private int mAnnee, mMois,mJour,mHeure,mMinutes;
 
-    private Date mDateHeureDebut, mDateHeureFin;
+    public Reunion mReunion;
 
-    private String[] mlieux;
+    private static final String BUNDLE_EXTRA_MEETING = "BUNDLE_EXTRA_MEETING";
+    private static final String NEW_MEETING_ACTIVITY_FRAGMENT="NEW_MEETING_ACTIVITY_FRAGMENT";
+    private static final String NEW_MEETING_INTER_FRAGMENTS="NEW_MEETING_INTER_FRAGMENTS";
 
     public AddMeetingFragment() {
         // Required empty public constructor
@@ -69,28 +66,19 @@ public class AddMeetingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDummyApiServiceSalles = DI_Salles.getServiceSalles();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         mBinding = FragmentAddMeetingBinding.inflate(inflater, container, false);
         mView = mBinding.getRoot();
 //        mView = inflater.inflate(R.layout.fragment_add_meeting, container, false);
         Context context = mView.getContext();
 
-/*        mSujetInputEditText = (TextInputLayout) mView.findViewById(R.id.SujetBox);
-
-        mHeureDebutEditText = (EditText) mView.findViewById(R.id.DateHeureDebut);
-        mHeureFinEditText = (EditText) mView.findViewById(R.id.DateHeureFin);
-
-        mSalletextview = (AutoCompleteTextView) mView.findViewById(R.id.autoCompleteTextView);
-        mSalleIcone = (ImageView) mView.findViewById(R.id.Couleur);*/
-
-        mDummyApiServiceSalles = new DummyApiServiceSalles();
-        mlieux = mDummyApiServiceSalles.getListeLieu();
-        ArrayAdapter<String> adapterLieux = new  ArrayAdapter<String>(context, android.R.layout.simple_list_item_1,mlieux);
+        mLieux = mDummyApiServiceSalles.getListeLieu();
+        ArrayAdapter<String> adapterLieux = new  ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, mLieux);
         mBinding.autoCompleteTextView.setAdapter(adapterLieux);
         mBinding.autoCompleteTextView.setThreshold(1);
 
@@ -140,7 +128,8 @@ public class AddMeetingFragment extends Fragment {
         mBinding.autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                extraireLieuSelection(salleDeReunion, parent.getItemAtPosition(position).toString());
+                mSalleDeReunion =mDummyApiServiceSalles.creerCatalogueLieu().get(parent.getItemAtPosition(position).toString());
+                mBinding.Couleur.setImageResource(mSalleDeReunion.getIcone().valeur());
             }
         });
 
@@ -158,6 +147,20 @@ public class AddMeetingFragment extends Fragment {
                 mOrganisateur = mDummyApiServiceCollaborateurs.creerCatalogueParticipant().get(parent.getItemAtPosition(position).toString());
             }
         });
+
+        mBinding.cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeWithoutResult();
+            }
+        });
+
+        mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendResultToFragmentManager();
+            }
+        });
     }
 
 //    Clean up any references to the binding class instance, because Fragments outlive their views
@@ -170,25 +173,18 @@ public class AddMeetingFragment extends Fragment {
     private List<Collaborateur> getListeParticipantsFromEmailSequence(String mailListWithComma){
         List<Collaborateur> participantList = new ArrayList<Collaborateur>();
 
-        emailList = Arrays.asList(mailListWithComma.split(", "));
+        mEmailList = Arrays.asList(mailListWithComma.split(", "));
 
-        for (String email : emailList){
+        for (String email : mEmailList){
             if(email==""){
-                emailList.remove(email);
+                mEmailList.remove(email);
             }
         }
 
-        for (String email : emailList){
+        for (String email : mEmailList){
             participantList.add(mDummyApiServiceCollaborateurs.creerCatalogueParticipant().get(email));
         }
         return  participantList;
-    }
-
-    private void extraireLieuSelection(Salle salle, String choix){
-        salle = mDummyApiServiceSalles.creerCatalogueLieu().get(choix);
-//        salleDeReunion = mDummyApiServiceSalles.creerCatalogueLieu().get(mSalletextview.getText().toString());
-        mBinding.Couleur.setImageResource(salleDeReunion.getIcone().valeur());
-
     }
 
     private void onDateTimePickerDialogDebut(Context context){
@@ -237,11 +233,40 @@ public class AddMeetingFragment extends Fragment {
         datePickerDialog.show();
     }
 
+    // --------------
+    // ACTIONS
+    // --------------
+
+    private void sendResultToFragmentManager(){
+        mReunion = createReunion();
+//        EventBus.getDefault().post(new AddMeetingEvent(mReunion));
+
+        Bundle resultat = new Bundle();
+        resultat.putSerializable(BUNDLE_EXTRA_MEETING,mReunion);
+        if (getActivity().getClass() == AddMeetingActivity.class){
+            getParentFragmentManager().setFragmentResult(NEW_MEETING_ACTIVITY_FRAGMENT,resultat);
+        } else {
+            getParentFragmentManager().setFragmentResult(NEW_MEETING_INTER_FRAGMENTS,resultat);
+        }
+    };
+
+    private void closeWithoutResult(){
+        //Close AddMeetingActivity
+        if(getActivity().getClass() == AddMeetingActivity.class) {
+            getParentFragmentManager().setFragmentResult(NEW_MEETING_ACTIVITY_FRAGMENT,null);
+        } else {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.frame_layout_other, new FragmentAccueil())
+                    .commit();
+        }
+    };
+
+
     public Reunion createReunion() {
         mSujet = mBinding.SujetBox.getEditText().getText().toString();
 
         Reunion reunion = new Reunion(
-                salleDeReunion,
+                mSalleDeReunion,
                 mSujet,
                 mParticipants,
                 mDateHeureDebut,

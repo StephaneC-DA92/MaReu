@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
+<!--    <View
         android:id="@+id/meeting_frame"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -13,7 +13,7 @@
         app:layout_constraintTop_toTopOf="@id/meeting_details"
         app:layout_constraintBottom_toBottomOf="@id/meeting_participants"
         app:layout_constraintEnd_toStartOf="@id/item_delete_button"
-        />
+        />-->
 
     <ImageView
         android:id="@+id/meeting_icon"
@@ -23,37 +23,45 @@
         app:layout_constraintTop_toTopOf="@id/meeting_details"
         app:layout_constraintBottom_toBottomOf="@id/meeting_participants"
         android:contentDescription="Pastille"
-        android:minHeight="30dp"
-        android:minWidth="30dp"
+        android:layout_marginStart="5dp"
+        android:minHeight="20dp"
+        android:minWidth="20dp"
         />
 
     <TextView
         android:id="@+id/meeting_details"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="TextView"
         android:hint="Sujet"
         android:textStyle="bold"
-        android:layout_margin="10dp"
+        android:textSize="@dimen/text_vholder"
         android:maxLines="1"
+        android:requiresFadingEdge="none"
+        android:gravity="start"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="5dp"
         android:scrollHorizontally="true"
         app:layout_constraintStart_toEndOf="@id/meeting_icon"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/item_delete_button"
         />
-
-<!--    https://developer.android.com/reference/kotlin/android/widget/TextView-->
 
     <TextView
         android:id="@+id/meeting_participants"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="TextView"
         android:hint="Heure"
-        android:layout_margin="10dp"
+        android:textSize="@dimen/subtext_vholder"
+        android:layout_marginHorizontal="5dp"
         android:maxLines="1"
+        android:requiresFadingEdge="none"
+        android:gravity="start"
         android:scrollHorizontally="true"
         app:layout_constraintStart_toEndOf="@id/meeting_icon"
         app:layout_constraintTop_toBottomOf="@id/meeting_details"
+        app:layout_constraintEnd_toStartOf="@id/item_delete_button"
         />
 
 
@@ -66,5 +74,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/meeting_details"
         app:srcCompat="@drawable/ic_baseline_delete_24"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="10dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

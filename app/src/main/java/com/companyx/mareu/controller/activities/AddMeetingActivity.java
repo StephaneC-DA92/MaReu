@@ -1,22 +1,17 @@
 package com.companyx.mareu.controller.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.companyx.mareu.R;
 import com.companyx.mareu.controller.fragments.AddMeetingFragment;
-import com.companyx.mareu.controller.fragments.MainFragment;
-import com.companyx.mareu.data.DummyApiServiceReunions;
 import com.companyx.mareu.databinding.ActivityAddMeetingBinding;
 import com.companyx.mareu.model.Reunion;
 
@@ -27,8 +22,9 @@ public class AddMeetingActivity extends AppCompatActivity {
     private AddMeetingFragment mAddMeetingFragment;
 
     public static final String BUNDLE_EXTRA_MEETING = "BUNDLE_EXTRA_MEETING";
+    private static final String NEW_MEETING_ACTIVITY_FRAGMENT="NEW_MEETING_ACTIVITY_FRAGMENT";
 
-    private Reunion mReunion;
+    private Reunion mNouvelleReunion =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +37,31 @@ public class AddMeetingActivity extends AppCompatActivity {
 
         configurerEtAfficherAddMeetingFragment();
 
-    }
+        getSupportFragmentManager().setFragmentResultListener(NEW_MEETING_ACTIVITY_FRAGMENT, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                if(bundle==null){
+                    closeActivityWithoutSaving();
+                } else {
+                    mNouvelleReunion = (Reunion) bundle.getSerializable(BUNDLE_EXTRA_MEETING);
+                    saveActivityResultAndThenClose();
+                }
+            }
+        });
+
+        }
+
+/*    public static void navigateToAddMeetingActivity(Activity activity){
+        Intent intent = new Intent(activity,AddMeetingActivity.class);
+        ActivityCompat.startActivity(activity,intent,null);
+    }*/
 
     public static void navigateToAddMeetingActivity(Activity activity, int RequestCode){
         Intent intent = new Intent(activity,AddMeetingActivity.class);
         ActivityCompat.startActivityForResult(activity,intent, RequestCode,null);
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_new_room, menu);
@@ -68,22 +81,19 @@ public class AddMeetingActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
     // --------------
     // MENU
     // --------------
 
-//    arrayadapter pour salle
-
     private void saveActivityResultAndThenClose(){
-        Reunion reunion = mAddMeetingFragment.createReunion();
-
-//        DONE : seriazable à faire pour réunion KO : essayer parcelable
-        Intent intent = new Intent();
-        intent.putExtra(BUNDLE_EXTRA_MEETING,reunion);
-        setResult(RESULT_OK,intent);
-        finish();
+        if(mNouvelleReunion !=null) {
+            Intent intent = new Intent();
+            intent.putExtra(BUNDLE_EXTRA_MEETING, mNouvelleReunion);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
             };
 
     private void closeActivityWithoutSaving(){

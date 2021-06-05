@@ -46,7 +46,7 @@ public class MeetingListAdapter extends RecyclerView.Adapter<ViewHolder> {
     Reunion reunion = mListeDeReunions.get(position);
 
     //Todo : à moduler : methode getdrawable, au lieu de switch
-        viewHolder.getDrawable(reunion.getSalle().getIcone().valeur());
+        viewHolder.setDrawable(reunion.getSalle().getIcone().valeur());
 
         viewHolder.getMeetingDetailsText()
             .setText(reunion.getSujet()+" - "+ new DateHeure().convertirDateHeureEnString(reunion.getHeureDebut())+" - "+reunion.getSalle().getLieu());

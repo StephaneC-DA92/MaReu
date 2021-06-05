@@ -25,7 +25,7 @@ public class DummyApiServiceReunions implements ApiServiceReunions{
     private Map<String, Date> mCatalogueDate;
 
     public void initialisationData(){
-        mReunions = creerListeDeReunions(3);
+        mReunions = creerListeDeReunions(12);
     }
 
     @Override
@@ -155,7 +155,10 @@ public class DummyApiServiceReunions implements ApiServiceReunions{
 
         for (int i = 0; i < numReunions; i++) {
 //            Salle salle = new Salle("Peach"+i,"France",i+2, Salle.Couleur.Vert);
-            Salle salle =salleApiService.getListeSalle().get(i);
+            int n;
+            n=i/10;
+            int m = i-n*10;
+            Salle salle = salleApiService.getListeSalle().get(m);
 
                 List<Collaborateur> Participants = new ArrayList<Collaborateur>();
 //                List<Participant> Participants = new ArrayList<Participant>();
@@ -166,9 +169,11 @@ public class DummyApiServiceReunions implements ApiServiceReunions{
 //            Organisateur organisateur = new Organisateur("OrganisaTest"+i,"DeTesteur"+i,"IdCol-0"+i,i+"Test.DeTesteur@Lamzone.com");
             Collaborateur organisateur = collaborateurApiService.getListeCollaborateur().get(i);
 
-            Reunion reunion = new Reunion(salle, "Réunion sujet "+i,Participants, new DateHeure("22/05/2021", i+"h30").formatParseDateHeure(),new DateHeure("22/05/2021", i+"h30").formatParseDateHeure(),organisateur);
+            Reunion reunion1 = new Reunion(salle, "Réunion sujet "+i,Participants, new DateHeure("22/05/2021", i+"h30").formatParseDateHeure(),new DateHeure("22/05/2021", i+1+"h30").formatParseDateHeure(),organisateur);
+            Reunion reunion2 = new Reunion(salle, "Réunion sujet "+i+"bis",Participants, new DateHeure("01/06/2021", i+"h30").formatParseDateHeure(),new DateHeure("01/06/2021", i+1+"h30").formatParseDateHeure(),organisateur);
 
-            reunions.add(reunion);
+            reunions.add(reunion1);
+            reunions.add(reunion2);
 /*            Log.e("Réunion générée :",reunions.get(i).getSujet());
             Log.e("Participants générés :",reunions.get(i).getParticipants().toString());*/
         }
@@ -196,7 +201,7 @@ public class DummyApiServiceReunions implements ApiServiceReunions{
         String[] choix = new String[n+1];
         lChoix.add(0,"");
         lChoix.toArray(choix);
-        Log.d("DUMMY_REUNIONS","getListeDate : "+choix.length+"# items : "+(choix.length-1));
+//        Log.d("DUMMY_REUNIONS","getListeDate : "+choix.length+"# items : "+(choix.length-1));
         return choix;
     }
 

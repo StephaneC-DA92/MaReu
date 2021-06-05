@@ -39,6 +39,11 @@ public class DummyApiServiceReunionsTest {
 
     @Test
     public void trierLieuDecroissant() {
+        DummyApiServiceReunions service = new DummyApiServiceReunions();
+        service.initialisationData();
+        List<Reunion> reunions = service.getListeReunions();
+        List<Reunion> reunionsf = service.trierLieuCroissant(reunions);
+        assertTrue(reunionsf.get(reunions.size()-1).getSalle().getCouleur().valeur() < reunionsf.get(0).getSalle().getCouleur().valeur());
     }
 
     @Test
@@ -60,5 +65,23 @@ public class DummyApiServiceReunionsTest {
 
     @Test
     public void getListeDate() {
+        DummyApiServiceReunions service = new DummyApiServiceReunions();
+        service.initialisationData();
+        int nDates =2;
+        String[] listeDates = service.getListeDate(service.getListeReunions());
+        assertEquals(listeDates.length,nDates+1);
+    }
+
+    @Test
+    public void creerListeDeReunions() {
+        DummyApiServiceReunions service = new DummyApiServiceReunions();
+        DummyApiServiceSalles salleApiService = new DummyApiServiceSalles();
+        service.initialisationData();
+        Reunion reunion0 = service.getListeReunions().get(0);
+        Reunion reunion11 = service.getListeReunions().get(23);
+        Salle salle0 = salleApiService.getListeSalle().get(0);
+        Salle salle11 = salleApiService.getListeSalle().get(1);
+        assertEquals(reunion0.getSalle().getLieu(),salle0.getLieu());
+        assertEquals(reunion11.getSalle().getLieu(),salle11.getLieu());
     }
 }

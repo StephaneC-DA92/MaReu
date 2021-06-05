@@ -11,10 +11,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.companyx.mareu.R;
+import com.companyx.mareu.controller.fragments.AddMeetingFragment;
+import com.companyx.mareu.controller.fragments.FragmentAccueil;
 import com.companyx.mareu.controller.fragments.MainFragment;
+import com.companyx.mareu.data.ApiServiceSalles;
 import com.companyx.mareu.data.DummyApiServiceSalles;
+import com.companyx.mareu.di.DI_Salles;
 import com.companyx.mareu.model.DateHeure;
 import com.companyx.mareu.model.Reunion;
 import com.companyx.mareu.model.Salle;
@@ -26,20 +31,20 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private MainFragment mMainFragment;
-    private FloatingActionButton mButton;
 
-    private boolean roomFilterEnabled,timeFilterEnabled;
+    private MainFragment mMainFragment;
+
+    private FragmentAccueil mFragmentAccueil;
+    private AddMeetingFragment mAddMeetingFragment;
+
+    private FloatingActionButton mButton;
 
     public static final int NEW_MEETING_ACTIVITY_CODE = 98;
     public static final int FILTER_ACTIVITY_CODE = 90;
 
     public static final String BUNDLE_FILTER_REUNIONS = "BUNDLE_FILTER_REUNIONS";
 
-    Date mDateDebutFiltre;
-    List<Salle> sallesFiltre;
-
-    String listeLieux, dateDebut ;
+    private String listeLieux, dateDebut ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,19 +57,28 @@ public class MainActivity extends AppCompatActivity {
 //        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 //        requestWindowFeature(Window.FEATURE_ACTION_BAR);
 
+        Log.d("ON_CREATE_ACTIVITY","MainActivity");
+
         configurerEtAfficherMainFragment();
+
+        configurerEtAfficherFragmentAccueil();
 
         mButton = (FloatingActionButton) findViewById(R.id.add_meeting);
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddMeetingActivity.navigateToAddMeetingActivity(MainActivity.this,NEW_MEETING_ACTIVITY_CODE);
+                //Fragment AddMeetingFragment pour tablette sw600dp en mode paysage
+                if (findViewById(R.id.frame_layout_other) != null) {
+                    configurerEtAfficherFragmentAddMeeting();
+                } else {
+//                    AddMeetingActivity.navigateToAddMeetingActivity(MainActivity.this);
+                    //TODO : start Activity for result : resultat AddMeeting, nouvelle réunion
+                    AddMeetingActivity.navigateToAddMeetingActivity(MainActivity.this, NEW_MEETING_ACTIVITY_CODE);
+                }
             }
         });
 
-        roomFilterEnabled=false;
-        timeFilterEnabled=false;
     }
 
     @Override
@@ -75,13 +89,12 @@ public class MainActivity extends AppCompatActivity {
 //        return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 //        montrer menu contextuel avec choix de filtre;
         switch(item.getItemId()){
             case R.id.filtrerSalleHeure :
-                FilteringActivity.navigateToFilteringActivity(MainActivity.this,FILTER_ACTIVITY_CODE,BUNDLE_FILTER_REUNIONS,mMainFragment.mDates);
+                FilteringActivity.navigateToFilteringActivity(MainActivity.this, FILTER_ACTIVITY_CODE, BUNDLE_FILTER_REUNIONS, mMainFragment.mDates);
                 break;
 
             case R.id.sansFiltre :
@@ -122,28 +135,8 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode==FILTER_ACTIVITY_CODE && resultCode == RESULT_OK){
             listeLieux = data.getStringExtra(FilteringActivity.BUNDLE_FILTER_ROOM);
             dateDebut = data.getStringExtra(FilteringActivity.BUNDLE_FILTER_DATE_START);
-            filtrerDansMainFragment(listeLieux,dateDebut);
+            mMainFragment.filtrerAffichageListe(listeLieux,dateDebut);
         }
-    }
-
-    //Inspiré de com/companyx/mareu/controller/fragments/AddMeetingFragment.java:179
-
-    private List<Salle> getListeSallesFromLieuxSequence(String ListeLieuxAvecVirgule){
-        List<Salle> listeSalles = new ArrayList<Salle>();
-
-        List<String> listeLieux = Arrays.asList(ListeLieuxAvecVirgule.split(", "));
-
-        for (String lieu : listeLieux){
-            if(lieu==""){
-                listeLieux.remove(lieu);
-            }
-        }
-
-        //TODO : instance unique mDummyApiServiceSalles du MainFragment?
-        for (String lieu : listeLieux){
-            listeSalles.add(new DummyApiServiceSalles().creerCatalogueLieu().get(lieu));
-        }
-        return listeSalles;
     }
 
 /*    private List<Object> getListofObjectsFromSequence(Object object, String SequenceWithComma, Map<String,Object> catalogue){
@@ -167,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
     // --------------
 
     private void configurerEtAfficherMainFragment(){
-        //  Appel au SupportFragmentManager pour trouver une fragment existant dans le conteneur FrameLayout
         mMainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout_main);
 
         if (mMainFragment == null) {
@@ -178,27 +170,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void filtrerDansMainFragment(String listeLieux,String dateDebut){
-        if(listeLieux.compareTo("")!= 0){
-            sallesFiltre = getListeSallesFromLieuxSequence(listeLieux);
-            if(dateDebut.compareTo("")!= 0){
-                mDateDebutFiltre= new DateHeure(dateDebut).formatParseDate();
-                roomFilterEnabled=true;
-                timeFilterEnabled=true;
-                mMainFragment.filtrerAvecSallesEtDateHeure(sallesFiltre,mDateDebutFiltre);
-            } else {
-                roomFilterEnabled=true;
-                mMainFragment.filtrerAvecSalles(sallesFiltre);
-            }
-        } else {
-//               TODO : à factoriser
-            if(dateDebut.compareTo("")!= 0){
-                mDateDebutFiltre= new DateHeure(dateDebut).formatParseDate();
-                timeFilterEnabled=true;
-                mMainFragment.filtrerAvecDate(mDateDebutFiltre);
-            } else {
-                Log.d("ERROR_FILTRE","Pas de critères de filtre reçus");
-            }
+    public void configurerEtAfficherFragmentAccueil() {
+        //Fragment accueil pour tablette sw600dp en mode paysage
+        if (findViewById(R.id.frame_layout_other) != null && !(getSupportFragmentManager().findFragmentById(R.id.frame_layout_other) instanceof FragmentAccueil)) {
+            mFragmentAccueil = new FragmentAccueil();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frame_layout_other, mFragmentAccueil)
+                    .commit();
         }
     }
+
+    private void configurerEtAfficherFragmentAddMeeting(){
+       if (getSupportFragmentManager().findFragmentById(R.id.frame_layout_other) ==null || !(getSupportFragmentManager().findFragmentById(R.id.frame_layout_other) instanceof AddMeetingFragment)) {
+            mAddMeetingFragment = new AddMeetingFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame_layout_other, mAddMeetingFragment)
+                    .commit();
+        }
+    }
+
 }

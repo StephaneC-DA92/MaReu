@@ -28,9 +28,10 @@
     <FrameLayout
         android:id="@+id/frame_layout_add_meeting"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/action_bar"></FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

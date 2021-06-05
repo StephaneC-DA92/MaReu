@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,35 +13,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Toast;
 
 import com.companyx.mareu.R;
-import com.companyx.mareu.data.DummyApiServiceCollaborateurs;
-import com.companyx.mareu.data.DummyApiServiceReunions;
-import com.companyx.mareu.data.DummyApiServiceSalles;
+import com.companyx.mareu.data.ApiServiceSalles;
 import com.companyx.mareu.databinding.ActivityFilteringBinding;
-import com.companyx.mareu.model.DateHeure;
+import com.companyx.mareu.di.DI_Salles;
 
-import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 
 public class FilteringActivity extends AppCompatActivity {
 
     private ActivityFilteringBinding mBinding;
 
     //Essayer DialogFragment au lieu de Fragment
-    private final Calendar mCalendrier = Calendar.getInstance();
-    private int mAnnee, mMois,mJour,mHeure,mMinutes;
 
-    public DummyApiServiceSalles mDummyApiServiceSalles;
-    private DummyApiServiceReunions mDummyApiServiceReunions;
+    private ApiServiceSalles mDummyApiServiceSalles;
 
-    private String maDateDebut;
-
-    public String mSequenceLieuxFiltre;
+    private String mDateDebut;
+    public String mSequenceLieux;
 
     public static final String BUNDLE_FILTER_ROOM = "BUNDLE_FILTER_ROOM";
     public static final String BUNDLE_FILTER_DATE_START = "BUNDLE_FILTER_DATE_START";
@@ -71,7 +60,7 @@ public class FilteringActivity extends AppCompatActivity {
         mBinding.FiltreDateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                maDateDebut=parent.getItemAtPosition(position).toString();
+                mDateDebut =parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -83,7 +72,7 @@ public class FilteringActivity extends AppCompatActivity {
 //        mFiltreSalletextview = (MultiAutoCompleteTextView) findViewById(R.id.FiltreSalles);
         //TODO : instance unique mDummyApiServiceSalles du MainFragment?
 
-        mDummyApiServiceSalles = new DummyApiServiceSalles();
+        mDummyApiServiceSalles = DI_Salles.getServiceSalles();
         String[] lieux = mDummyApiServiceSalles.getListeLieu();
 
         ArrayAdapter<String> adapterLieux = new  ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,lieux);
@@ -122,16 +111,16 @@ public class FilteringActivity extends AppCompatActivity {
     }
 
     private void saveActivityResultAndThenClose(){
-        mSequenceLieuxFiltre =mBinding.FiltreSalles.getText().toString();
-    if(mSequenceLieuxFiltre!=""||maDateDebut!="") {
+        mSequenceLieux =mBinding.FiltreSalles.getText().toString();
+    if(mSequenceLieux !=""|| mDateDebut !="") {
         Intent intent = new Intent();
-        if (mSequenceLieuxFiltre != "") {
+        if (mSequenceLieux != "") {
             //        DONE : seriazable à faire pour réunion KO
-            intent.putExtra(BUNDLE_FILTER_ROOM, mSequenceLieuxFiltre);
+            intent.putExtra(BUNDLE_FILTER_ROOM, mSequenceLieux);
         }
 
-        if (maDateDebut != "") {
-            intent.putExtra(BUNDLE_FILTER_DATE_START, maDateDebut);
+        if (mDateDebut != "") {
+            intent.putExtra(BUNDLE_FILTER_DATE_START, mDateDebut);
         }
         setResult(RESULT_OK, intent);
         finish();

@@ -29,17 +29,12 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         mMeetingIcon = view.findViewById(R.id.meeting_icon);
         mMeetingDetailsText = view.findViewById(R.id.meeting_details);
         mMeetingParticipantsText = view.findViewById(R.id.meeting_participants);
-        mItemView = view.findViewById(R.id.meeting_frame);
         mDeleteButton = view.findViewById(R.id.item_delete_button);
-
     }
 
     //       Getters
     public ImageView getMeetingIcon() {
         return mMeetingIcon;
-    }
-    public void getDrawable(int resId) {
-        getMeetingIcon().setImageResource(resId);
     }
 
     public TextView getMeetingDetailsText() {
@@ -48,5 +43,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public TextView getMeetingParticipantsText() {
         return mMeetingParticipantsText;
+    }
+
+    //       Setters
+    public void setDrawable(int resId) {
+        mMeetingIcon.setImageResource(resId);
     }
 }
