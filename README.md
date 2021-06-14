@@ -14,8 +14,7 @@ Ce dépôt contient une application pour le P4 du parcours **PRFE3**.
 ## Informations générales
 Nom du projet : **MaRéu**
 ***
-_Application de gestion de réunions 
-_
+Application de gestion de réunions   
 
 ### Fonctionnalités :
 * Affichage de liste de réunions comprenant :
@@ -41,17 +40,12 @@ Liste des technologies utilisées dans ce projet
 * [JUnit](https://github.com/junit-team/junit4/wiki) : Version 4.13
 * [Espresso](https://developer.android.com/training/testing/espresso) : Version 3.3.0
 
-
-
-
 ### Démarrage
 Version de SdK min : 21
-● Application supportant Android 5.0 (API21) et ses versions supérieures
-
+Pour une application supportant Android 5.0 (API21) et ses versions supérieures
 
 ### Statut :
 En cours de développement
-A optimiser : usage des fragments
 
 #### Modifications prévues : roadmap
 Empêcher création de doublon avec message d'avertissement
@@ -62,11 +56,13 @@ Gestion des exceptions en cas de validation de formulaire avec données manquant
 Stéphane
 
 ## Screenshots
-* L'utilisateur filtre les réunions pour la consultation de liste 
+* L'utilisateur filtre les réunions pour la consultation de liste, avec des options de tri. 
 
  <div style="display:flex;" >
- 	<img src="/vysor_list_filter.PNG" width="24%">
+ 	<img src="/vysor_list.PNG" width="24%">
  	<img src="vysor_list_filtering.PNG" width="24%" style="margin-left:10px;" >
+    <img src="vysor_filtering.PNG" width="24%" style="margin-left:10px;" >
+    <img src="vysor_list_sorting.PNG" width="24%" style="margin-left:10px;" >
  </div>
 
 * L'utilisateur ajoute une réunion  
@@ -82,49 +78,45 @@ Stéphane
 ## Tests
 * Tests unitaires locaux
     * com\companyx\mareu\data\DummyApiServiceReunionsTest.java
-	* filtrerLieu()
-	* filtrerPlusieursLieux()
-	* filtrerDate()
-	* filtrerDateEtLieu()
-	* ajouterReunion()
-	* supprimerReunion()
-
-	Options supplémentaires :
-	* trierLieuCroissant()
-	* trierLieuDecroissant()
-	* trierDateDecroissant()
-	* trierDateCroissant()
+        * filtrerLieu()
+        * filtrerPlusieursLieux()
+        * filtrerDate()
+        * filtrerDateEtLieu()
+        * ajouterReunion()
+        * supprimerReunion()            
+            Options supplémentaires :
+            * trierLieuCroissant()
+            * trierLieuDecroissant()
+            * trierDateDecroissant()
+            * trierDateCroissant()
 
 * Tests unitaires instrumentés
     * com\companyx\mareu\controller\activities\MainActivityTest.java
-
-	onMainActivityReunionListShouldBeDisplayed
-	onDeleteClickReunionListShouldBeDisplayedMinusITem
-	onNoFilterActionRawListShouldBeDisplayed
-
-	Options supplémentaires :
-
-	onRoomDownSortingActionSortedListShouldBeDisplayed
-	onDateUpSortingActionSortedListShouldBeDisplayed
-	onDateDownSortingActionSortedListShouldBeDisplayed
-	onNoSortingActionSortedListShouldBeDisplayed
+        * onMainActivityReunionListShouldBeDisplayed()
+        * onDeleteClickReunionListShouldBeDisplayedMinusITem()
+        * onNoFilterActionRawListShouldBeDisplayed()
+            Options supplémentaires :
+            * onRoomDownSortingActionSortedListShouldBeDisplayed()
+            * onDateUpSortingActionSortedListShouldBeDisplayed()
+            * onDateDownSortingActionSortedListShouldBeDisplayed()
+            * onNoSortingActionSortedListShouldBeDisplayed()
 
     * com\companyx\mareu\controller\activities\MainActivityTest_ForcingExecution.java
-	Options supplémentaires :
-	onRoomUpSortingActionSortedListShouldBeDisplayed
+        Options supplémentaires :
+        * onRoomUpSortingActionSortedListShouldBeDisplayed()
 
     * com\companyx\mareu\controller\activities\AddMeetingActivityTest.java
-	onValidatingNewMeetingReunionListShouldDisplayExtraItem
+	    * onValidatingNewMeetingReunionListShouldDisplayExtraItem()
 
     * com\companyx\mareu\controller\activities\AddMeetingActivityTest_ForcingExecution.java
-	onCancellingNewMeetingReunionListShouldDisplayNoExtraItem
+	    * onCancellingNewMeetingReunionListShouldDisplayNoExtraItem()
 
     * com\companyx\mareu\controller\activities\FilteringActivityTest.java
-	onOneRoomFilteredActionFilteredListShouldBeDisplayed
-	onManyRoomFilteredActionFilteredListShouldBeDisplayed
-	onRoomAndDateFilteredActionFilteredListShouldBeDisplayed
-	onFilterCancellationOriginalListShouldBeDisplayed
-	onDateFilteredActionFilteredListShouldBeDisplayed
+        * onOneRoomFilteredActionFilteredListShouldBeDisplayed()
+        * onManyRoomFilteredActionFilteredListShouldBeDisplayed()
+        * onRoomAndDateFilteredActionFilteredListShouldBeDisplayed()
+        * onFilterCancellationOriginalListShouldBeDisplayed()
+        * onDateFilteredActionFilteredListShouldBeDisplayed()
 
 ## Crédits
 Les guides et questions/réponses disponibles aux URL suivants:
