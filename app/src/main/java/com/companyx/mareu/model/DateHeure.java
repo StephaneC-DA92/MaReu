@@ -21,7 +21,7 @@ public class DateHeure implements Serializable {
     final Calendar mCalendrier = Calendar.getInstance();
 //    int mAnnee,mMois,mJour, mHeure,mMinutes;
 
-    String mDateString,mHeureString;
+    String mDateString, mHeureString;
 
     String pattern1 = "dd/MM/yyyy HH'h'mm";
     String pattern2 = "dd/MM/yyyy";
@@ -39,19 +39,19 @@ public class DateHeure implements Serializable {
         mMinutes = minutes;
     }*/
 
- /*   public Date DateHeure() {
-        mCalendrier.clear();
-        mCalendrier.set(Calendar.YEAR,mAnnee);
-        mCalendrier.set(Calendar.MONTH,mMois-1);
-        mCalendrier.set(Calendar.DAY_OF_MONTH,mJour);
-        mCalendrier.set(Calendar.HOUR_OF_DAY, mHeure);
-        mCalendrier.set(Calendar.MINUTE,mMinutes);
-        return mCalendrier.getTime();
-    }
+    /*   public Date DateHeure() {
+           mCalendrier.clear();
+           mCalendrier.set(Calendar.YEAR,mAnnee);
+           mCalendrier.set(Calendar.MONTH,mMois-1);
+           mCalendrier.set(Calendar.DAY_OF_MONTH,mJour);
+           mCalendrier.set(Calendar.HOUR_OF_DAY, mHeure);
+           mCalendrier.set(Calendar.MINUTE,mMinutes);
+           return mCalendrier.getTime();
+       }
 
-    public String DateHeureToString() {
-        return  mJour + "/" + mMois + "/" + mAnnee + " " + mHeure + "h" + mMinutes;
-    }*/
+       public String DateHeureToString() {
+           return  mJour + "/" + mMois + "/" + mAnnee + " " + mHeure + "h" + mMinutes;
+       }*/
     //Alternative
     public DateHeure(String date, String heure) {
         mDateString = date;
@@ -67,40 +67,42 @@ public class DateHeure implements Serializable {
 
     //Date internationale. Ex. : Sat May 22 11:30:00 CEST 2021. TODO : date française
     public Date formatParseDateHeure() {
-        return convertStringtoDateHeure(mDateString+" "+mHeureString);
+        return convertStringtoDateHeure(mDateString + " " + mHeureString);
     }
-    public Date convertStringtoDateHeure(String str){
-        return formatDateHeure.parse(str,pp);
+
+    public Date convertStringtoDateHeure(String str) {
+        return formatDateHeure.parse(str, pp);
     }
 
     //Date internationale. Ex. : Sat May 22 00:00:00 CEST 2021. TODO : date française
     public Date formatParseDate() {
         return convertStringtoDate(mDateString);
     }
-    public Date convertStringtoDate(String str){
-        return formatDate.parse(str,pp);
+
+    public Date convertStringtoDate(String str) {
+        return formatDate.parse(str, pp);
     }
 
-    public String convertirDateHeureEnString(Date dateHeure){
+    public String convertirDateHeureEnString(Date dateHeure) {
         mCalendrier.clear();
         mCalendrier.setTime(dateHeure);
-        return String.format("%02d",mCalendrier.get(Calendar.DAY_OF_MONTH))
-                +"/"+String.format("%02d",(mCalendrier.get(Calendar.MONTH)+1))
-                +"/"+mCalendrier.get(Calendar.YEAR)
-                +" "+String.format("%02d",mCalendrier.get(Calendar.HOUR_OF_DAY))
-                +"h"+String.format("%02d",mCalendrier.get(Calendar.MINUTE));
+        return String.format("%02d", mCalendrier.get(Calendar.DAY_OF_MONTH))
+                + "/" + String.format("%02d", (mCalendrier.get(Calendar.MONTH) + 1))
+                + "/" + mCalendrier.get(Calendar.YEAR)
+                + " " + String.format("%02d", mCalendrier.get(Calendar.HOUR_OF_DAY))
+                + "h" + String.format("%02d", mCalendrier.get(Calendar.MINUTE));
     }
 
-    public String convertirDateHeureEnDateString(Date dateHeure){
+    public String convertirDateHeureEnDateString(Date dateHeure) {
         mCalendrier.clear();
         mCalendrier.setTime(dateHeure);
-        return String.format("%02d",mCalendrier.get(Calendar.DAY_OF_MONTH))
-                +"/"+String.format("%02d",(mCalendrier.get(Calendar.MONTH)+1))
-                +"/"+mCalendrier.get(Calendar.YEAR);
+        return String.format("%02d", mCalendrier.get(Calendar.DAY_OF_MONTH))
+                + "/" + String.format("%02d", (mCalendrier.get(Calendar.MONTH) + 1))
+                + "/" + mCalendrier.get(Calendar.YEAR);
     }
 
-    public String concateneStringforPrint(){
-        return mDateString+" "+mHeureString;
+    public String concateneStringforPrint() {
+        return mDateString + " " + mHeureString;
     }
 
     /*    DateTimeFormatter fmtOut = DateTimeFormatter.ofPattern("dd-MM-yyyy").withZone(ZoneOffset.UTC);

@@ -21,7 +21,7 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:titleTextColor="@color/white"
             app:title="Trier les réunions"
-            android:gravity="center"/>
+            android:gravity="center" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -37,8 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/filter_action_bar"
         app:layout_constraintEnd_toEndOf="parent"
-        android:drawableStart="@drawable/ic_baseline_access_time_24"
-        />
+        android:drawableStart="@drawable/ic_baseline_access_time_24" />
 
     <TextView
         android:id="@+id/label_spinner"
@@ -50,7 +49,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/FiltreDateSpinner"
         app:layout_constraintEnd_toEndOf="parent"
-        android:labelFor="@id/FiltreDateSpinner"/>
+        android:labelFor="@id/FiltreDateSpinner" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/FiltreSalles"

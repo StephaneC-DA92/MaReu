@@ -45,63 +45,63 @@ public class DummyApiServiceReunionsTest {
 
     @Test
     public void filtrerLieu() {
-        List<Salle> salles = serviceSalles.getListeSalle().subList(0,1);
+        List<Salle> salles = serviceSalles.getListeSalle().subList(0, 1);
         List<Reunion> reunions = serviceReunions.getListeReunions();
-        List<Reunion> reunionsf = serviceReunions.filtrerLieu(reunions,salles);
-        assertEquals(reunionsf.size(),ITEMS_COUNT_SALLE);
+        List<Reunion> reunionsf = serviceReunions.filtrerLieu(reunions, salles);
+        assertEquals(reunionsf.size(), ITEMS_COUNT_SALLE);
     }
 
     @Test
     public void filtrerPlusieursLieux() {
-        List<Salle> salles = serviceSalles.getListeSalle().subList(0,2);
+        List<Salle> salles = serviceSalles.getListeSalle().subList(0, 2);
         List<Reunion> reunions = serviceReunions.getListeReunions();
-        List<Reunion> reunionsf = serviceReunions.filtrerLieu(reunions,salles);
-        assertEquals(reunionsf.size(),ITEMS_COUNT_DEUX_SALLES);
+        List<Reunion> reunionsf = serviceReunions.filtrerLieu(reunions, salles);
+        assertEquals(reunionsf.size(), ITEMS_COUNT_DEUX_SALLES);
     }
 
     @Test
     public void filtrerDate() {
-        Date mDateFiltre= new DateHeure(dateFiltre).formatParseDate();
+        Date mDateFiltre = new DateHeure(dateFiltre).formatParseDate();
         List<Reunion> reunions = serviceReunions.getListeReunions();
-        List<Reunion> reunionsf = serviceReunions.filtrerDate(reunions,mDateFiltre);
-        assertEquals(reunionsf.size(),ITEMS_COUNT_DATE);
+        List<Reunion> reunionsf = serviceReunions.filtrerDate(reunions, mDateFiltre);
+        assertEquals(reunionsf.size(), ITEMS_COUNT_DATE);
     }
 
     @Test
     public void filtrerDateEtLieu() {
-        List<Salle> salles = serviceSalles.getListeSalle().subList(0,1);
-        Date mDateFiltre= new DateHeure(dateFiltre).formatParseDate();
+        List<Salle> salles = serviceSalles.getListeSalle().subList(0, 1);
+        Date mDateFiltre = new DateHeure(dateFiltre).formatParseDate();
         List<Reunion> reunions = serviceReunions.getListeReunions();
-        List<Reunion> reunionsf = serviceReunions.filtrerLieuEtDate(reunions,salles,mDateFiltre);
-        assertEquals(reunionsf.size(),ITEMS_COUNT_SALLE_DATE);
+        List<Reunion> reunionsf = serviceReunions.filtrerLieuEtDate(reunions, salles, mDateFiltre);
+        assertEquals(reunionsf.size(), ITEMS_COUNT_SALLE_DATE);
     }
 
     @Test
     public void trierLieuCroissant() {
         List<Reunion> reunions = serviceReunions.getListeReunions();
         List<Reunion> reunionsf = serviceReunions.trierLieuCroissant(reunions);
-        assertTrue(reunionsf.get(reunions.size()-1).getSalle().getCouleur().valeur() > reunionsf.get(0).getSalle().getCouleur().valeur());
+        assertTrue(reunionsf.get(reunions.size() - 1).getSalle().getLieu().compareTo(reunionsf.get(0).getSalle().getLieu())>0);
     }
 
     @Test
     public void trierLieuDecroissant() {
         List<Reunion> reunions = serviceReunions.getListeReunions();
         List<Reunion> reunionsf = serviceReunions.trierLieuDecroissant(reunions);
-        assertTrue(reunionsf.get(reunions.size()-1).getSalle().getCouleur().valeur() < reunionsf.get(0).getSalle().getCouleur().valeur());
+        assertTrue(reunionsf.get(reunions.size() - 1).getSalle().getLieu().compareTo(reunionsf.get(0).getSalle().getLieu())<0);
     }
 
     @Test
     public void trierDateDecroissant() {
         List<Reunion> reunions = serviceReunions.getListeReunions();
         List<Reunion> reunionsf = serviceReunions.trierHeureDecroissant(reunions);
-        assertTrue(reunionsf.get(reunions.size()-1).getHeureDebut().compareTo(reunionsf.get(0).getHeureDebut()) < 0);
+        assertTrue(reunionsf.get(reunions.size() - 1).getHeureDebut().compareTo(reunionsf.get(0).getHeureDebut()) < 0);
     }
 
     @Test
     public void trierDateCroissant() {
         List<Reunion> reunions = serviceReunions.getListeReunions();
         List<Reunion> reunionsf = serviceReunions.trierHeureCroissant(reunions);
-        assertTrue(reunionsf.get(reunions.size()-1).getHeureDebut().compareTo(reunionsf.get(0).getHeureDebut()) > 0);
+        assertTrue(reunionsf.get(reunions.size() - 1).getHeureDebut().compareTo(reunionsf.get(0).getHeureDebut()) > 0);
     }
 
     /*//Test traitement de données pour spinner
@@ -128,17 +128,17 @@ public class DummyApiServiceReunionsTest {
     @Test
     public void ajouterReunion() {
         Salle salle = serviceSalles.getListeSalle().get(0);
-        List<Collaborateur> Participants = serviceCollaborateurs.getListeCollaborateur().subList(0,2);
+        List<Collaborateur> Participants = serviceCollaborateurs.getListeCollaborateur().subList(0, 2);
         Collaborateur organisateur = serviceCollaborateurs.getListeCollaborateur().get(0);
-        Reunion reunion = new Reunion(salle, "Réunion test ",Participants, new DateHeure("05/06/2021", "10h30").formatParseDateHeure(),new DateHeure("05/06/2021", "11h30").formatParseDateHeure(),organisateur);
+        Reunion reunion = new Reunion(salle, "Réunion test ", Participants, new DateHeure("05/06/2021", "10h30").formatParseDateHeure(), new DateHeure("05/06/2021", "11h30").formatParseDateHeure(), organisateur);
         serviceReunions.addReunionItem(reunion);
-        assertEquals(serviceReunions.getListeReunions().size(),ITEMS_COUNT+1);
+        assertEquals(serviceReunions.getListeReunions().size(), ITEMS_COUNT + 1);
     }
 
     @Test
     public void supprimerReunion() {
         Reunion reunion = serviceReunions.getListeReunions().get(0);
         serviceReunions.deleteReunionItem(reunion);
-        assertEquals(serviceReunions.getListeReunions().size(),ITEMS_COUNT-1);
+        assertEquals(serviceReunions.getListeReunions().size(), ITEMS_COUNT - 1);
     }
 }

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    Filtre des réunions par date ou par lieu-->
+    <!--    Filtre des réunions par date ou par lieu-->
 
     <item
         android:id="@+id/filter"
@@ -14,8 +14,7 @@
             <item
                 android:id="@+id/filtrerSalleHeure"
                 android:title="Filtre par lieu ou par date"
-                app:showAsAction="withText"
-                ></item>
+                app:showAsAction="withText"></item>
 
             <item
                 android:id="@+id/sansFiltre"
@@ -35,25 +34,23 @@
             <item
                 android:id="@+id/tri_lieu_croissant"
                 android:title="Lieu par ordre croissant"
-                app:showAsAction="withText"
-                />
+                app:showAsAction="withText" />
             <item
                 android:id="@+id/tri_lieu_decroissant"
                 android:title="Lieu par ordre décroissant"
-                app:showAsAction="withText"/>
+                app:showAsAction="withText" />
             <item
                 android:id="@+id/tri_heure_croissante"
                 android:title="Heure par ordre croissant"
-                app:showAsAction="withText"
-                />
+                app:showAsAction="withText" />
             <item
                 android:id="@+id/tri_heure_decroissante"
                 android:title="Heure par ordre décroissant"
-                app:showAsAction="withText"/>
+                app:showAsAction="withText" />
             <item
                 android:id="@+id/sans_tri"
                 android:title="Tri par défaut"
-                app:showAsAction="withText"/>
+                app:showAsAction="withText" />
 
         </menu>
 

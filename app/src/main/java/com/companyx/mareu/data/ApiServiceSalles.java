@@ -13,7 +13,7 @@ public interface ApiServiceSalles {
 
     List<Salle> getListeSalle();
 
-    Map<String,Salle> creerCatalogueLieu();
+    Map<String, Salle> creerCatalogueLieu();
 
     String[] getListeLieu();
 

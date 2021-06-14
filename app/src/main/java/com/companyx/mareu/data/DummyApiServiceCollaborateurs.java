@@ -10,8 +10,10 @@ import java.util.Map;
 /**
  * Created by CodeurSteph on 17/05/2021
  */
-public class DummyApiServiceCollaborateurs implements ApiServiceCollaborateurs{
+public class DummyApiServiceCollaborateurs implements ApiServiceCollaborateurs {
+
     private List<Collaborateur> collaborateurs = GenerateurCollaborateurs.genererCollaborateurs();
+
     private Map<String, Collaborateur> mCatalogueParticipant;
 
     @Override
@@ -19,18 +21,18 @@ public class DummyApiServiceCollaborateurs implements ApiServiceCollaborateurs{
         return collaborateurs;
     }
 
-    public Map<String, Collaborateur> creerCatalogueParticipant(){
-        mCatalogueParticipant = new HashMap<String,Collaborateur>();
-        for(int i = 0;i<collaborateurs.size();i++){
-            mCatalogueParticipant.put(collaborateurs.get(i).getEmail(),collaborateurs.get(i));
+    public Map<String, Collaborateur> creerCatalogueParticipant() {
+        mCatalogueParticipant = new HashMap<String, Collaborateur>();
+        for (int i = 0; i < collaborateurs.size(); i++) {
+            mCatalogueParticipant.put(collaborateurs.get(i).getEmail(), collaborateurs.get(i));
         }
         return mCatalogueParticipant;
     }
 
-    public String[] getListeParticipants(){
+    public String[] getListeParticipants() {
         String[] choix = new String[collaborateurs.size()];
-        for(int i = 0;i<collaborateurs.size();i++){
-            choix[i]=collaborateurs.get(i).getEmail();
+        for (int i = 0; i < collaborateurs.size(); i++) {
+            choix[i] = collaborateurs.get(i).getEmail();
         }
         return choix;
     }

@@ -39,6 +39,6 @@ public class FragmentAccueil extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBinding=null;
+        mBinding = null;
     }
 }

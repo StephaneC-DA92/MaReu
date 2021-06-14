@@ -19,14 +19,14 @@ public class DateHeureTest {
 
         Calendar mCalendrier = Calendar.getInstance();
         mCalendrier.clear();
-        mCalendrier.set(Calendar.YEAR,2021);
-        mCalendrier.set(Calendar.MONTH,5-1);
-        mCalendrier.set(Calendar.DAY_OF_MONTH,22);
+        mCalendrier.set(Calendar.YEAR, 2021);
+        mCalendrier.set(Calendar.MONTH, 5 - 1);
+        mCalendrier.set(Calendar.DAY_OF_MONTH, 22);
         mCalendrier.set(Calendar.HOUR_OF_DAY, 1);
-        mCalendrier.set(Calendar.MINUTE,2);
+        mCalendrier.set(Calendar.MINUTE, 2);
         Date date2 = mCalendrier.getTime();
 
-        assertTrue(date1.compareTo(date2)==0);
+        assertTrue(date1.compareTo(date2) == 0);
     }
 
     @Test
@@ -36,12 +36,12 @@ public class DateHeureTest {
 
         Calendar mCalendrier = Calendar.getInstance();
         mCalendrier.clear();
-        mCalendrier.set(Calendar.YEAR,2021);
-        mCalendrier.set(Calendar.MONTH,5-1);
-        mCalendrier.set(Calendar.DAY_OF_MONTH,22);
+        mCalendrier.set(Calendar.YEAR, 2021);
+        mCalendrier.set(Calendar.MONTH, 5 - 1);
+        mCalendrier.set(Calendar.DAY_OF_MONTH, 22);
         Date date2 = mCalendrier.getTime();
 
-        assertTrue(date1.compareTo(date2)==0);
+        assertTrue(date1.compareTo(date2) == 0);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class DateHeureTest {
         Date date1 = dh.formatParseDateHeure();
         String str1 = dh.convertirDateHeureEnString(date1);
 
-        assertEquals(str1,"22/05/2021 01h02");
+        assertEquals(str1, "22/05/2021 01h02");
     }
 
     @Test
@@ -59,7 +59,7 @@ public class DateHeureTest {
         Date date1 = dh.formatParseDateHeure();
         String str2 = dh.convertirDateHeureEnDateString(date1);
 
-        assertEquals(str2,"22/05/2021");
+        assertEquals(str2, "22/05/2021");
     }
 
     @Test
@@ -67,6 +67,6 @@ public class DateHeureTest {
         DateHeure dh = new DateHeure("22/05/2021", "01h02");
         String str3 = dh.concateneStringforPrint();
 
-        assertEquals(str3,"22/05/2021 01h02");
+        assertEquals(str3, "22/05/2021 01h02");
     }
 }

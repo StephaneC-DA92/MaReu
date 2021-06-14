@@ -15,7 +15,7 @@ public class Reunion implements Serializable {
     Date mDateHeureFin;
     Collaborateur mOrganisateur;
 
-    public Reunion(Salle salle, String sujet, List<Collaborateur> participants,Date dateHeureDebut, Date dateHeureFin, Collaborateur organisateur) {
+    public Reunion(Salle salle, String sujet, List<Collaborateur> participants, Date dateHeureDebut, Date dateHeureFin, Collaborateur organisateur) {
         mSalle = salle;
         mSujet = sujet;
         mParticipants = participants;
@@ -39,7 +39,7 @@ public class Reunion implements Serializable {
 
     public String getListeStringParticipants() {
         String str = mParticipants.get(0).getEmail();
-        if(mParticipants.size()>1) {
+        if (mParticipants.size() > 1) {
             for (int i = 1; i < mParticipants.size(); i++) {
                 str += ", " + mParticipants.get(i).getEmail();
             }

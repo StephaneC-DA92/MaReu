@@ -2,22 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_close"
+    <item
+        android:id="@+id/action_close"
         android:icon="@drawable/ic_baseline_close_24"
         android:title="@string/action_close"
-        app:showAsAction="always"
-        />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_check"
         android:icon="@drawable/ic_baseline_check_24"
         android:title="@string/action_check"
-        app:showAsAction="always"/>
-
+        app:showAsAction="always" />
 
 
 </menu>
 
-<!--    https://developer.android.com/training/appbar/actions#java-->
-<!--    https://developer.android.com/training/appbar?hl=en-->
-<!--    https://developer.android.com/training/appbar/setting-up#java-->
+    <!--    https://developer.android.com/training/appbar/actions#java-->
+    <!--    https://developer.android.com/training/appbar?hl=en-->
+    <!--    https://developer.android.com/training/appbar/setting-up#java-->

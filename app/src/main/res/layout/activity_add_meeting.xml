@@ -21,7 +21,7 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:titleTextColor="@color/white"
             app:title="@string/new_meeting"
-            android:gravity="center"/>
+            android:gravity="center" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

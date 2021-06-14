@@ -51,13 +51,13 @@ public class AddMeetingFragment extends Fragment {
     private String[] mLieux;
 
     private final Calendar mCalendrier = Calendar.getInstance();
-    private int mAnnee, mMois,mJour,mHeure,mMinutes;
+    private int mAnnee, mMois, mJour, mHeure, mMinutes;
 
     public Reunion mReunion;
 
     private static final String BUNDLE_EXTRA_MEETING = "BUNDLE_EXTRA_MEETING";
-    private static final String NEW_MEETING_ACTIVITY_FRAGMENT="NEW_MEETING_ACTIVITY_FRAGMENT";
-    private static final String NEW_MEETING_INTER_FRAGMENTS="NEW_MEETING_INTER_FRAGMENTS";
+    private static final String NEW_MEETING_ACTIVITY_FRAGMENT = "NEW_MEETING_ACTIVITY_FRAGMENT";
+    private static final String NEW_MEETING_INTER_FRAGMENTS = "NEW_MEETING_INTER_FRAGMENTS";
 
     public AddMeetingFragment() {
         // Required empty public constructor
@@ -74,26 +74,22 @@ public class AddMeetingFragment extends Fragment {
                              Bundle savedInstanceState) {
         mBinding = FragmentAddMeetingBinding.inflate(inflater, container, false);
         mView = mBinding.getRoot();
-//        mView = inflater.inflate(R.layout.fragment_add_meeting, container, false);
         Context context = mView.getContext();
 
         mLieux = mDummyApiServiceSalles.getListeLieu();
-        ArrayAdapter<String> adapterLieux = new  ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, mLieux);
+        ArrayAdapter<String> adapterLieux = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, mLieux);
         mBinding.autoCompleteTextView.setAdapter(adapterLieux);
         mBinding.autoCompleteTextView.setThreshold(1);
 
-//        mParticipantsTextview = (MultiAutoCompleteTextView) mView.findViewById(R.id.multiAutoCompleteTextView);
         mDummyApiServiceCollaborateurs = new DummyApiServiceCollaborateurs();
         String[] participants = mDummyApiServiceCollaborateurs.getListeParticipants();
-        ArrayAdapter<String> adapterParticipants = new  ArrayAdapter<String>(context, android.R.layout.simple_list_item_1,participants);
+        ArrayAdapter<String> adapterParticipants = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, participants);
         mBinding.multiAutoCompleteTextView.setAdapter(adapterParticipants);
         mBinding.multiAutoCompleteTextView.setThreshold(1);
         mBinding.multiAutoCompleteTextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
-//        mOrganisateurTextView = (AutoCompleteTextView) mView.findViewById(R.id.autoCompleteTextView2);
-        //TODO : à modifier
         String[] organisateurs = participants;
-        ArrayAdapter<String> adapterOrganisateurs = new  ArrayAdapter<String>(context, android.R.layout.simple_list_item_1,organisateurs);
+        ArrayAdapter<String> adapterOrganisateurs = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, organisateurs);
         mBinding.autoCompleteTextView2.setAdapter(adapterOrganisateurs);
         mBinding.autoCompleteTextView2.setThreshold(1);
 
@@ -128,12 +124,11 @@ public class AddMeetingFragment extends Fragment {
         mBinding.autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mSalleDeReunion =mDummyApiServiceSalles.creerCatalogueLieu().get(parent.getItemAtPosition(position).toString());
+                mSalleDeReunion = mDummyApiServiceSalles.creerCatalogueLieu().get(parent.getItemAtPosition(position).toString());
                 mBinding.Couleur.setImageResource(mSalleDeReunion.getIcone().valeur());
             }
         });
 
-        //TODO : capture saisie setOnItemSelectedListener ou empêcher saisie
         mBinding.multiAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -163,31 +158,31 @@ public class AddMeetingFragment extends Fragment {
         });
     }
 
-//    Clean up any references to the binding class instance, because Fragments outlive their views
+    //    Clean up any references to the binding class instance, because Fragments outlive their views
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBinding=null;
+        mBinding = null;
     }
 
-    private List<Collaborateur> getListeParticipantsFromEmailSequence(String mailListWithComma){
+    private List<Collaborateur> getListeParticipantsFromEmailSequence(String mailListWithComma) {
         List<Collaborateur> participantList = new ArrayList<Collaborateur>();
 
         mEmailList = Arrays.asList(mailListWithComma.split(", "));
 
-        for (String email : mEmailList){
-            if(email==""){
+        for (String email : mEmailList) {
+            if (email == "") {
                 mEmailList.remove(email);
             }
         }
 
-        for (String email : mEmailList){
+        for (String email : mEmailList) {
             participantList.add(mDummyApiServiceCollaborateurs.creerCatalogueParticipant().get(email));
         }
-        return  participantList;
+        return participantList;
     }
 
-    private void onDateTimePickerDialogDebut(Context context){
+    private void onDateTimePickerDialogDebut(Context context) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -198,10 +193,11 @@ public class AddMeetingFragment extends Fragment {
                         TimePickerDialog timePickerDialog = new TimePickerDialog(context,
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
-                                    public void onTimeSet(TimePicker view, int heure,int minutes) {
+                                    public void onTimeSet(TimePicker view, int heure, int minutes) {
                                         String heureDebut = heure + "h" + minutes;
-                                        mBinding.DateHeureDebut.append(" "+heureDebut);
-                                        mDateHeureDebut = new DateHeure(dateDebut,heureDebut).formatParseDateHeure();                                    }
+                                        mBinding.DateHeureDebut.append(" " + heureDebut);
+                                        mDateHeureDebut = new DateHeure(dateDebut, heureDebut).formatParseDateHeure();
+                                    }
                                 }, mHeure, mMinutes, true);
                         timePickerDialog.show();
                     }
@@ -209,7 +205,7 @@ public class AddMeetingFragment extends Fragment {
         datePickerDialog.show();
     }
 
-    private void onDateTimePickerDialogFin(Context context){
+    private void onDateTimePickerDialogFin(Context context) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -224,8 +220,9 @@ public class AddMeetingFragment extends Fragment {
                                     public void onTimeSet(TimePicker view, int heure,
                                                           int minutes) {
                                         String heureFin = heure + "h" + minutes;
-                                        mBinding.DateHeureFin.append(" "+heureFin);
-                                        mDateHeureFin= new DateHeure(dateFin,heureFin).formatParseDateHeure();                                    }
+                                        mBinding.DateHeureFin.append(" " + heureFin);
+                                        mDateHeureFin = new DateHeure(dateFin, heureFin).formatParseDateHeure();
+                                    }
                                 }, mHeure, mMinutes, true);
                         timePickerDialog.show();
                     }
@@ -237,30 +234,29 @@ public class AddMeetingFragment extends Fragment {
     // ACTIONS
     // --------------
 
-    private void sendResultToFragmentManager(){
+    private void sendResultToFragmentManager() {
         mReunion = createReunion();
 //        EventBus.getDefault().post(new AddMeetingEvent(mReunion));
 
         Bundle resultat = new Bundle();
-        resultat.putSerializable(BUNDLE_EXTRA_MEETING,mReunion);
-        if (getActivity().getClass() == AddMeetingActivity.class){
-            getParentFragmentManager().setFragmentResult(NEW_MEETING_ACTIVITY_FRAGMENT,resultat);
+        resultat.putSerializable(BUNDLE_EXTRA_MEETING, mReunion);
+        if (getActivity().getClass() == AddMeetingActivity.class) {
+            getParentFragmentManager().setFragmentResult(NEW_MEETING_ACTIVITY_FRAGMENT, resultat);
         } else {
-            getParentFragmentManager().setFragmentResult(NEW_MEETING_INTER_FRAGMENTS,resultat);
+            getParentFragmentManager().setFragmentResult(NEW_MEETING_INTER_FRAGMENTS, resultat);
         }
-    };
+    }
 
-    private void closeWithoutResult(){
+    private void closeWithoutResult() {
         //Close AddMeetingActivity
-        if(getActivity().getClass() == AddMeetingActivity.class) {
-            getParentFragmentManager().setFragmentResult(NEW_MEETING_ACTIVITY_FRAGMENT,null);
+        if (getActivity().getClass() == AddMeetingActivity.class) {
+            getParentFragmentManager().setFragmentResult(NEW_MEETING_ACTIVITY_FRAGMENT, null);
         } else {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.frame_layout_other, new FragmentAccueil())
                     .commit();
         }
-    };
-
+    }
 
     public Reunion createReunion() {
         mSujet = mBinding.SujetBox.getEditText().getText().toString();
@@ -272,7 +268,6 @@ public class AddMeetingFragment extends Fragment {
                 mDateHeureDebut,
                 mDateHeureFin,
                 mOrganisateur);
-//        DONE : ajout à déplacer dans Fragment
         return reunion;
     }
 }

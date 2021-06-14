@@ -27,8 +27,6 @@ public class FilteringActivity extends AppCompatActivity {
 
     private ActivityFilteringBinding mBinding;
 
-    //Essayer DialogFragment au lieu de Fragment
-
     private ApiServiceSalles mDummyApiServiceSalles;
 
     private String mDateDebut;
@@ -42,50 +40,44 @@ public class FilteringActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding=ActivityFilteringBinding.inflate(getLayoutInflater());
+        mBinding = ActivityFilteringBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
 
         setSupportActionBar(mBinding.filterActionToolbar);
 
-        //Spinner : bordure et centrage texte
         data = getIntent();
         String[] dates = data.getStringArrayExtra(MainActivity.BUNDLE_FILTER_REUNIONS);
-        Log.d("SPINNER","Liste : "+dates.length);
-        ArrayAdapter<String> adapterDates = new  ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,dates);
-//        ArrayAdapter<CharSequence> adapterDates = ArrayAdapter.createFromResource(this,R.array.date_array, android.R.layout.simple_spinner_item);
+//        Log.d("SPINNER", "Liste : " + dates.length);
+        ArrayAdapter<String> adapterDates = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dates);
         adapterDates.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mBinding.FiltreDateSpinner.setAdapter(adapterDates);
 
-        mBinding.FiltreDateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        mBinding.FiltreDateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mDateDebut =parent.getItemAtPosition(position).toString();
+                mDateDebut = parent.getItemAtPosition(position).toString();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(parent.getContext(),"Aucune date sélectionnée",Toast.LENGTH_LONG).show();
+                Toast.makeText(parent.getContext(), "Aucune date sélectionnée", Toast.LENGTH_LONG).show();
             }
         });
-
-//        mFiltreSalletextview = (MultiAutoCompleteTextView) findViewById(R.id.FiltreSalles);
-        //TODO : instance unique mDummyApiServiceSalles du MainFragment?
 
         mDummyApiServiceSalles = DI_Salles.getServiceSalles();
         String[] lieux = mDummyApiServiceSalles.getListeLieu();
 
-        ArrayAdapter<String> adapterLieux = new  ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,lieux);
+        ArrayAdapter<String> adapterLieux = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lieux);
         mBinding.FiltreSalles.setAdapter(adapterLieux);
         mBinding.FiltreSalles.setThreshold(1);
         mBinding.FiltreSalles.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
     }
 
-    public static void navigateToFilteringActivity(Activity activity, int RequestCode, String name, String[] value){
-        Intent intent = new Intent(activity,FilteringActivity.class);
-        intent.putExtra(name,value);
-        ActivityCompat.startActivityForResult(activity,intent, RequestCode,null);
-
+    public static void navigateToFilteringActivity(Activity activity, int RequestCode, String name, String[] value) {
+        Intent intent = new Intent(activity, FilteringActivity.class);
+        intent.putExtra(name, value);
+        ActivityCompat.startActivityForResult(activity, intent, RequestCode, null);
     }
 
     @Override
@@ -110,27 +102,25 @@ public class FilteringActivity extends AppCompatActivity {
         }
     }
 
-    private void saveActivityResultAndThenClose(){
-        mSequenceLieux =mBinding.FiltreSalles.getText().toString();
-    if(mSequenceLieux !=""|| mDateDebut !="") {
-        Intent intent = new Intent();
-        if (mSequenceLieux != "") {
-            //        DONE : seriazable à faire pour réunion KO
-            intent.putExtra(BUNDLE_FILTER_ROOM, mSequenceLieux);
+    private void saveActivityResultAndThenClose() {
+        mSequenceLieux = mBinding.FiltreSalles.getText().toString();
+        if (mSequenceLieux != "" || mDateDebut != "") {
+            Intent intent = new Intent();
+            if (mSequenceLieux != "") {
+                intent.putExtra(BUNDLE_FILTER_ROOM, mSequenceLieux);
+            }
+            if (mDateDebut != "") {
+                intent.putExtra(BUNDLE_FILTER_DATE_START, mDateDebut);
+            }
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            Toast.makeText(this, "Veuillez saisir des critères", Toast.LENGTH_SHORT).show();
         }
+    }
 
-        if (mDateDebut != "") {
-            intent.putExtra(BUNDLE_FILTER_DATE_START, mDateDebut);
-        }
-        setResult(RESULT_OK, intent);
+    private void closeActivityWithoutSaving() {
+        setResult(RESULT_CANCELED, null);
         finish();
-    } else {
-        Toast.makeText(this,"Veuillez saisir des critères",Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    private void closeActivityWithoutSaving(){
-        setResult(RESULT_CANCELED,null);
-        finish();
-    };
+    }
 }

@@ -26,9 +26,11 @@ public interface ApiServiceReunions {
     List<Reunion> filtrerLieuEtDate(List<Reunion> reunions, List<Salle> salles, Date date);
 
     List<Reunion> trierLieuCroissant(List<Reunion> reunions);
+
     List<Reunion> trierLieuDecroissant(List<Reunion> reunions);
 
     List<Reunion> trierHeureCroissant(List<Reunion> reunions);
+
     List<Reunion> trierHeureDecroissant(List<Reunion> reunions);
 
     String[] getListeDate(List<Reunion> reunions);
