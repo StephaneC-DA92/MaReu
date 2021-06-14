@@ -20,6 +20,7 @@ public class AddMeetingActivity extends AppCompatActivity {
     private ActivityAddMeetingBinding mBinding;
 
     private AddMeetingFragment mAddMeetingFragment;
+    private static final String TAG_FRAGMENT_ACTIVITY_MEETING = "TAG_FRAGMENT_ACTIVITY_MEETING";
 
     public static final String BUNDLE_EXTRA_MEETING = "BUNDLE_EXTRA_MEETING";
     private static final String NEW_MEETING_ACTIVITY_FRAGMENT="NEW_MEETING_ACTIVITY_FRAGMENT";
@@ -108,12 +109,12 @@ public class AddMeetingActivity extends AppCompatActivity {
 
     private void configurerEtAfficherAddMeetingFragment(){
         //  Appel au SupportFragmentManager pour trouver une fragment exostant dans le conteneur FrameLayout
-        mAddMeetingFragment = (AddMeetingFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout_add_meeting);
+        mAddMeetingFragment = (AddMeetingFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_ACTIVITY_MEETING);
 
         if (mAddMeetingFragment == null) {
             mAddMeetingFragment = new AddMeetingFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_layout_add_meeting, mAddMeetingFragment)
+                    .add(R.id.frame_layout_add_meeting, mAddMeetingFragment,TAG_FRAGMENT_ACTIVITY_MEETING)
                     .commit();
         }
     }

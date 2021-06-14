@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by CodeurSteph on 17/05/2021
  */
 public class DummyApiServiceCollaborateurs implements ApiServiceCollaborateurs{
-    private List<Collaborateur> collaborateurs = GenerateurCollaborateurs.COLLABORATEURS_LAMZONE;
+    private List<Collaborateur> collaborateurs = GenerateurCollaborateurs.genererCollaborateurs();
     private Map<String, Collaborateur> mCatalogueParticipant;
 
     @Override

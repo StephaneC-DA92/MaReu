@@ -19,6 +19,8 @@ import com.companyx.mareu.controller.fragments.FragmentAccueil;
 import com.companyx.mareu.controller.fragments.MainFragment;
 import com.companyx.mareu.data.ApiServiceSalles;
 import com.companyx.mareu.data.DummyApiServiceSalles;
+import com.companyx.mareu.databinding.ActivityAddMeetingBinding;
+import com.companyx.mareu.databinding.ActivityMainBinding;
 import com.companyx.mareu.di.DI_Salles;
 import com.companyx.mareu.model.DateHeure;
 import com.companyx.mareu.model.Reunion;
@@ -32,27 +34,31 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MainFragment mMainFragment;
+    private ActivityMainBinding mBinding;
 
+    private MainFragment mMainFragment;
     private FragmentAccueil mFragmentAccueil;
     private AddMeetingFragment mAddMeetingFragment;
 
-    private FloatingActionButton mButton;
+    private static final String TAG_FRAGMENT_MAIN = "TAG_FRAGMENT_MAIN";
+    private static final String TAG_FRAGMENT_MEETING = "TAG_FRAGMENT_MEETING";
+    private static final String TAG_FRAGMENT_ACCUEIL = "TAG_FRAGMENT_ACCUEIL";
 
     public static final int NEW_MEETING_ACTIVITY_CODE = 98;
+
     public static final int FILTER_ACTIVITY_CODE = 90;
 
     public static final String BUNDLE_FILTER_REUNIONS = "BUNDLE_FILTER_REUNIONS";
-
     private String listeLieux, dateDebut ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mBinding= ActivityMainBinding.inflate(getLayoutInflater());
+        View view = mBinding.getRoot();
+        setContentView(view);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
+        setSupportActionBar(mBinding.toolbar);
 
 //        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 //        requestWindowFeature(Window.FEATURE_ACTION_BAR);
@@ -63,9 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         configurerEtAfficherFragmentAccueil();
 
-        mButton = (FloatingActionButton) findViewById(R.id.add_meeting);
-
-        mButton.setOnClickListener(new View.OnClickListener() {
+        mBinding.addMeeting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Fragment AddMeetingFragment pour tablette sw600dp en mode paysage
@@ -165,26 +169,32 @@ public class MainActivity extends AppCompatActivity {
         if (mMainFragment == null) {
             mMainFragment = new MainFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_layout_main, mMainFragment)
+                    .add(R.id.frame_layout_main, mMainFragment,TAG_FRAGMENT_MAIN)
                     .commit();
         }
     }
 
     public void configurerEtAfficherFragmentAccueil() {
-        //Fragment accueil pour tablette sw600dp en mode paysage
-        if (findViewById(R.id.frame_layout_other) != null && !(getSupportFragmentManager().findFragmentById(R.id.frame_layout_other) instanceof FragmentAccueil)) {
-            mFragmentAccueil = new FragmentAccueil();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_layout_other, mFragmentAccueil)
-                    .commit();
+        if (findViewById(R.id.frame_layout_other) != null) {
+            mFragmentAccueil = (FragmentAccueil) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_ACCUEIL);
+
+            //Fragment accueil pour tablette sw600dp en mode paysage
+            if (mFragmentAccueil == null) {
+                mFragmentAccueil = new FragmentAccueil();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.frame_layout_other, mFragmentAccueil, TAG_FRAGMENT_ACCUEIL)
+                        .commit();
+            }
         }
     }
 
     private void configurerEtAfficherFragmentAddMeeting(){
-       if (getSupportFragmentManager().findFragmentById(R.id.frame_layout_other) ==null || !(getSupportFragmentManager().findFragmentById(R.id.frame_layout_other) instanceof AddMeetingFragment)) {
+        mAddMeetingFragment = (AddMeetingFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_MEETING);
+
+        if (mAddMeetingFragment == null) {
             mAddMeetingFragment = new AddMeetingFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame_layout_other, mAddMeetingFragment)
+                    .replace(R.id.frame_layout_other, mAddMeetingFragment,TAG_FRAGMENT_MEETING)
                     .commit();
         }
     }

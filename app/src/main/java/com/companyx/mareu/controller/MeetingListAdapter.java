@@ -25,8 +25,6 @@ public class MeetingListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private List<Reunion> mListeDeReunions;
 
-    public static final String BUNDLE_STATE_SCORE = "currentScore";
-
     //    Constructeur de l'adapter
     public MeetingListAdapter(List<Reunion> listeDeReunions) {
         mListeDeReunions = listeDeReunions;
@@ -45,7 +43,6 @@ public class MeetingListAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
     Reunion reunion = mListeDeReunions.get(position);
 
-    //Todo : à moduler : methode getdrawable, au lieu de switch
         viewHolder.setDrawable(reunion.getSalle().getIcone().valeur());
 
         viewHolder.getMeetingDetailsText()

@@ -19,7 +19,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public ImageView mMeetingIcon;
     public TextView mMeetingDetailsText;
     public TextView mMeetingParticipantsText;
-    public View mItemView;
 
     public ImageButton mDeleteButton;
 

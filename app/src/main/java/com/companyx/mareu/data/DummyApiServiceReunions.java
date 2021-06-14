@@ -21,12 +21,8 @@ import java.util.Map;
  * Created by CodeurSteph on 17/05/2021
  */
 public class DummyApiServiceReunions implements ApiServiceReunions{
-    private List<Reunion> mReunions=new ArrayList<Reunion>();
+    private List<Reunion> mReunions = GenerateurReunions.genererReunions();
     private Map<String, Date> mCatalogueDate;
-
-    public void initialisationData(){
-        mReunions = creerListeDeReunions(12);
-    }
 
     @Override
     public List<Reunion> getListeReunions() {
@@ -81,11 +77,12 @@ public class DummyApiServiceReunions implements ApiServiceReunions{
     @Override
     public List<Reunion> trierLieuCroissant(List<Reunion> reunions) {
 //        initial capacity of ten new ArrayList<Reunion>()
-        List<Reunion> reunionsTriees=new ArrayList<Reunion>();
-        reunionsTriees.addAll(reunions);
+        List<Reunion> reunionsTriees=new ArrayList<>(reunions);
+//        reunionsTriees.addAll(reunions);
         for(int i=0;i<reunionsTriees.size()-1;i++){
             for(int j=0;j<reunionsTriees.size()-1-i;j++) {
-                if (reunionsTriees.get(j).getSalle().getCouleur().valeur() > reunionsTriees.get(j+1).getSalle().getCouleur().valeur()) {
+//                if (reunionsTriees.get(j).getSalle().getCouleur().valeur() > reunionsTriees.get(j+1).getSalle().getCouleur().valeur()) {
+                if (reunionsTriees.get(j).getSalle().getLieu().compareTo(reunionsTriees.get(j+1).getSalle().getLieu()) > 0) {
                     Collections.swap(reunionsTriees, j, j+1);
                 }
             }
@@ -100,8 +97,9 @@ public class DummyApiServiceReunions implements ApiServiceReunions{
 //        Reunion[] tableauReunionsTriees = new Reunion[reunions.size()];
         for(int i=0;i<reunionsTriees.size()-1;i++){
             for(int j=0;j<reunionsTriees.size()-1-i;j++) {
-                if (reunionsTriees.get(j).getSalle().getCouleur().valeur() < reunionsTriees.get(j+1).getSalle().getCouleur().valeur()) {
-                    Collections.swap(reunionsTriees, j, j+1);
+//                if (reunionsTriees.get(j).getSalle().getCouleur().valeur() < reunionsTriees.get(j+1).getSalle().getCouleur().valeur()) {
+                    if (reunionsTriees.get(j).getSalle().getLieu().compareTo(reunionsTriees.get(j+1).getSalle().getLieu()) < 0) {
+                        Collections.swap(reunionsTriees, j, j+1);
 /*                    tableauReunionsTriees[j-1]=reunions.get(j);
                     tableauReunionsTriees[j]=reunions.get(j-1);
                 } else {
@@ -140,44 +138,6 @@ public class DummyApiServiceReunions implements ApiServiceReunions{
             }
         }
         return reunionsTriees;
-    }
-
-    public static List<Reunion> creerListeDeReunions(int numReunions) {
-        List<Reunion> reunions = new ArrayList<Reunion>();
-
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy HH:mm");
-        ParsePosition pp = new ParsePosition(0);
-/*        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE);
-        Date mDate = df.parse("3:30pm",pp);*/
-
-        DummyApiServiceSalles salleApiService = new DummyApiServiceSalles();
-        DummyApiServiceCollaborateurs collaborateurApiService = new DummyApiServiceCollaborateurs();
-
-        for (int i = 0; i < numReunions; i++) {
-//            Salle salle = new Salle("Peach"+i,"France",i+2, Salle.Couleur.Vert);
-            int n;
-            n=i/10;
-            int m = i-n*10;
-            Salle salle = salleApiService.getListeSalle().get(m);
-
-                List<Collaborateur> Participants = new ArrayList<Collaborateur>();
-//                List<Participant> Participants = new ArrayList<Participant>();
-                for (int j = 0; j <= i; j++) {
-                    Participants.add(collaborateurApiService.getListeCollaborateur().get(j));
-//                    Participants.add((Participant) collaborateurApiService.getListeCollaborateur().get(j));
-                }
-//            Organisateur organisateur = new Organisateur("OrganisaTest"+i,"DeTesteur"+i,"IdCol-0"+i,i+"Test.DeTesteur@Lamzone.com");
-            Collaborateur organisateur = collaborateurApiService.getListeCollaborateur().get(i);
-
-            Reunion reunion1 = new Reunion(salle, "Réunion sujet "+i,Participants, new DateHeure("22/05/2021", i+"h30").formatParseDateHeure(),new DateHeure("22/05/2021", i+1+"h30").formatParseDateHeure(),organisateur);
-            Reunion reunion2 = new Reunion(salle, "Réunion sujet "+i+"bis",Participants, new DateHeure("01/06/2021", i+"h30").formatParseDateHeure(),new DateHeure("01/06/2021", i+1+"h30").formatParseDateHeure(),organisateur);
-
-            reunions.add(reunion1);
-            reunions.add(reunion2);
-/*            Log.e("Réunion générée :",reunions.get(i).getSujet());
-            Log.e("Participants générés :",reunions.get(i).getParticipants().toString());*/
-        }
-        return reunions;
     }
 
     public String[] getListeDate(List<Reunion> reunions){

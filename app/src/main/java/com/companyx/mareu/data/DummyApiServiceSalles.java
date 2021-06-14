@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by CodeurSteph on 17/05/2021
  */
 public class DummyApiServiceSalles implements ApiServiceSalles{
-    private List<Salle> salles = GenerateurSalles.SALLES_LAMZONE;
+    private List<Salle> salles = GenerateurSalles.genererSalles();
     private Map<String,Salle> mCatalogueLieu;
 
     @Override

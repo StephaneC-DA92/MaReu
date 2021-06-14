@@ -80,7 +80,7 @@ public class MainFragment extends Fragment
 
         mDummyApiServiceReunions= DI_Reunions.getServiceReunions();
         //TODO : à supprimer après developpement
-        mDummyApiServiceReunions.initialisationData();
+        mDummyApiServiceReunions.getListeReunions();
 
         mFragmentStatut = Statut.SansFiltre;
 
@@ -132,7 +132,6 @@ public class MainFragment extends Fragment
 /*    @Override
     public void onButtonClicked(View view,Reunion reunion) {
         mDummyApiServiceReunions.deleteReunionItem(reunion);
-//        TODO : utilité à vérifier
         mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
         initialisationAdapterListeReunions(mReunionsAffichees,"ADAPTER_DELETION");
 //        Log.e("ADAPTER_DELETION","Nombre items : -1");
@@ -145,18 +144,18 @@ public class MainFragment extends Fragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mBinding=null;
-        Log.d("ON_DESTROY_MAINFRAGMENT","MainFragment");
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
         Log.d("ON_STOP_MAINFRAGMENT","MainFragment");
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBinding=null;
+        Log.d("ON_DESTROY_MAINFRAGMENT","MainFragment");
     }
 
     /**
@@ -166,7 +165,6 @@ public class MainFragment extends Fragment
     @Subscribe
     public void onDeleteMeeting(DeleteMeetingEvent event) {
         mDummyApiServiceReunions.deleteReunionItem(event.reunion);
-//        TODO : utilité à vérifier
         mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
         initialisationAdapterListeReunions("ADAPTER_DELETION",mReunionsAffichees);
     }
@@ -174,8 +172,9 @@ public class MainFragment extends Fragment
 /*    @Subscribe
     public void onAddMeeting(AddMeetingEvent event) {
         ajouterNouvelleReunion(event.reunion);
-//TODO : informer MainActivity
-}*/
+        mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
+        initialisationAdapterListeReunions("ADAPTER_ADDING",mReunionsAffichees);
+        }*/
 
     public void ajouterNouvelleReunion(Reunion reunion){
         mDummyApiServiceReunions.addReunionItem(reunion);

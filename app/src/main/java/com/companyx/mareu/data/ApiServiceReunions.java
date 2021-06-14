@@ -13,8 +13,6 @@ import java.util.List;
  */
 public interface ApiServiceReunions {
 
-    void initialisationData();
-
     List<Reunion> getListeReunions();
 
     void addReunionItem(Reunion reunion);

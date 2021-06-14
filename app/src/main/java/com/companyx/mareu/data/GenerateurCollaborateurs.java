@@ -1,7 +1,9 @@
 package com.companyx.mareu.data;
 
 import com.companyx.mareu.model.Collaborateur;
+import com.companyx.mareu.model.Reunion;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -37,5 +39,9 @@ public abstract class GenerateurCollaborateurs {
         }
     }
 */
+
+    static List<Collaborateur> genererCollaborateurs() {
+        return new ArrayList<>(COLLABORATEURS_LAMZONE);
+    }
 
 }
