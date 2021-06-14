@@ -72,8 +72,11 @@ Stéphane
  	<img src="vysor_add_meeting.PNG" width="24%" style="margin-left:10px;" >
  </div>
  
-* L'utilisateur supprime une réunion  
-![Liste_de_reunions_suppression](/vysor_delete_meeting.PNG)  
+* L'utilisateur supprime une réunion 
+
+ <div style="display:flex;" >
+ 	<img src="/vysor_delete_meeting.PNG" width="24%">
+ </div> 
 
 ## Tests
 * Tests unitaires locaux
