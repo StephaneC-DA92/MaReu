@@ -73,7 +73,7 @@ public class MainFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("ON_CREATE_MAINFRAGMENT", "new MainFragment");
+//        Log.d("ON_CREATE_MAINFRAGMENT", "new MainFragment");
 
         mDummyApiServiceReunions = DI_Reunions.getServiceReunions();
         mDummyApiServiceReunions.getListeReunions();
@@ -113,7 +113,6 @@ public class MainFragment extends Fragment{
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 //        Log.d("ON_ATTACH_FRAGMENT", "MainFragment avec id : " + getId() + "et host : " + getHost().toString() + "Activity : " + getActivity().toString() + "Context : " + getContext().toString());
-
     }
 
     @Override
@@ -168,7 +167,7 @@ public class MainFragment extends Fragment{
         initialisationAdapterListeReunions("ADAPTER_ADDING", mReunionsAffichees);
     }
 
-    //Pattern comportement : Strategy ?
+    //Pattern comportement
     public void sansFiltrer() {
         mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
         initialisationAdapterListeReunions("ADAPTER_REINIT", mReunionsAffichees);
@@ -192,12 +191,11 @@ public class MainFragment extends Fragment{
     private void initialisationAdapterListeReunions(String tag, List<Reunion> reunions) {
         MeetingListAdapter adapter = new MeetingListAdapter(reunions);
         mRecyclerView.setAdapter(adapter);
-//        adapter.setOnDeleteButtonClickListener(this);
 
 //        Log.d(tag, "Nombre items : " + adapter.getItemCount());
         mDates = mDummyApiServiceReunions.getListeDate(mReunionsAffichees);
-        mNombreReunionsAffichees = mReunionsAffichees.size();
 
+        mNombreReunionsAffichees = mReunionsAffichees.size();
         if (mNombreReunionsAffichees == 0) {
             mBinding.messageAccueil.setText(R.string.message_accueil);
         }

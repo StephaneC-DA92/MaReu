@@ -59,6 +59,7 @@ public class AddMeetingActivityTest_ForcingExecution {
 
     @Before
     public void setUp() throws Exception {
+        //Essayer DI ici
       /*  Intent intent = new Intent();
         mActivityTestRule.launchActivity(intent);*/
         mActivity = mActivityTestRule.getActivity();

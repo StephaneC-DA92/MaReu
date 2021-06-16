@@ -38,6 +38,7 @@ public class DummyApiServiceReunionsTest {
 
     @Before
     public void setup() {
+        //API unique possible pour DI
         serviceReunions = DI_Reunions.getNewInstanceServiceReunions();
         serviceSalles = DI_Salles.getNewInstanceServiceSalles();
         serviceCollaborateurs = DI_Collaborateurs.getNewInstanceServiceCollaborateurs();

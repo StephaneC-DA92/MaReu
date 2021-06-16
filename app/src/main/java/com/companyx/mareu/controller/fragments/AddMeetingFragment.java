@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.companyx.mareu.R;
 import com.companyx.mareu.controller.activities.AddMeetingActivity;
@@ -153,7 +154,11 @@ public class AddMeetingFragment extends Fragment {
         mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(checkReunion()){
                 sendResultToFragmentManager();
+                } else {
+                    Toast.makeText(getContext(), "Veuillez saisir tous les détails de la réunion", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -188,14 +193,15 @@ public class AddMeetingFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int annee, int mois, int jour) {
                         String dateDebut = jour + "/" + (mois + 1) + "/" + annee;
-                        mBinding.DateHeureDebut.setText(dateDebut);
+//                        mBinding.DateHeureDebut.setText(dateDebut);
 
                         TimePickerDialog timePickerDialog = new TimePickerDialog(context,
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker view, int heure, int minutes) {
                                         String heureDebut = heure + "h" + minutes;
-                                        mBinding.DateHeureDebut.append(" " + heureDebut);
+//                                        mBinding.DateHeureDebut.append(" " + heureDebut);
+                                        mBinding.DateHeureDebut.setText(dateDebut+" " + heureDebut);
                                         mDateHeureDebut = new DateHeure(dateDebut, heureDebut).formatParseDateHeure();
                                     }
                                 }, mHeure, mMinutes, true);
@@ -211,7 +217,7 @@ public class AddMeetingFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int annee, int mois, int jour) {
                         String dateFin = jour + "/" + (mois + 1) + "/" + annee;
-                        mBinding.DateHeureFin.setText(dateFin);
+//                        mBinding.DateHeureFin.setText(dateFin);
 
                         TimePickerDialog timePickerDialog = new TimePickerDialog(context,
                                 new TimePickerDialog.OnTimeSetListener() {
@@ -220,7 +226,8 @@ public class AddMeetingFragment extends Fragment {
                                     public void onTimeSet(TimePicker view, int heure,
                                                           int minutes) {
                                         String heureFin = heure + "h" + minutes;
-                                        mBinding.DateHeureFin.append(" " + heureFin);
+//                                        mBinding.DateHeureFin.append(" " + heureFin);
+                                        mBinding.DateHeureFin.setText(dateFin +" " + heureFin);
                                         mDateHeureFin = new DateHeure(dateFin, heureFin).formatParseDateHeure();
                                     }
                                 }, mHeure, mMinutes, true);
@@ -269,5 +276,13 @@ public class AddMeetingFragment extends Fragment {
                 mDateHeureFin,
                 mOrganisateur);
         return reunion;
+    }
+
+    private boolean checkReunion(){
+        if(mSalleDeReunion == null||mSujet==""||mParticipants==null||mDateHeureDebut==null||mDateHeureFin==null||mOrganisateur==null){
+            return false;
+        } else {
+            return true;
+        }
     }
 }

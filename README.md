@@ -7,9 +7,9 @@ Ce dépôt contient une application pour le P4 du parcours **PRFE3**.
 ## Table des matières
 1. [Informations générales]
 2. [Technologies]
-6. [Tests]
-7. [Screenshots]
-8. [Crédits]
+3. [Tests]
+4. [Screenshots]
+5. [Crédits]
 
 ## Informations générales
 Nom du projet : **MaRéu**
@@ -47,13 +47,13 @@ Pour une application supportant Android 5.0 (API21) et ses versions supérieures
 ### Statut :
 En cours de développement
 
-#### Modifications prévues : roadmap
-Empêcher création de doublon avec message d'avertissement
-Vérifier les places disponibles dans la salle de la réunion en cours de création
-Gestion des exceptions en cas de validation de formulaire avec données manquantes
+#### Modifications possibles : roadmap
+Gestion des exceptions pour formulaire filtre
+Gestion des tentatives de création de doublon
+Gestion des places disponibles en salle pour création de réunion
 
 ### Auteur :
-Stéphane
+Stéphane C
 
 ## Screenshots
 * L'utilisateur filtre les réunions pour la consultation de liste, avec des options de tri. 
@@ -79,7 +79,7 @@ Stéphane
  </div> 
 
 ## Tests
-* Tests unitaires locaux
+* Tests unitaires
     * com\companyx\mareu\data\DummyApiServiceReunionsTest.java
         * filtrerLieu()
         * filtrerPlusieursLieux()
@@ -93,7 +93,7 @@ Stéphane
             * trierDateDecroissant()
             * trierDateCroissant()
 
-* Tests unitaires instrumentés
+* Tests instrumentalisés
     * com\companyx\mareu\controller\activities\MainActivityTest.java
         * onMainActivityReunionListShouldBeDisplayed()
         * onDeleteClickReunionListShouldBeDisplayedMinusITem()

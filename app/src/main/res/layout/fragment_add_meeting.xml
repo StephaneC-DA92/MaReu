@@ -30,9 +30,10 @@
 
         <EditText
             android:id="@+id/DateHeureDebut"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="20dp"
             android:inputType="datetime"
             android:hint="Heure de début"
             android:clickable="false"
@@ -41,15 +42,15 @@
             android:focusableInTouchMode="false"
             android:drawableStart="@drawable/ic_baseline_access_time_24"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/DateHeureFin"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/SujetBox"
-            app:layout_constraintBottom_toTopOf="@id/frame_salle" />
+            app:layout_constraintBottom_toTopOf="@id/DateHeureFin" />
 
         <EditText
             android:id="@+id/DateHeureFin"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginHorizontal="20dp"
             android:inputType="datetime"
             android:hint="Heure de fin"
             android:clickable="false"
@@ -57,9 +58,9 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:drawableStart="@drawable/ic_baseline_access_time_24"
-            app:layout_constraintStart_toEndOf="@+id/DateHeureDebut"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/SujetBox"
+            app:layout_constraintTop_toBottomOf="@id/DateHeureDebut"
             app:layout_constraintBottom_toTopOf="@id/frame_salle" />
 
         <LinearLayout
@@ -67,10 +68,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginHorizontal="20dp"
+            android:layout_margin="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/DateHeureDebut"
+            app:layout_constraintTop_toBottomOf="@+id/DateHeureFin"
             app:layout_constraintBottom_toTopOf="@id/multiAutoCompleteTextView">
 
             <AutoCompleteTextView
@@ -129,9 +130,8 @@
             app:backgroundTint="@color/blue_1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/autoCompleteTextView2"
             app:srcCompat="@drawable/ic_baseline_check_24"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginEnd="20dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -141,9 +141,8 @@
             app:backgroundTint="@color/blue_1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/autoCompleteTextView2"
             app:srcCompat="@drawable/ic_baseline_close_24"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginStart="20dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

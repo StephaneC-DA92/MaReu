@@ -41,8 +41,8 @@ public abstract class GenerateurReunions {
 
             Collaborateur organisateur = collaborateurApiService.getListeCollaborateur().get(i);
 
-            Reunion reunion1 = new Reunion(salle, "Réunion sujet " + i, Participants, new DateHeure("22/05/2021", i + "h30").formatParseDateHeure(), new DateHeure("22/05/2021", i + 1 + "h30").formatParseDateHeure(), organisateur);
-            Reunion reunion2 = new Reunion(salle, "Réunion sujet " + i + "bis", Participants, new DateHeure("01/06/2021", i + "h30").formatParseDateHeure(), new DateHeure("01/06/2021", i + 1 + "h30").formatParseDateHeure(), organisateur);
+            Reunion reunion1 = new Reunion(salle, "Réunion A" + i, Participants, new DateHeure("22/05/2021", i + "h30").formatParseDateHeure(), new DateHeure("22/05/2021", i + 1 + "h30").formatParseDateHeure(), organisateur);
+            Reunion reunion2 = new Reunion(salle, "Réunion B" + i, Participants, new DateHeure("01/06/2021", i + "h30").formatParseDateHeure(), new DateHeure("01/06/2021", i + 1 + "h30").formatParseDateHeure(), organisateur);
 
             reunions.add(reunion1);
             reunions.add(reunion2);
