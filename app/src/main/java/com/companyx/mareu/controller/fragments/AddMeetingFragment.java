@@ -193,14 +193,12 @@ public class AddMeetingFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int annee, int mois, int jour) {
                         String dateDebut = jour + "/" + (mois + 1) + "/" + annee;
-//                        mBinding.DateHeureDebut.setText(dateDebut);
 
                         TimePickerDialog timePickerDialog = new TimePickerDialog(context,
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker view, int heure, int minutes) {
                                         String heureDebut = heure + "h" + minutes;
-//                                        mBinding.DateHeureDebut.append(" " + heureDebut);
                                         mBinding.DateHeureDebut.setText(dateDebut+" " + heureDebut);
                                         mDateHeureDebut = new DateHeure(dateDebut, heureDebut).formatParseDateHeure();
                                     }
@@ -217,7 +215,6 @@ public class AddMeetingFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int annee, int mois, int jour) {
                         String dateFin = jour + "/" + (mois + 1) + "/" + annee;
-//                        mBinding.DateHeureFin.setText(dateFin);
 
                         TimePickerDialog timePickerDialog = new TimePickerDialog(context,
                                 new TimePickerDialog.OnTimeSetListener() {
@@ -226,7 +223,6 @@ public class AddMeetingFragment extends Fragment {
                                     public void onTimeSet(TimePicker view, int heure,
                                                           int minutes) {
                                         String heureFin = heure + "h" + minutes;
-//                                        mBinding.DateHeureFin.append(" " + heureFin);
                                         mBinding.DateHeureFin.setText(dateFin +" " + heureFin);
                                         mDateHeureFin = new DateHeure(dateFin, heureFin).formatParseDateHeure();
                                     }
@@ -243,7 +239,6 @@ public class AddMeetingFragment extends Fragment {
 
     private void sendResultToFragmentManager() {
         mReunion = createReunion();
-//        EventBus.getDefault().post(new AddMeetingEvent(mReunion));
 
         Bundle resultat = new Bundle();
         resultat.putSerializable(BUNDLE_EXTRA_MEETING, mReunion);

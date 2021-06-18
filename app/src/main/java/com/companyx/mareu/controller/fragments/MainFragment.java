@@ -178,7 +178,6 @@ public class MainFragment extends Fragment{
         MeetingListAdapter adapter = new MeetingListAdapter(reunions);
         mRecyclerView.setAdapter(adapter);
 
-//        Log.d(tag, "Nombre items : " + adapter.getItemCount());
         mDates = mDummyApiServiceReunions.getListeDate(mReunionsAffichees);
 
         mNombreReunionsAffichees = mReunionsAffichees.size();

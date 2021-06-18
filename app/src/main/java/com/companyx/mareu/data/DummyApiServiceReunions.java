@@ -109,7 +109,6 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
         String[] choix = new String[n + 1];
         lChoix.add(0, "");
         lChoix.toArray(choix);
-//        Log.d("DUMMY_REUNIONS","getListeDate : "+choix.length+"# items : "+(choix.length-1));
         return choix;
     }
 }
