@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
 
         setSupportActionBar(mBinding.toolbar);
-//        Log.d("ON_CREATE_ACTIVITY", "MainActivity");
 
         configurerEtAfficherMainFragment();
 
@@ -96,26 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.sansFiltre:
                 mMainFragment.sansFiltrer();
-                break;
-
-            case R.id.tri_lieu_croissant:
-                mMainFragment.trierLieuCroissant();
-                break;
-
-            case R.id.tri_lieu_decroissant:
-                mMainFragment.trierLieuDecroissant();
-                break;
-
-            case R.id.tri_heure_croissante:
-                mMainFragment.trierHeureCroissant();
-                break;
-
-            case R.id.tri_heure_decroissante:
-                mMainFragment.trierHeureDecroissant();
-                break;
-
-            case R.id.sans_tri:
-                mMainFragment.sansTrier();
                 break;
         }
         return super.onOptionsItemSelected(item);

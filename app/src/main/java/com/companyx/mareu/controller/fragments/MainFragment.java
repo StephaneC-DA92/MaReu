@@ -13,18 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.companyx.mareu.R;
 import com.companyx.mareu.controller.MeetingListAdapter;
 import com.companyx.mareu.data.ApiServiceReunions;
 import com.companyx.mareu.data.ApiServiceSalles;
-import com.companyx.mareu.data.DummyApiServiceReunions;
-import com.companyx.mareu.databinding.FragmentAddMeetingBinding;
 import com.companyx.mareu.databinding.FragmentMainBinding;
 import com.companyx.mareu.di.DI_Reunions;
 import com.companyx.mareu.di.DI_Salles;
-import com.companyx.mareu.events.AddMeetingEvent;
 import com.companyx.mareu.events.DeleteMeetingEvent;
 import com.companyx.mareu.model.DateHeure;
 import com.companyx.mareu.model.Reunion;
@@ -73,7 +69,6 @@ public class MainFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Log.d("ON_CREATE_MAINFRAGMENT", "new MainFragment");
 
         mDummyApiServiceReunions = DI_Reunions.getServiceReunions();
         mDummyApiServiceReunions.getListeReunions();
@@ -98,12 +93,12 @@ public class MainFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        Log.d("ON_CREATEVIEW_MAINFRAG", "Recycler");
 
         mBinding = FragmentMainBinding.inflate(inflater, container, false);
         mView = mBinding.getRoot();
         Context context = mView.getContext();
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.meeting_item_list);
+        mRecyclerView = mBinding.meetingItemList;
+//        mRecyclerView = (RecyclerView) mView.findViewById(R.id.meeting_item_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         return mView;
@@ -112,14 +107,12 @@ public class MainFragment extends Fragment{
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-//        Log.d("ON_ATTACH_FRAGMENT", "MainFragment avec id : " + getId() + "et host : " + getHost().toString() + "Activity : " + getActivity().toString() + "Context : " + getContext().toString());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         rafraichirAffichage(mFragmentStatut);
-//        Log.d("ON_RESUME_MAINFRAGMENT", "Rafraîchissement");
     }
 
     @Override
@@ -153,13 +146,6 @@ public class MainFragment extends Fragment{
         mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
         initialisationAdapterListeReunions("ADAPTER_DELETION", mReunionsAffichees);
     }
-
-/*    @Subscribe
-    public void onAddMeeting(AddMeetingEvent event) {
-        ajouterNouvelleReunion(event.reunion);
-        mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
-        initialisationAdapterListeReunions("ADAPTER_ADDING",mReunionsAffichees);
-        }*/
 
     public void ajouterNouvelleReunion(Reunion reunion) {
         mDummyApiServiceReunions.addReunionItem(reunion);
@@ -220,30 +206,6 @@ public class MainFragment extends Fragment{
         }
     }
 
-    public void trierLieuCroissant() {
-        mReunionsTriees = mDummyApiServiceReunions.trierLieuCroissant(mReunionsAffichees);
-        initialisationAdapterListeReunions("TRI_SALLE_CR", mReunionsTriees);
-    }
-
-    public void trierLieuDecroissant() {
-        mReunionsTriees = mDummyApiServiceReunions.trierLieuDecroissant(mReunionsAffichees);
-        initialisationAdapterListeReunions("TRI_SALLE_DECR", mReunionsTriees);
-    }
-
-    public void trierHeureCroissant() {
-        mReunionsTriees = mDummyApiServiceReunions.trierHeureCroissant(mReunionsAffichees);
-        initialisationAdapterListeReunions("TRI_HEURE_CR", mReunionsTriees);
-    }
-
-    public void trierHeureDecroissant() {
-        mReunionsTriees = mDummyApiServiceReunions.trierHeureDecroissant(mReunionsAffichees);
-        initialisationAdapterListeReunions("TRI_HEURE_DECR", mReunionsTriees);
-    }
-
-    public void sansTrier() {
-        mReunionsTriees = mReunionsAffichees;
-        initialisationAdapterListeReunions("SANS_TRI", mReunionsTriees);
-    }
 
     public void filtrerAffichageListe(String listeLieux, String dateDebut) {
         if (listeLieux.compareTo("") != 0) {
@@ -274,9 +236,6 @@ public class MainFragment extends Fragment{
             if (lieu == "") {
                 listeLieux.remove(lieu);
             }
-        }
-
-        for (String lieu : listeLieux) {
             listeSalles.add(mDummyApiServiceSalles.creerCatalogueLieu().get(lieu));
         }
         return listeSalles;

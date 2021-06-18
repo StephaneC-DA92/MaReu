@@ -27,9 +27,6 @@ Application de gestion de réunions
 * Filtre des réunions par date ou par lieu
 * Gestion de l’affichage responsive sur toutes les tailles de téléphone et de tablette Android, en modes portrait et paysage.
 
-Options supplémentaires :
-* Tri par date croissante/décroissante
-* Tri par lieu croissant/décroissant
 
 ## Technologies
 Liste des technologies utilisées dans ce projet
@@ -45,7 +42,7 @@ Version de SdK min : 21
 Pour une application supportant Android 5.0 (API21) et ses versions supérieures
 
 ### Statut :
-En cours de développement
+En cours de validation
 
 #### Modifications possibles : roadmap
 Gestion des exceptions pour formulaire filtre
@@ -62,7 +59,6 @@ Stéphane C
  	<img src="/vysor_list.PNG" width="24%">
  	<img src="vysor_list_filtering.PNG" width="24%" style="margin-left:10px;" >
     <img src="vysor_filtering.PNG" width="24%" style="margin-left:10px;" >
-    <img src="vysor_list_sorting.PNG" width="24%" style="margin-left:10px;" >
  </div>
 
 * L'utilisateur ajoute une réunion  
@@ -87,26 +83,13 @@ Stéphane C
         * filtrerDateEtLieu()
         * ajouterReunion()
         * supprimerReunion()            
-            Options supplémentaires :
-            * trierLieuCroissant()
-            * trierLieuDecroissant()
-            * trierDateDecroissant()
-            * trierDateCroissant()
+
 
 * Tests instrumentalisés
     * com\companyx\mareu\controller\activities\MainActivityTest.java
         * onMainActivityReunionListShouldBeDisplayed()
         * onDeleteClickReunionListShouldBeDisplayedMinusITem()
         * onNoFilterActionRawListShouldBeDisplayed()
-            Options supplémentaires :
-            * onRoomDownSortingActionSortedListShouldBeDisplayed()
-            * onDateUpSortingActionSortedListShouldBeDisplayed()
-            * onDateDownSortingActionSortedListShouldBeDisplayed()
-            * onNoSortingActionSortedListShouldBeDisplayed()
-
-    * com\companyx\mareu\controller\activities\MainActivityTest_ForcingExecution.java
-        Options supplémentaires :
-        * onRoomUpSortingActionSortedListShouldBeDisplayed()
 
     * com\companyx\mareu\controller\activities\AddMeetingActivityTest.java
 	    * onValidatingNewMeetingReunionListShouldDisplayExtraItem()

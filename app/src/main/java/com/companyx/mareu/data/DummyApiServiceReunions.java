@@ -76,48 +76,7 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
         return filtrerDate(filtrerLieu(reunions, salles), date);
     }
 
-    @Override
-    public List<Reunion> trierLieuCroissant(List<Reunion> reunions) {
-//        initial capacity of ten new ArrayList<Reunion>()
-        List<Reunion> reunionsTriees = new ArrayList<>(reunions);
-        for (int i = 0; i < reunionsTriees.size() - 1; i++) {
-            for (int j = 0; j < reunionsTriees.size() - 1 - i; j++) {
-                if (reunionsTriees.get(j).getSalle().getLieu().compareTo(reunionsTriees.get(j + 1).getSalle().getLieu()) > 0) {
-                    Collections.swap(reunionsTriees, j, j + 1);
-                }
-            }
-        }
-        return reunionsTriees;
-    }
-
-    @Override
-    public List<Reunion> trierLieuDecroissant(List<Reunion> reunions) {
-        List<Reunion> reunionsTriees = new ArrayList<>(reunions);
-        for (int i = 0; i < reunionsTriees.size() - 1; i++) {
-            for (int j = 0; j < reunionsTriees.size() - 1 - i; j++) {
-                if (reunionsTriees.get(j).getSalle().getLieu().compareTo(reunionsTriees.get(j + 1).getSalle().getLieu()) < 0) {
-                    Collections.swap(reunionsTriees, j, j + 1);
-                }
-            }
-        }
-        return reunionsTriees;
-    }
-
-    @Override
-    public List<Reunion> trierHeureDecroissant(List<Reunion> reunions) {
-        List<Reunion> reunionsTriees = new ArrayList<>(reunions);
-        for (int i = 0; i < reunionsTriees.size() - 1; i++) {
-            for (int j = 0; j < reunionsTriees.size() - 1 - i; j++) {
-                if (reunionsTriees.get(j).getHeureDebut().compareTo(reunionsTriees.get(j + 1).getHeureDebut()) < 0) {
-                    Collections.swap(reunionsTriees, j, j + 1);
-                }
-            }
-        }
-        return reunionsTriees;
-    }
-
-    @Override
-    public List<Reunion> trierHeureCroissant(List<Reunion> reunions) {
+    private List<Reunion> trierHeureCroissant(List<Reunion> reunions) {
         List<Reunion> reunionsTriees = new ArrayList<>(reunions);
         for (int i = 0; i < reunionsTriees.size() - 1; i++) {
             for (int j = 0; j < reunionsTriees.size() - 1 - i; j++) {

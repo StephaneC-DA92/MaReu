@@ -27,8 +27,6 @@ public abstract class GenerateurReunions {
 
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy HH:mm");
         ParsePosition pp = new ParsePosition(0);
-/*        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE);
-        Date mDate = df.parse("3:30pm",pp);*/
 
         salleApiService = DI_Salles.getServiceSalles();
         collaborateurApiService = DI_Collaborateurs.getServiceCollaborateurs();
@@ -46,8 +44,7 @@ public abstract class GenerateurReunions {
 
             reunions.add(reunion1);
             reunions.add(reunion2);
-/*            Log.e("Réunion générée :",reunions.get(i).getSujet());
-            Log.e("Participants générés :",reunions.get(i).getParticipants().toString());*/
+
         }
         return reunions;
     }

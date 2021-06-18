@@ -37,7 +37,7 @@ public class MainActivityTest5 {
 
     @Test
     public void mainActivityTest5() {
-        ViewInteraction actionMenuItemView = onView(
+       /* ViewInteraction actionMenuItemView = onView(
                 allOf(withId(R.id.sorting), withContentDescription("Options de tri"),
                         childAtPosition(
                                 childAtPosition(
@@ -45,7 +45,7 @@ public class MainActivityTest5 {
                                         1),
                                 1),
                         isDisplayed()));
-        actionMenuItemView.perform(click());
+        actionMenuItemView.perform(click());*/
 
 
         ViewInteraction materialTextView = onView(

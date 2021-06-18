@@ -46,18 +46,15 @@ public class MeetingListAdapter extends RecyclerView.Adapter<ViewHolder> {
         viewHolder.setDrawable(reunion.getSalle().getIcone().valeur());
 
         viewHolder.getMeetingDetailsText()
-                .setText(reunion.getSujet() + " - " + new DateHeure().convertirDateHeureEnString(reunion.getHeureDebut()) + " - " + reunion.getSalle().getLieu());
-//        Log.d("Détails réunion", reunion.getSujet() + " - " + new DateHeure().convertirDateHeureEnString(reunion.getHeureDebut()) + " - " + reunion.getSalle().getLieu());
+                .setText(reunion.getSujet() + " - " + new DateHeure().convertirDateHeureEnHeureString(reunion.getHeureDebut()) + " - " + reunion.getSalle().getLieu());
 
         viewHolder.getMeetingParticipantsText()
                 .setText(reunion.getListeStringParticipants());
-//        Log.d("Liste participants", reunion.getListeStringParticipants());
 
         viewHolder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EventBus.getDefault().post(new DeleteMeetingEvent(reunion));
-//                Log.d("Suppression", "Réunion item : -1");
             }
         });
     }

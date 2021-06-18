@@ -8,9 +8,5 @@
     <string name="hello_blank_fragment">Hello!</string>
     <string name="bienvenue">Bienvenue</string>
     <string name="message_accueil">Veuillez créer une réunion</string>
-    <string-array name="date_array">
-        <item>"01/01/2021"</item>
-        <item>"31/12/2021"</item>
-    </string-array>
 
 </resources>
