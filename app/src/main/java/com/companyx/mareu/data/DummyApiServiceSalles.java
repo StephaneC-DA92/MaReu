@@ -1,9 +1,7 @@
 package com.companyx.mareu.data;
 
-import com.companyx.mareu.model.Collaborateur;
 import com.companyx.mareu.model.Salle;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +11,7 @@ import java.util.Map;
  */
 public class DummyApiServiceSalles implements ApiServiceSalles {
 
-    private List<Salle> salles = GenerateurSalles.genererSalles();
+    private List<Salle> salles = GenerateurSalles.generateRooms();
 
     private Map<String, Salle> mCatalogueLieu;
 
@@ -22,7 +20,7 @@ public class DummyApiServiceSalles implements ApiServiceSalles {
         return salles;
     }
 
-    public Map<String, Salle> creerCatalogueLieu() {
+    public Map<String, Salle> createPlaceCatalogue() {
         mCatalogueLieu = new HashMap<String, Salle>();
         for (int i = 0; i < salles.size(); i++) {
             mCatalogueLieu.put(salles.get(i).getLieu(), salles.get(i));
@@ -30,7 +28,7 @@ public class DummyApiServiceSalles implements ApiServiceSalles {
         return mCatalogueLieu;
     }
 
-    public String[] getListeLieu() {
+    public String[] getPlaceList() {
         String[] choix = new String[salles.size()];
         for (int i = 0; i < salles.size(); i++) {
             choix[i] = salles.get(i).getLieu();

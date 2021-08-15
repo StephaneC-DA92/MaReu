@@ -25,44 +25,13 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <Spinner
-        android:id="@+id/FiltreDateSpinner"
+    <FrameLayout
+        android:id="@+id/frame_layout_filtering"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:layout_marginHorizontal="40dp"
-        android:hint="Heure de début"
-        android:gravity="center"
-        android:layout_marginTop="80dp"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_action_bar"
         app:layout_constraintEnd_toEndOf="parent"
-        android:drawableStart="@drawable/ic_baseline_access_time_24" />
-
-    <TextView
-        android:id="@+id/label_spinner"
-        android:text="Choisir une date de réunion existante"
-        android:textStyle="italic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/FiltreDateSpinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:labelFor="@id/FiltreDateSpinner" />
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/FiltreSalles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="80dp"
-        android:drawableStart="@drawable/ic_baseline_meeting_room_24"
-        android:drawablePadding="10dp"
-        android:gravity="bottom"
-        android:hint="Choisir les salles"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_spinner" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filter_action_bar"></FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

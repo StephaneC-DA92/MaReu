@@ -20,9 +20,9 @@ public abstract class GenerateurReunions {
     private static ApiServiceSalles salleApiService;
     private static ApiServiceCollaborateurs collaborateurApiService;
 
-    public static List<Reunion> REUNIONS_LAMZONE = creerListeDeReunions(12);
+    public static List<Reunion> REUNIONS_LAMZONE = createMeetingList(12);
 
-    private static List<Reunion> creerListeDeReunions(int numReunions) {
+    private static List<Reunion> createMeetingList(int numReunions) {
         List<Reunion> reunions = new ArrayList<Reunion>();
 
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy HH:mm");
@@ -33,9 +33,9 @@ public abstract class GenerateurReunions {
 
         for (int i = 0; i < numReunions; i++) {
 
-            Salle salle = genererSalle(i);
+            Salle salle = generateRoom(i);
 
-            List<Collaborateur> Participants = genererParticipants(i);
+            List<Collaborateur> Participants = generateParticipants(i);
 
             Collaborateur organisateur = collaborateurApiService.getListeCollaborateur().get(i);
 
@@ -49,11 +49,11 @@ public abstract class GenerateurReunions {
         return reunions;
     }
 
-    static List<Reunion> genererReunions() {
+    static List<Reunion> generateMeetings() {
         return new ArrayList<>(REUNIONS_LAMZONE);
     }
 
-    private static Salle genererSalle(int i){
+    private static Salle generateRoom(int i){
         int n;
         n = i / 10;
         int m = i - n * 10;
@@ -62,7 +62,7 @@ public abstract class GenerateurReunions {
         return salle;
     }
 
-    private static List<Collaborateur>  genererParticipants(int i){
+    private static List<Collaborateur> generateParticipants(int i){
         List<Collaborateur> Participants = new ArrayList<Collaborateur>();
         for (int j = 0; j <= i; j++) {
             Participants.add(collaborateurApiService.getListeCollaborateur().get(j));

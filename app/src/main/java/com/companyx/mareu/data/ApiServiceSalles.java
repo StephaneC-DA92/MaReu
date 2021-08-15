@@ -13,8 +13,8 @@ public interface ApiServiceSalles {
 
     List<Salle> getListeSalle();
 
-    Map<String, Salle> creerCatalogueLieu();
+    Map<String, Salle> createPlaceCatalogue();
 
-    String[] getListeLieu();
+    String[] getPlaceList();
 
 }

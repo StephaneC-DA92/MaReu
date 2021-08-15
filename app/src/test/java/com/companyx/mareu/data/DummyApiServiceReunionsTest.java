@@ -9,14 +9,11 @@ import com.companyx.mareu.model.Reunion;
 import com.companyx.mareu.model.Salle;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -48,7 +45,7 @@ public class DummyApiServiceReunionsTest {
     public void filtrerLieu() {
         List<Salle> salles = serviceSalles.getListeSalle().subList(0, 1);
         List<Reunion> reunions = serviceReunions.getListeReunions();
-        List<Reunion> reunionsf = serviceReunions.filtrerLieu(reunions, salles);
+        List<Reunion> reunionsf = serviceReunions.filterPlace(reunions, salles);
         assertEquals(reunionsf.size(), ITEMS_COUNT_SALLE);
     }
 
@@ -56,7 +53,7 @@ public class DummyApiServiceReunionsTest {
     public void filtrerPlusieursLieux() {
         List<Salle> salles = serviceSalles.getListeSalle().subList(0, 2);
         List<Reunion> reunions = serviceReunions.getListeReunions();
-        List<Reunion> reunionsf = serviceReunions.filtrerLieu(reunions, salles);
+        List<Reunion> reunionsf = serviceReunions.filterPlace(reunions, salles);
         assertEquals(reunionsf.size(), ITEMS_COUNT_DEUX_SALLES);
     }
 
@@ -64,7 +61,7 @@ public class DummyApiServiceReunionsTest {
     public void filtrerDate() {
         Date mDateFiltre = new DateHeure(dateFiltre).formatParseDate();
         List<Reunion> reunions = serviceReunions.getListeReunions();
-        List<Reunion> reunionsf = serviceReunions.filtrerDate(reunions, mDateFiltre);
+        List<Reunion> reunionsf = serviceReunions.filterDate(reunions, mDateFiltre);
         assertEquals(reunionsf.size(), ITEMS_COUNT_DATE);
     }
 
@@ -73,7 +70,7 @@ public class DummyApiServiceReunionsTest {
         List<Salle> salles = serviceSalles.getListeSalle().subList(0, 1);
         Date mDateFiltre = new DateHeure(dateFiltre).formatParseDate();
         List<Reunion> reunions = serviceReunions.getListeReunions();
-        List<Reunion> reunionsf = serviceReunions.filtrerLieuEtDate(reunions, salles, mDateFiltre);
+        List<Reunion> reunionsf = serviceReunions.filterPlaceDate(reunions, salles, mDateFiltre);
         assertEquals(reunionsf.size(), ITEMS_COUNT_SALLE_DATE);
     }
 

@@ -1,6 +1,5 @@
 package com.companyx.mareu.controller;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,17 @@ public class MeetingListAdapter extends RecyclerView.Adapter<ViewHolder> {
         mListeDeReunions = listeDeReunions;
     }
 
+
+    /**
+     * Mise à jour des réunions gérées par l'adapter
+     *
+     * @param reunions liste des réunions gérées par l'adapter
+     */
+    public void updateReunions(@NonNull final List<Reunion> reunions) {
+        this.mListeDeReunions = reunions;
+        notifyDataSetChanged();
+    }
+
     //Crée les vues appelées par le layout manager
     @NonNull
     @Override
@@ -46,7 +56,7 @@ public class MeetingListAdapter extends RecyclerView.Adapter<ViewHolder> {
         viewHolder.setDrawable(reunion.getSalle().getIcone().valeur());
 
         viewHolder.getMeetingDetailsText()
-                .setText(reunion.getSujet() + " - " + new DateHeure().convertirDateHeureEnHeureString(reunion.getHeureDebut()) + " - " + reunion.getSalle().getLieu());
+                .setText(reunion.getSujet() + " - " + new DateHeure().convertDateTimeToTimeString(reunion.getHeureDebut()) + " - " + reunion.getSalle().getLieu());
 
         viewHolder.getMeetingParticipantsText()
                 .setText(reunion.getListeStringParticipants());

@@ -1,19 +1,12 @@
 package com.companyx.mareu.data;
 
-import android.util.Log;
-
-import com.companyx.mareu.model.Collaborateur;
 import com.companyx.mareu.model.DateHeure;
 import com.companyx.mareu.model.Reunion;
 import com.companyx.mareu.model.Salle;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +15,7 @@ import java.util.Map;
  */
 public class DummyApiServiceReunions implements ApiServiceReunions {
 
-    private List<Reunion> mReunions = GenerateurReunions.genererReunions();
+    private List<Reunion> mReunions = GenerateurReunions.generateMeetings();
 
     private Map<String, Date> mCatalogueDate;
 
@@ -43,7 +36,7 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
 
     //Pattern Etat
     @Override
-    public List<Reunion> filtrerLieu(List<Reunion> reunions, List<Salle> salles) {
+    public List<Reunion> filterPlace(List<Reunion> reunions, List<Salle> salles) {
         List<Reunion> reunionsFiltreesLieu = new ArrayList<Reunion>();
         for (Salle salle : salles) {
             for (Reunion reunion : reunions) {
@@ -56,13 +49,13 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
     }
 
     @Override
-    public List<Reunion> filtrerDate(List<Reunion> reunions, Date date) {
+    public List<Reunion> filterDate(List<Reunion> reunions, Date date) {
         List<Reunion> reunionsFiltreesSalle = new ArrayList<Reunion>();
         for (Reunion reunion : reunions) {
 
             DateHeure dh = new DateHeure();
-            dh.convertirDateHeureEnDateString(reunion.getHeureDebut());
-            Date datedebut = new DateHeure(dh.convertirDateHeureEnDateString(reunion.getHeureDebut())).formatParseDate();
+            dh.convertDateTimeToDateString(reunion.getHeureDebut());
+            Date datedebut = new DateHeure(dh.convertDateTimeToDateString(reunion.getHeureDebut())).formatParseDate();
 
             if (datedebut.compareTo(date) == 0) {
                 reunionsFiltreesSalle.add(reunion);
@@ -72,11 +65,52 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
     }
 
     @Override
-    public List<Reunion> filtrerLieuEtDate(List<Reunion> reunions, List<Salle> salles, Date date) {
-        return filtrerDate(filtrerLieu(reunions, salles), date);
+    public List<Reunion> filterPlaceDate(List<Reunion> reunions, List<Salle> salles, Date date) {
+        return filterDate(filterPlace(reunions, salles), date);
     }
 
-    private List<Reunion> trierHeureCroissant(List<Reunion> reunions) {
+    @Override
+    public List<Reunion> sortPlaceUp(List<Reunion> reunions) {
+//        initial capacity of ten new ArrayList<Reunion>()
+        List<Reunion> reunionsTriees = new ArrayList<>(reunions);
+        for (int i = 0; i < reunionsTriees.size() - 1; i++) {
+            for (int j = 0; j < reunionsTriees.size() - 1 - i; j++) {
+                if (reunionsTriees.get(j).getSalle().getLieu().compareTo(reunionsTriees.get(j + 1).getSalle().getLieu()) > 0) {
+                    Collections.swap(reunionsTriees, j, j + 1);
+                }
+            }
+        }
+        return reunionsTriees;
+    }
+
+    @Override
+    public List<Reunion> sortPlaceDown(List<Reunion> reunions) {
+        List<Reunion> reunionsTriees = new ArrayList<>(reunions);
+        for (int i = 0; i < reunionsTriees.size() - 1; i++) {
+            for (int j = 0; j < reunionsTriees.size() - 1 - i; j++) {
+                if (reunionsTriees.get(j).getSalle().getLieu().compareTo(reunionsTriees.get(j + 1).getSalle().getLieu()) < 0) {
+                    Collections.swap(reunionsTriees, j, j + 1);
+                }
+            }
+        }
+        return reunionsTriees;
+    }
+
+    @Override
+    public List<Reunion> sortTimeUp(List<Reunion> reunions) {
+        List<Reunion> reunionsTriees = new ArrayList<>(reunions);
+        for (int i = 0; i < reunionsTriees.size() - 1; i++) {
+            for (int j = 0; j < reunionsTriees.size() - 1 - i; j++) {
+                if (reunionsTriees.get(j).getHeureDebut().compareTo(reunionsTriees.get(j + 1).getHeureDebut()) < 0) {
+                    Collections.swap(reunionsTriees, j, j + 1);
+                }
+            }
+        }
+        return reunionsTriees;
+    }
+
+    @Override
+    public List<Reunion> sortTimeDown(List<Reunion> reunions) {
         List<Reunion> reunionsTriees = new ArrayList<>(reunions);
         for (int i = 0; i < reunionsTriees.size() - 1; i++) {
             for (int j = 0; j < reunionsTriees.size() - 1 - i; j++) {
@@ -89,20 +123,20 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
     }
 
     public String[] getListeDate(List<Reunion> reunions) {
-        List<Reunion> reunionst = trierHeureCroissant(reunions);
+        List<Reunion> reunionst = sortTimeDown(reunions);
         int n = reunionst.size();
         List<String> lChoix = new ArrayList<String>();
 
         DateHeure dh = new DateHeure();
 
-        lChoix.add(dh.convertirDateHeureEnDateString(reunionst.get(0).getHeureDebut()));
+        lChoix.add(dh.convertDateTimeToDateString(reunionst.get(0).getHeureDebut()));
         if (reunionst.size() > 1) {
             for (int i = 1; i < reunionst.size(); i++) {
-                if (dh.convertirDateHeureEnDateString(reunionst.get(i).getHeureDebut()).compareTo(dh.convertirDateHeureEnDateString(reunionst.get(i - 1).getHeureDebut())) == 0) {
+                if (dh.convertDateTimeToDateString(reunionst.get(i).getHeureDebut()).compareTo(dh.convertDateTimeToDateString(reunionst.get(i - 1).getHeureDebut())) == 0) {
                     n--;
                     continue;
                 }
-                lChoix.add(dh.convertirDateHeureEnDateString(reunionst.get(i).getHeureDebut()));
+                lChoix.add(dh.convertDateTimeToDateString(reunionst.get(i).getHeureDebut()));
             }
         }
 

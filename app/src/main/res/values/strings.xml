@@ -7,6 +7,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello!</string>
     <string name="bienvenue">Bienvenue</string>
-    <string name="message_accueil">Veuillez créer une réunion</string>
+    <string name="message_accueil">Veuillez créer une réunion ou modifier les critères de filtre</string>
 
 </resources>

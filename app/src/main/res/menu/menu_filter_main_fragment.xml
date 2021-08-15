@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--    Tri des réunions par date ou par lieu-->
+
+    <group android:id="@+id/group3">
+    <item
+        android:id="@+id/sorting"
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        android:title="Options de tri"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item
+                android:id="@+id/tri_lieu_croissant"
+                android:title="Lieu par ordre croissant"
+                app:showAsAction="withText" />
+            <item
+                android:id="@+id/tri_lieu_decroissant"
+                android:title="Lieu par ordre décroissant"
+                app:showAsAction="withText" />
+            <item
+                android:id="@+id/tri_heure_croissante"
+                android:title="Heure par ordre croissant"
+                app:showAsAction="withText" />
+            <item
+                android:id="@+id/tri_heure_decroissante"
+                android:title="Heure par ordre décroissant"
+                app:showAsAction="withText" />
+            <item
+                android:id="@+id/sans_tri"
+                android:title="Tri par défaut"
+                app:showAsAction="withText" />
+
+        </menu>
+
+    </item>
+    </group>
+</menu>

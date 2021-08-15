@@ -5,9 +5,13 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,6 +22,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.companyx.mareu.R;
+import com.companyx.mareu.controller.Utils;
 import com.companyx.mareu.controller.activities.AddMeetingActivity;
 import com.companyx.mareu.data.ApiServiceSalles;
 import com.companyx.mareu.data.DummyApiServiceCollaborateurs;
@@ -27,6 +32,8 @@ import com.companyx.mareu.model.Collaborateur;
 import com.companyx.mareu.model.DateHeure;
 import com.companyx.mareu.model.Reunion;
 import com.companyx.mareu.model.Salle;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,10 +63,6 @@ public class AddMeetingFragment extends Fragment {
 
     public Reunion mReunion;
 
-    private static final String BUNDLE_EXTRA_MEETING = "BUNDLE_EXTRA_MEETING";
-    private static final String NEW_MEETING_ACTIVITY_FRAGMENT = "NEW_MEETING_ACTIVITY_FRAGMENT";
-    private static final String NEW_MEETING_INTER_FRAGMENTS = "NEW_MEETING_INTER_FRAGMENTS";
-
     public AddMeetingFragment() {
         // Required empty public constructor
     }
@@ -68,6 +71,8 @@ public class AddMeetingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDummyApiServiceSalles = DI_Salles.getServiceSalles();
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -77,7 +82,7 @@ public class AddMeetingFragment extends Fragment {
         mView = mBinding.getRoot();
         Context context = mView.getContext();
 
-        mLieux = mDummyApiServiceSalles.getListeLieu();
+        mLieux = mDummyApiServiceSalles.getPlaceList();
         ArrayAdapter<String> adapterLieux = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, mLieux);
         mBinding.autoCompleteTextView.setAdapter(adapterLieux);
         mBinding.autoCompleteTextView.setThreshold(1);
@@ -95,6 +100,35 @@ public class AddMeetingFragment extends Fragment {
         mBinding.autoCompleteTextView2.setThreshold(1);
 
         return mView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu_filter_actions, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.filter_action_check:
+                if(checkReunion()){
+                    sendResultToFragmentManager();
+
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.frame_layout_other, new FragmentAccueil())
+                            .commit();
+                } else {
+                    Toast.makeText(getContext(), "Veuillez saisir tous les détails de la réunion", Toast.LENGTH_LONG).show();
+                }
+                return true;
+            case R.id.filter_action_close:
+                closeWithoutResult();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -125,7 +159,7 @@ public class AddMeetingFragment extends Fragment {
         mBinding.autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mSalleDeReunion = mDummyApiServiceSalles.creerCatalogueLieu().get(parent.getItemAtPosition(position).toString());
+                mSalleDeReunion = mDummyApiServiceSalles.createPlaceCatalogue().get(parent.getItemAtPosition(position).toString());
                 mBinding.Couleur.setImageResource(mSalleDeReunion.getIcone().valeur());
             }
         });
@@ -141,24 +175,6 @@ public class AddMeetingFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mOrganisateur = mDummyApiServiceCollaborateurs.creerCatalogueParticipant().get(parent.getItemAtPosition(position).toString());
-            }
-        });
-
-        mBinding.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeWithoutResult();
-            }
-        });
-
-        mBinding.saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(checkReunion()){
-                sendResultToFragmentManager();
-                } else {
-                    Toast.makeText(getContext(), "Veuillez saisir tous les détails de la réunion", Toast.LENGTH_LONG).show();
-                }
             }
         });
     }
@@ -241,23 +257,29 @@ public class AddMeetingFragment extends Fragment {
         mReunion = createReunion();
 
         Bundle resultat = new Bundle();
-        resultat.putSerializable(BUNDLE_EXTRA_MEETING, mReunion);
+        resultat.putSerializable(Utils.BUNDLE_EXTRA_MEETING, mReunion);
         if (getActivity().getClass() == AddMeetingActivity.class) {
-            getParentFragmentManager().setFragmentResult(NEW_MEETING_ACTIVITY_FRAGMENT, resultat);
+            getParentFragmentManager().setFragmentResult(Utils.NEW_MEETING_ACTIVITY_FRAGMENT, resultat);
         } else {
-            getParentFragmentManager().setFragmentResult(NEW_MEETING_INTER_FRAGMENTS, resultat);
+            getParentFragmentManager().setFragmentResult(Utils.NEW_MEETING_INTER_FRAGMENTS, resultat);
+
+            replaceByFragmentAccueil();
         }
     }
 
     private void closeWithoutResult() {
-        //Close AddMeetingActivity
+        //Send result to AddMeetingActivity for closure
         if (getActivity().getClass() == AddMeetingActivity.class) {
-            getParentFragmentManager().setFragmentResult(NEW_MEETING_ACTIVITY_FRAGMENT, null);
+            getParentFragmentManager().setFragmentResult(Utils.NEW_MEETING_ACTIVITY_FRAGMENT, null);
         } else {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.frame_layout_other, new FragmentAccueil())
-                    .commit();
+            replaceByFragmentAccueil();
         }
+    }
+
+    public final void replaceByFragmentAccueil(){
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.frame_layout_other, new FragmentAccueil())
+                .commit();
     }
 
     public Reunion createReunion() {

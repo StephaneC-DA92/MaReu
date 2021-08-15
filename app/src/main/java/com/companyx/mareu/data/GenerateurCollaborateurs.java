@@ -31,7 +31,7 @@ public abstract class GenerateurCollaborateurs {
             new Collaborateur("Zorba", "Legrec", "IdCol-14", "Zorba.Legrec@Lamzone.com")
     );
 
-    static List<Collaborateur> genererCollaborateurs() {
+    static List<Collaborateur> generateCollaborateurs() {
         return new ArrayList<>(COLLABORATEURS_LAMZONE);
     }
 }

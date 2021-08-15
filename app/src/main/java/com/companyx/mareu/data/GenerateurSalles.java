@@ -26,7 +26,7 @@ public abstract class GenerateurSalles {
             new Salle("DasRoom", "Allemagne", 12, Salle.Couleur.Bleu, Salle.Icone.Bleu)
     );
 
-    static List<Salle> genererSalles() {
+    static List<Salle> generateRooms() {
         return new ArrayList<>(SALLES_LAMZONE);
     }
 }

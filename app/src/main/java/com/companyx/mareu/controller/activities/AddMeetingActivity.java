@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.companyx.mareu.R;
+import com.companyx.mareu.controller.Utils;
 import com.companyx.mareu.controller.fragments.AddMeetingFragment;
 import com.companyx.mareu.databinding.ActivityAddMeetingBinding;
 import com.companyx.mareu.model.Reunion;
@@ -20,11 +21,6 @@ public class AddMeetingActivity extends AppCompatActivity {
     private ActivityAddMeetingBinding mBinding;
 
     private AddMeetingFragment mAddMeetingFragment;
-
-    private static final String TAG_FRAGMENT_ACTIVITY_MEETING = "TAG_FRAGMENT_ACTIVITY_MEETING";
-
-    public static final String BUNDLE_EXTRA_MEETING = "BUNDLE_EXTRA_MEETING";
-    private static final String NEW_MEETING_ACTIVITY_FRAGMENT = "NEW_MEETING_ACTIVITY_FRAGMENT";
 
     private Reunion mNouvelleReunion = null;
 
@@ -39,13 +35,14 @@ public class AddMeetingActivity extends AppCompatActivity {
 
         configurerEtAfficherAddMeetingFragment();
 
-        getSupportFragmentManager().setFragmentResultListener(NEW_MEETING_ACTIVITY_FRAGMENT, this, new FragmentResultListener() {
+        //Recevoir bundle avec réunion en provenance du fragment AddMeeting
+        getSupportFragmentManager().setFragmentResultListener(Utils.NEW_MEETING_ACTIVITY_FRAGMENT, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 if (bundle == null) {
                     closeActivityWithoutSaving();
                 } else {
-                    mNouvelleReunion = (Reunion) bundle.getSerializable(BUNDLE_EXTRA_MEETING);
+                    mNouvelleReunion = (Reunion) bundle.getSerializable(Utils.BUNDLE_EXTRA_MEETING);
                     saveActivityResultAndThenClose();
                 }
             }
@@ -61,15 +58,17 @@ public class AddMeetingActivity extends AppCompatActivity {
     // MENU
     // --------------
 
+    //Envoyer résultat succès à activité appelante
     private void saveActivityResultAndThenClose() {
         if (mNouvelleReunion != null) {
             Intent intent = new Intent();
-            intent.putExtra(BUNDLE_EXTRA_MEETING, mNouvelleReunion);
+            intent.putExtra(Utils.BUNDLE_EXTRA_MEETING, mNouvelleReunion);
             setResult(RESULT_OK, intent);
             finish();
         }
     }
 
+    //Envoyer résultat échec à activité appelante
     private void closeActivityWithoutSaving() {
         setResult(RESULT_CANCELED, null);
         finish();
@@ -80,13 +79,13 @@ public class AddMeetingActivity extends AppCompatActivity {
     // --------------
 
     private void configurerEtAfficherAddMeetingFragment() {
-        //  Appel au SupportFragmentManager pour trouver une fragment exostant dans le conteneur FrameLayout
-        mAddMeetingFragment = (AddMeetingFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_ACTIVITY_MEETING);
+        //  Appel au SupportFragmentManager pour trouver une fragment existant dans le conteneur FrameLayout
+        mAddMeetingFragment = (AddMeetingFragment) getSupportFragmentManager().findFragmentByTag(Utils.TAG_FRAGMENT_ACTIVITY_MEETING);
 
         if (mAddMeetingFragment == null) {
             mAddMeetingFragment = new AddMeetingFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_layout_add_meeting, mAddMeetingFragment, TAG_FRAGMENT_ACTIVITY_MEETING)
+                    .add(R.id.frame_layout_add_meeting, mAddMeetingFragment, Utils.TAG_FRAGMENT_ACTIVITY_MEETING)
                     .commit();
         }
     }

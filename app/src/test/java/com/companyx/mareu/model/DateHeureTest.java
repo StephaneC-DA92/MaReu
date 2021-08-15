@@ -48,7 +48,7 @@ public class DateHeureTest {
     public void convertirDateHeureEnString() {
         DateHeure dh = new DateHeure("22/05/2021", "01h02");
         Date date1 = dh.formatParseDateHeure();
-        String str1 = dh.convertirDateHeureEnString(date1);
+        String str1 = dh.convertDateTimeToString(date1);
 
         assertEquals(str1, "22/05/2021 01h02");
     }
@@ -57,7 +57,7 @@ public class DateHeureTest {
     public void convertirDateHeureEnDateString() {
         DateHeure dh = new DateHeure("22/05/2021", "01h02");
         Date date1 = dh.formatParseDateHeure();
-        String str2 = dh.convertirDateHeureEnDateString(date1);
+        String str2 = dh.convertDateTimeToDateString(date1);
 
         assertEquals(str2, "22/05/2021");
     }

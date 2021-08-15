@@ -60,7 +60,7 @@ public class DateHeure implements Serializable {
         return formatDate.parse(str, pp);
     }
 
-    public String convertirDateHeureEnString(Date dateHeure) {
+    public String convertDateTimeToString(Date dateHeure) {
         mCalendrier.clear();
         mCalendrier.setTime(dateHeure);
         return String.format("%02d", mCalendrier.get(Calendar.DAY_OF_MONTH))
@@ -70,14 +70,14 @@ public class DateHeure implements Serializable {
                 + "h" + String.format("%02d", mCalendrier.get(Calendar.MINUTE));
     }
 
-    public String convertirDateHeureEnHeureString(Date dateHeure) {
+    public String convertDateTimeToTimeString(Date dateHeure) {
         mCalendrier.clear();
         mCalendrier.setTime(dateHeure);
         return String.format("%02d", mCalendrier.get(Calendar.HOUR_OF_DAY))
                 + "h" + String.format("%02d", mCalendrier.get(Calendar.MINUTE));
     }
 
-    public String convertirDateHeureEnDateString(Date dateHeure) {
+    public String convertDateTimeToDateString(Date dateHeure) {
         mCalendrier.clear();
         mCalendrier.setTime(dateHeure);
         return String.format("%02d", mCalendrier.get(Calendar.DAY_OF_MONTH))

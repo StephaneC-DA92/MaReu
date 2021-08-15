@@ -1,7 +1,6 @@
 package com.companyx.mareu.data;
 
 import com.companyx.mareu.model.Collaborateur;
-import com.companyx.mareu.model.Salle;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.Map;
  */
 public class DummyApiServiceCollaborateurs implements ApiServiceCollaborateurs {
 
-    private List<Collaborateur> collaborateurs = GenerateurCollaborateurs.genererCollaborateurs();
+    private List<Collaborateur> collaborateurs = GenerateurCollaborateurs.generateCollaborateurs();
 
     private Map<String, Collaborateur> mCatalogueParticipant;
 

@@ -19,11 +19,19 @@ public interface ApiServiceReunions {
 
     void deleteReunionItem(Reunion reunion);
 
-    List<Reunion> filtrerLieu(List<Reunion> reunions, List<Salle> salles);
+    List<Reunion> filterPlace(List<Reunion> reunions, List<Salle> salles);
 
-    List<Reunion> filtrerDate(List<Reunion> reunions, Date date);
+    List<Reunion> filterDate(List<Reunion> reunions, Date date);
 
-    List<Reunion> filtrerLieuEtDate(List<Reunion> reunions, List<Salle> salles, Date date);
+    List<Reunion> filterPlaceDate(List<Reunion> reunions, List<Salle> salles, Date date);
+
+    List<Reunion> sortPlaceUp(List<Reunion> reunions);
+
+    List<Reunion> sortPlaceDown(List<Reunion> reunions);
+
+    List<Reunion> sortTimeDown(List<Reunion> reunions);
+
+    List<Reunion> sortTimeUp(List<Reunion> reunions);
 
     String[] getListeDate(List<Reunion> reunions);
 }

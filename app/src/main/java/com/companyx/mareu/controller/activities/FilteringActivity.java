@@ -1,39 +1,30 @@
 package com.companyx.mareu.controller.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentResultListener;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.MultiAutoCompleteTextView;
-import android.widget.Toast;
 
 import com.companyx.mareu.R;
-import com.companyx.mareu.data.ApiServiceSalles;
+import com.companyx.mareu.controller.Utils;
+import com.companyx.mareu.controller.fragments.FilteringFragment;
 import com.companyx.mareu.databinding.ActivityFilteringBinding;
-import com.companyx.mareu.di.DI_Salles;
-
-import java.util.Calendar;
 
 public class FilteringActivity extends AppCompatActivity {
 
     private ActivityFilteringBinding mBinding;
 
-    private ApiServiceSalles mDummyApiServiceSalles;
+    private FilteringFragment mFilteringFragment;
+
+/*    private ApiServiceSalles mDummyApiServiceSalles;
 
     private String mDateDebut;
-    public String mSequenceLieux;
-
-    public static final String BUNDLE_FILTER_ROOM = "BUNDLE_FILTER_ROOM";
-    public static final String BUNDLE_FILTER_DATE_START = "BUNDLE_FILTER_DATE_START";
+    public String mSequenceLieux;*/
 
     private Intent data;
 
@@ -46,9 +37,13 @@ public class FilteringActivity extends AppCompatActivity {
 
         setSupportActionBar(mBinding.filterActionToolbar);
 
+        configureAndDisplayFilteringFragment();
+
+        //Capter l'intent à l'origine du lancement de l'activité
         data = getIntent();
-        String[] dates = data.getStringArrayExtra(MainActivity.BUNDLE_FILTER_REUNIONS);
-//        Log.d("SPINNER", "Liste : " + dates.length);
+        mFilteringFragment.mDates = data.getStringArrayExtra(Utils.BUNDLE_FILTER_REUNIONS);
+
+  /*      String[] dates = data.getStringArrayExtra(MainActivity.BUNDLE_FILTER_REUNIONS);
         ArrayAdapter<String> adapterDates = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dates);
         adapterDates.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mBinding.FiltreDateSpinner.setAdapter(adapterDates);
@@ -71,7 +66,23 @@ public class FilteringActivity extends AppCompatActivity {
         ArrayAdapter<String> adapterLieux = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lieux);
         mBinding.FiltreSalles.setAdapter(adapterLieux);
         mBinding.FiltreSalles.setThreshold(1);
-        mBinding.FiltreSalles.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        mBinding.FiltreSalles.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());*/
+
+        //Recevoir bundle avec date et réunion en provenance du fragment Filtering
+        getSupportFragmentManager().setFragmentResultListener(Utils.FILTERING_ACTIVITY_FRAGMENT, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                if (bundle == null) {
+                    setResult(RESULT_CANCELED, null);
+                    finish();
+                } else {
+                    Intent intent = new Intent();
+                    intent.putExtras(bundle);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            }
+        });
     }
 
     public static void navigateToFilteringActivity(Activity activity, int RequestCode, String name, String[] value) {
@@ -80,7 +91,7 @@ public class FilteringActivity extends AppCompatActivity {
         ActivityCompat.startActivityForResult(activity, intent, RequestCode, null);
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_filter_actions, menu);
@@ -99,27 +110,22 @@ public class FilteringActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
-    private void saveActivityResultAndThenClose() {
-        mSequenceLieux = mBinding.FiltreSalles.getText().toString();
-        if (mSequenceLieux != "" || mDateDebut != "") {
-            Intent intent = new Intent();
-            if (mSequenceLieux != "") {
-                intent.putExtra(BUNDLE_FILTER_ROOM, mSequenceLieux);
-            }
-            if (mDateDebut != "") {
-                intent.putExtra(BUNDLE_FILTER_DATE_START, mDateDebut);
-            }
-            setResult(RESULT_OK, intent);
-            finish();
-        } else {
-            Toast.makeText(this, "Veuillez saisir des critères", Toast.LENGTH_SHORT).show();
+
+    // --------------
+    // FRAGMENTS
+    // --------------
+
+    private void configureAndDisplayFilteringFragment() {
+        //  Appel au SupportFragmentManager pour trouver une fragment exostant dans le conteneur FrameLayout
+        mFilteringFragment = (FilteringFragment) getSupportFragmentManager().findFragmentByTag(Utils.TAG_FRAGMENT_ACTIVITY_FILTERING);
+
+        if (mFilteringFragment == null) {
+            mFilteringFragment = new FilteringFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frame_layout_filtering, mFilteringFragment, Utils.TAG_FRAGMENT_ACTIVITY_FILTERING)
+                    .commit();
         }
-    }
-
-    private void closeActivityWithoutSaving() {
-        setResult(RESULT_CANCELED, null);
-        finish();
     }
 }
