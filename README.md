@@ -12,7 +12,8 @@ Ce dépôt contient une application pour le P4 du parcours **PRFE3**.
 5. [Crédits]
 
 ## Informations générales
-Nom du projet : **MaRéu**
+Nom du projet : **MaRéu**   
+Version : 2.0
 ***
 Application de gestion de réunions   
 
@@ -42,12 +43,13 @@ Version de SdK min : 21
 Pour une application supportant Android 5.0 (API21) et ses versions supérieures
 
 ### Statut :
-En cours de validation
+Prototype en cours de développement
 
 #### Modifications possibles : roadmap
-Gestion des exceptions pour formulaire filtre
-Gestion des tentatives de création de doublon
-Gestion des places disponibles en salle pour création de réunion
+* Gestion des exceptions pour le formulaire du filtre  
+* Gestion des tentatives de création de doublon   
+* Gestion des places disponibles en salle pour création de réunion   
+* Spécialisation pour les classes activités et fragments   
 
 ### Auteur :
 Stéphane C
