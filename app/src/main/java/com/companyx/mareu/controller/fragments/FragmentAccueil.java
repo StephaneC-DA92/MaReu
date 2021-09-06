@@ -1,39 +1,47 @@
 package com.companyx.mareu.controller.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.companyx.mareu.R;
 import com.companyx.mareu.databinding.FragmentAccueilBinding;
-import com.companyx.mareu.databinding.FragmentAddMeetingBinding;
 
-public class FragmentAccueil extends Fragment {
+public class FragmentAccueil extends BaseFragment{
 
     private FragmentAccueilBinding mBinding;
-    private View mView;
 
-    public FragmentAccueil() {
-        // Required empty public constructor
+    // --------------
+    // INITIALIZATION
+    // --------------
+
+    public static FragmentAccueil newInstance(){
+        return new FragmentAccueil();
     }
+
+    // --------------
+    // IMPLEMENTATION
+    // --------------
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void setCallback() {
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    protected void configureFragmentSettings(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    protected void configureFragmentDesign(LayoutInflater inflater, ViewGroup container) {
         mBinding = FragmentAccueilBinding.inflate(inflater, container, false);
         mView = mBinding.getRoot();
-        return mView;
+    }
+
+    @Override
+    protected void saveResultAndThenClose() {
+
     }
 
     @Override
@@ -41,4 +49,5 @@ public class FragmentAccueil extends Fragment {
         super.onDestroyView();
         mBinding = null;
     }
+
 }

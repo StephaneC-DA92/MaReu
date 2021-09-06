@@ -9,4 +9,20 @@
     <string name="bienvenue">Bienvenue</string>
     <string name="message_accueil">Veuillez créer une réunion ou modifier les critères de filtre</string>
 
+    <string name="addmeeting_preference_file_key">com.companyx.mareu.addmeeting_preference_file_key</string>
+    <string name="addmeeting_sujet_key">BUNDLE_STATE_Sujet</string>
+    <string name="addmeeting_dateDebut_key">BUNDLE_STATE_dateDebut</string>
+    <string name="addmeeting_heureDebut_key">BUNDLE_STATE_heureDebut</string>
+    <string name="addmeeting_dateFin_key">BUNDLE_STATE_dateFin</string>
+    <string name="addmeeting_heureFin_key">BUNDLE_STATE_heureFin</string>
+    <string name="addmeeting_salle_key">BUNDLE_STATE_Salle</string>
+    <string name="addmeeting_participant_key">BUNDLE_STATE_Participants</string>
+    <string name="addmeeting_organisateur_key">BUNDLE_STATE_Organisateur</string>
+
+
+    <string name="filtering_preference_file_key">com.companyx.mareu.filtering_preference_file_key</string>
+    <string name="filering_dateDebut_key">dateDebut</string>
+    <string name="filering_room_key">Salle</string>
+
+
 </resources>

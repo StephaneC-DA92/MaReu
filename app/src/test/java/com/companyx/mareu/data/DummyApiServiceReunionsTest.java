@@ -90,4 +90,10 @@ public class DummyApiServiceReunionsTest {
         serviceReunions.deleteReunionItem(reunion);
         assertEquals(serviceReunions.getListeReunions().size(), ITEMS_COUNT - 1);
     }
+
+    @Test
+    public void genererListeDatesPourFiltre() {
+        String[] listeDates = serviceReunions.getListeDate(serviceReunions.getListeReunions());
+        assertEquals(listeDates.length, 3);
+    }
 }

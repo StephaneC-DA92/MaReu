@@ -34,7 +34,7 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
         mReunions.remove(reunion);
     }
 
-    //Pattern Etat
+    //TODO : Pattern strategy
     @Override
     public List<Reunion> filterPlace(List<Reunion> reunions, List<Salle> salles) {
         List<Reunion> reunionsFiltreesLieu = new ArrayList<Reunion>();
@@ -122,27 +122,57 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
         return reunionsTriees;
     }
 
+    //TODO : à améliorer /fait
     public String[] getListeDate(List<Reunion> reunions) {
-        List<Reunion> reunionst = sortTimeDown(reunions);
-        int n = reunionst.size();
-        List<String> lChoix = new ArrayList<String>();
+        /*List<Reunion> reunionsTriees = sortTimeDown(reunions);
+        int n = reunionsTriees.size();
+        List<String> listeChoix = new ArrayList<String>();
 
         DateHeure dh = new DateHeure();
 
-        lChoix.add(dh.convertDateTimeToDateString(reunionst.get(0).getHeureDebut()));
-        if (reunionst.size() > 1) {
-            for (int i = 1; i < reunionst.size(); i++) {
-                if (dh.convertDateTimeToDateString(reunionst.get(i).getHeureDebut()).compareTo(dh.convertDateTimeToDateString(reunionst.get(i - 1).getHeureDebut())) == 0) {
+        listeChoix.add(dh.convertDateTimeToDateString(reunionsTriees.get(0).getHeureDebut()));
+        if (reunionsTriees.size() > 1) {
+            for (int i = 1; i < reunionsTriees.size(); i++) {
+                if (dh.convertDateTimeToDateString(reunionsTriees.get(i).getHeureDebut()).
+                compareTo(dh.convertDateTimeToDateString(reunionsTriees.get(i - 1).getHeureDebut())) == 0) {
                     n--;
                     continue;
                 }
-                lChoix.add(dh.convertDateTimeToDateString(reunionst.get(i).getHeureDebut()));
+                listeChoix.add(dh.convertDateTimeToDateString(reunionsTriees.get(i).getHeureDebut()));
             }
         }
 
         String[] choix = new String[n + 1];
-        lChoix.add(0, "");
-        lChoix.toArray(choix);
+        listeChoix.add(0, "");
+        listeChoix.toArray(choix);
+        return choix;*/
+
+        int n = reunions.size();
+        String valeurParDéfaut = "";
+
+        List<Reunion> reunionsTriees = sortTimeDown(reunions);
+        List<String> listeChoix = new ArrayList<String>();
+
+        DateHeure dh = new DateHeure();
+
+        if(n>1) {
+            for (int i = 0; i < n-2; i++){
+                if (dh.convertDateTimeToDateString(reunionsTriees.get(i).getHeureDebut()).
+                        compareTo(dh.convertDateTimeToDateString(reunionsTriees.get(i+1).getHeureDebut()))!=0) {
+                    listeChoix.add(dh.convertDateTimeToDateString(reunionsTriees.get(i).getHeureDebut()));
+                }
+            }
+            listeChoix.add(dh.convertDateTimeToDateString(reunionsTriees.get(n-1).getHeureDebut()));
+        } else {
+        //Méthode inutile pour n = 1
+            listeChoix.add(dh.convertDateTimeToDateString(reunionsTriees.get(0).getHeureDebut()));
+        }
+
+        listeChoix.add(0, valeurParDéfaut);
+
+        String[] choix = new String[listeChoix.size()];
+        listeChoix.toArray(choix);
         return choix;
+
     }
 }

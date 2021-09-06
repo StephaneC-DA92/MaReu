@@ -12,9 +12,9 @@ import java.util.Date;
  * Created by CodeurSteph on 18/05/2021
  */
 
-//Stocke données au format Date et fournit jour au format Date
-//Convertit Date au format String selon pattern défini
-//Extrait le jour d'un objet Date
+/*Stocke données au format Date et fournit jour au format Date
+Convertit Date au format String selon pattern défini
+Extrait le jour d'un objet Date*/
 
 public class DateHeure implements Serializable {
 

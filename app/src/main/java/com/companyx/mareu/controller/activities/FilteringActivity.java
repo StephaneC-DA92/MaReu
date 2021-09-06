@@ -1,21 +1,27 @@
 package com.companyx.mareu.controller.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.companyx.mareu.AllFragmentFactory;
 import com.companyx.mareu.R;
 import com.companyx.mareu.controller.Utils;
+import com.companyx.mareu.controller.fragments.BaseFragment;
 import com.companyx.mareu.controller.fragments.FilteringFragment;
 import com.companyx.mareu.databinding.ActivityFilteringBinding;
 
-public class FilteringActivity extends AppCompatActivity {
+public class FilteringActivity extends AppCompatActivity implements BaseFragment.FragmentActionListener{
 
     private ActivityFilteringBinding mBinding;
 
@@ -31,59 +37,58 @@ public class FilteringActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        Log.d("Track FilteringActivity","onCreate");
+
         mBinding = ActivityFilteringBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
 
         setSupportActionBar(mBinding.filterActionToolbar);
 
-        configureAndDisplayFilteringFragment();
+        ActionBar ab = getSupportActionBar();
+
+        ab.setDisplayHomeAsUpEnabled(true);
+        //ContentDescription : "Navigate up" par défaut
+        ab.setHomeActionContentDescription("Revenir à la liste des réunions");
 
         //Capter l'intent à l'origine du lancement de l'activité
-        data = getIntent();
-        mFilteringFragment.mDates = data.getStringArrayExtra(Utils.BUNDLE_FILTER_REUNIONS);
+        data = this.getIntent();
 
-  /*      String[] dates = data.getStringArrayExtra(MainActivity.BUNDLE_FILTER_REUNIONS);
-        ArrayAdapter<String> adapterDates = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dates);
-        adapterDates.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mBinding.FiltreDateSpinner.setAdapter(adapterDates);
-
-        mBinding.FiltreDateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mDateDebut = parent.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(parent.getContext(), "Aucune date sélectionnée", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        mDummyApiServiceSalles = DI_Salles.getServiceSalles();
-        String[] lieux = mDummyApiServiceSalles.getListeLieu();
-
-        ArrayAdapter<String> adapterLieux = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lieux);
-        mBinding.FiltreSalles.setAdapter(adapterLieux);
-        mBinding.FiltreSalles.setThreshold(1);
-        mBinding.FiltreSalles.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());*/
+        configureAndDisplayFilteringFragment(data.getStringArrayExtra(Utils.BUNDLE_FILTER_REUNIONS));
 
         //Recevoir bundle avec date et réunion en provenance du fragment Filtering
         getSupportFragmentManager().setFragmentResultListener(Utils.FILTERING_ACTIVITY_FRAGMENT, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                if (bundle == null) {
-                    setResult(RESULT_CANCELED, null);
-                    finish();
-                } else {
-                    Intent intent = new Intent();
-                    intent.putExtras(bundle);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+                saveActivityResultAndThenClose(bundle);
             }
         });
+
+        Log.d("Track FilteringActivity","onCreate with Task" + getTaskId());
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Mode landscape tablette : bascule de FilteringActivity à MainActivity avec FilteringFragment getResources().getDimension(R.dimen.tablet_size)
+        if(getResources().getConfiguration().screenWidthDp >= 600 &&
+                getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            Log.d("Track FilteringActivity","onStart");
+
+            navigateToOtherActivity();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("Track FilteringActivity","onDestroy");
+    }
+
+    // --------------
+    // NAVIGATION
+    // --------------
 
     public static void navigateToFilteringActivity(Activity activity, int RequestCode, String name, String[] value) {
         Intent intent = new Intent(activity, FilteringActivity.class);
@@ -91,41 +96,67 @@ public class FilteringActivity extends AppCompatActivity {
         ActivityCompat.startActivityForResult(activity, intent, RequestCode, null);
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_filter_actions, menu);
-        return true;
+    //TODO : vérifier
+    @Override
+    public void navigateToOtherActivity() {
+//        TODO : avec syst config handle!!
+//        MainActivity.navigateToMainActivity(this, AllFragmentFactory.FragmentType.FilteringFragment);
+//        ActivityCompat.finishAfterTransition(this);
+//        ActivityCompat.recreate(new MainActivity());
+
+
+        setResult(RESULT_FIRST_USER,null);
+        finish();
+
+        Log.d("Track FilteringActivity","back?");
+    }
+
+    // --------------
+    // ACTIONS
+    // --------------
+
+    //Envoyer résultat succès à activité appelante
+    private void saveActivityResultAndThenClose(Bundle bundle) {
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.filter_action_check:
-                saveActivityResultAndThenClose();
-                return true;
-            case R.id.filter_action_close:
-                closeActivityWithoutSaving();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }*/
+    public void onClickCloseMenu() {
+        //Envoyer résultat échec à activité appelante
+        setResult(RESULT_CANCELED, null);
+        finish();
+        
+    }
 
+    @Override
+    public void ManageOtherFragment() {
+
+    }
 
     // --------------
     // FRAGMENTS
     // --------------
 
-    private void configureAndDisplayFilteringFragment() {
+    private void configureAndDisplayFilteringFragment(String[] mDates) {
         //  Appel au SupportFragmentManager pour trouver une fragment exostant dans le conteneur FrameLayout
         mFilteringFragment = (FilteringFragment) getSupportFragmentManager().findFragmentByTag(Utils.TAG_FRAGMENT_ACTIVITY_FILTERING);
 
         if (mFilteringFragment == null) {
-            mFilteringFragment = new FilteringFragment();
+            mFilteringFragment = FilteringFragment.newInstance(mDates);
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.frame_layout_filtering, mFilteringFragment, Utils.TAG_FRAGMENT_ACTIVITY_FILTERING)
                     .commit();
+        } else if(getSupportFragmentManager().findFragmentById(R.id.frame_layout_filtering)==null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frame_layout_filtering, mFilteringFragment, Utils.TAG_FRAGMENT_ACTIVITY_FILTERING)
+                    .commit();
+        } else if(getSupportFragmentManager().findFragmentById(R.id.frame_layout_filtering)!=null){
+            Log.d("Track FilteringActivity","mFilteringFragment not null already in frame_layout_filtering" + mFilteringFragment.getId());
         }
+
     }
 }

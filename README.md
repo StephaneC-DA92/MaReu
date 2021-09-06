@@ -30,13 +30,18 @@ Application de gestion de réunions
 
 
 ## Technologies
-Liste des technologies utilisées dans ce projet
+Liste des technologies utilisées : 
 * [Android Studio](https://developer.android.com/studio/) : Version 4.1.3
 * [viewBinding](https://developer.android.com/topic/libraries/view-binding) : since Android Studio 3.6
 * [Gradle](https://developer.android.com/studio/releases/gradle-plugin) : Version 4.1.3
 * [EventBus](https://greenrobot.org/eventbus/) : Version 3.2.0
 * [JUnit](https://github.com/junit-team/junit4/wiki) : Version 4.13
 * [Espresso](https://developer.android.com/training/testing/espresso) : Version 3.3.0
+
+Notes sur les méthodes utilisées :   
+* Communication entre fragments : FragmentManager pour transfert de lot de données via Bundle    
+* Communication entre fragment et activité : FragmentManager pour transfert de lot de données via Bundle, ou callback pour appliquer une méthode   
+* Gestion de changement de configuration : SharedPreferences pour sauvegarde temporaire de données individuelles partagées   
 
 ### Démarrage
 Version de SdK min : 21
