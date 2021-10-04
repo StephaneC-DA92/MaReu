@@ -2,6 +2,7 @@ package com.companyx.mareu.controller.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -33,8 +34,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class FilteringFragment extends BaseFragment{
 
-    private FragmentFilteringBinding mBinding;
-//    private View mView;
+    private FragmentFilteringBinding mFilteringBinding;
 
     private SharedPreferences FilteringSharedPref;
     private SharedPreferences.Editor FilteringEditor;
@@ -46,7 +46,6 @@ public class FilteringFragment extends BaseFragment{
 
     private static final String ARG_DATES = "Dates";
     public String[] mDates;
-    public static final String BUNDLE_DATES_KEY="BUNDLE_DATES_KEY";
 
     public FilteringFragment() {
         // Required empty public constructor
@@ -86,39 +85,41 @@ public class FilteringFragment extends BaseFragment{
         if (getArguments() != null) {
             mDates = getArguments().getStringArray(ARG_DATES);
         } else if (savedInstanceState != null){
-            mDates = savedInstanceState.getStringArray(BUNDLE_DATES_KEY);
+            mDates = savedInstanceState.getStringArray(Utils.BUNDLE_LIST_DATES_KEY);
         }
 
-        //Check pref existant?
         FilteringSharedPref = requireActivity().getSharedPreferences(getString(R.string.filtering_preference_file_key),Context.MODE_PRIVATE);
         FilteringEditor = FilteringSharedPref.edit();
     }
 
     @Override
     protected void configureFragmentDesign(LayoutInflater inflater, ViewGroup container) {
-        mBinding = FragmentFilteringBinding.inflate(inflater, container, false);
-        mView = mBinding.getRoot();
+        mFilteringBinding = FragmentFilteringBinding.inflate(inflater, container, false);
+        mView = mFilteringBinding.getRoot();
 
         Context context = mView.getContext();
 
         ArrayAdapter<String> adapterDates = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, mDates);
         adapterDates.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mBinding.FiltreDateSpinner.setAdapter(adapterDates);
+        mFilteringBinding.FiltreDateSpinner.setAdapter(adapterDates);
 
         if(FilteringSharedPref.contains(getString(R.string.filering_dateDebut_key))
 //                &&FilteringSharedPref.getString(getString(R.string.filering_dateDebut_key),null)!=null
         ){mDateDebut = FilteringSharedPref.getString(getString(R.string.filering_dateDebut_key), null);
+
+            Toast.makeText(requireContext(), "Action en cours pour filtre des réunions", Toast.LENGTH_SHORT).show();
+
             for(int i = 0; i<mDates.length;i++){
                 if(mDates[i].equals(mDateDebut)){
-                    mBinding.FiltreDateSpinner.setSelection(i,true);
+                    mFilteringBinding.FiltreDateSpinner.setSelection(i,true);
                     break;
                 }
             }
         } else {
-            mBinding.FiltreDateSpinner.setSelection(0,true);
+            mFilteringBinding.FiltreDateSpinner.setSelection(0,true);
         }
 
-        mBinding.FiltreDateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mFilteringBinding.FiltreDateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //TODO : pas selection initiale à 0
@@ -141,26 +142,38 @@ public class FilteringFragment extends BaseFragment{
         String[] lieux = mDummyApiServiceSalles.getPlaceList();
 
         ArrayAdapter<String> adapterLieux = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, lieux);
-        mBinding.FiltreSalles.setAdapter(adapterLieux);
-        mBinding.FiltreSalles.setThreshold(1);
-        mBinding.FiltreSalles.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        mFilteringBinding.FiltreSalles.setAdapter(adapterLieux);
+        mFilteringBinding.FiltreSalles.setThreshold(1);
+        mFilteringBinding.FiltreSalles.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         if(FilteringSharedPref.getString(getString(R.string.filering_room_key), null)!=null){
 
             mSequenceLieux = FilteringSharedPref.getString(getString(R.string.filering_room_key), null);
 
-            mBinding.FiltreSalles.setText(mSequenceLieux.subSequence(0,mSequenceLieux.length()));
+            if(!FilteringSharedPref.contains(getString(R.string.filering_dateDebut_key))){
+                Toast.makeText(requireContext(), "Action en cours pour filtre des réunions", Toast.LENGTH_SHORT).show();
+            }
+
+            mFilteringBinding.FiltreSalles.setText(mSequenceLieux.subSequence(0,mSequenceLieux.length()));
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        //Bordure pour vue multifragments
+        int size = (int) (getResources().getDimension(R.dimen.tablet_size)/getResources().getDisplayMetrics().density);
 
-        mBinding.FiltreSalles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        if (getResources().getConfiguration().screenWidthDp >= size &&
+                getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mFilteringBinding.filteringBorder.setVisibility(View.VISIBLE);
+        }
+
+        //TODO : memory leaks
+        mFilteringBinding.FiltreSalles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mSequenceLieux = mBinding.FiltreSalles.getText().toString();
+                mSequenceLieux = mFilteringBinding.FiltreSalles.getText().toString();
 
                 FilteringEditor.putString(getString(R.string.filering_room_key), mSequenceLieux).apply();
             }
@@ -198,13 +211,13 @@ public class FilteringFragment extends BaseFragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBinding = null;
+        mFilteringBinding = null;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArray(BUNDLE_DATES_KEY,mDates);
+        outState.putStringArray(Utils.BUNDLE_LIST_DATES_KEY,mDates);
     }
 
     // --------------
@@ -223,10 +236,18 @@ public class FilteringFragment extends BaseFragment{
             }
             sendResultToFragmentManager(resultat, Utils.FILTERING_ACTIVITY_FRAGMENT, Utils.FILTERING_INTER_FRAGMENTS);
 
-            FilteringSharedPref.edit().clear().commit(); // vider les préférences
+            ManageSharedPreferences();
 
         } else {
             Toast.makeText(mView.getContext(), "Veuillez saisir des critères", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void ManageSharedPreferences(){
+        FilteringEditor.clear().commit(); // vider les préférences
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            getActivity().deleteSharedPreferences(getString(R.string.filtering_preference_file_key)); //supprimer les préférences
         }
     }
 

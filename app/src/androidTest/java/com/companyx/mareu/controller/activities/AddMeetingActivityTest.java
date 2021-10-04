@@ -1,32 +1,21 @@
 package com.companyx.mareu.controller.activities;
 
-import android.content.Intent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
-import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.rule.ActivityTestRule;
 
 import com.companyx.mareu.R;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -37,15 +26,14 @@ import static androidx.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.companyx.mareu.utils.RecyclerViewItemCountAssertion.withItemCount;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -154,26 +142,31 @@ public class AddMeetingActivityTest {
                         isDisplayed()));
         materialButton4.perform(click());
 
-        ViewInteraction materialAutoCompleteTextView = onView(withId(R.id.autoCompleteTextView));
+        ViewInteraction materialAutoCompleteTextView = onView(withId(R.id.autoCompleteRoom));
         materialAutoCompleteTextView.perform(scrollTo(), typeText(salle));
         onView(withText(containsString(salle))).inRoot(RootMatchers.isPlatformPopup()).perform(click());
         materialAutoCompleteTextView.check(matches(withText(containsString(salle))));
 
-        ViewInteraction appCompatMultiAutoCompleteTextView = onView(withId(R.id.multiAutoCompleteTextView));
+        ViewInteraction appCompatMultiAutoCompleteTextView = onView(withId(R.id.multiAutoCompleteParticipants));
         appCompatMultiAutoCompleteTextView.perform(scrollTo(), typeText(nom1));
         onView(withText(containsString(email1))).inRoot(RootMatchers.isPlatformPopup()).perform(click());
         appCompatMultiAutoCompleteTextView.perform(typeTextIntoFocusedView(nom2));
         onView(withText(containsString(email2))).inRoot(RootMatchers.isPlatformPopup()).perform(click());
         appCompatMultiAutoCompleteTextView.check(matches(withText(containsString(email1 + ", " + email2))));
 
-        ViewInteraction materialAutoCompleteTextView2 = onView(withId(R.id.autoCompleteTextView2));
+        ViewInteraction materialAutoCompleteTextView2 = onView(withId(R.id.autoCompleteOrganisateur));
         materialAutoCompleteTextView2.perform(scrollTo(), typeText(nom3));
         onView(withText(containsString(email3))).inRoot(RootMatchers.isPlatformPopup()).perform(click());
         materialAutoCompleteTextView2.check(matches(withText(containsString(email3))));
 
        //Sauvegarde
-        ViewInteraction floatingActionButton2 = onView(allOf(withId(R.id.save_button)));
-        floatingActionButton2.perform(scrollTo(), click());
+        /*ViewInteraction floatingActionButton2 = onView(allOf(withId(R.id.filter_action_check)));
+        floatingActionButton2.perform(scrollTo(), click());*/
+
+        ViewInteraction actionFilterView = onView(
+                allOf(withId(R.id.filter_action_check), withContentDescription("Valider"),
+                        isDisplayed()));
+        actionFilterView.perform(click());
 
         //Liste modifiée : 1 réunion en plus
         onView(withId(R.id.meeting_item_list)).check(withItemCount(ITEMS_COUNT + 1));

@@ -39,7 +39,7 @@ public abstract class BaseFragment extends Fragment { //implements AllFragmentFa
 
     public interface FragmentActionListener {
         public void onClickCloseMenu();
-        public void navigateToOtherActivity();
+        public void NavigateToOtherActivity();
         public void ManageOtherFragment();
     }
 
@@ -125,7 +125,10 @@ public abstract class BaseFragment extends Fragment { //implements AllFragmentFa
     public void onResume() {
         super.onResume();
 
-        Log.d("Track BaseFragment","onResume " + getClass().toString()+" Id "+this.getId()+" in "+requireActivity().getLocalClassName()+" Task "+requireActivity().getTaskId());
+        Log.d("Track BaseFragment","onResume for " + getClass().toString()+" with Id "+this.getId()+
+                " in "+requireActivity().getLocalClassName()+
+                " within Task "+requireActivity().getTaskId()+
+                " Host : "+this.getHost().toString());
     }
 
     @Override

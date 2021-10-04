@@ -2,5 +2,5 @@
 <resources>
     <dimen name="text_vholder">13sp</dimen>
     <dimen name="subtext_vholder">11sp</dimen>
-    <dimen name="tablet_size">600</dimen>
+    <dimen name="tablet_size">600dp</dimen>
 </resources>

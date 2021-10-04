@@ -1,5 +1,12 @@
 package com.companyx.mareu.controller;
 
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
+
 import androidx.fragment.app.Fragment;
 
 import com.companyx.mareu.R;
@@ -28,4 +35,13 @@ public class Utils {
 
     public static final String BUNDLE_FILTER_ROOM = "BUNDLE_FILTER_ROOM";
     public static final String BUNDLE_FILTER_DATE_START = "BUNDLE_FILTER_DATE_START";
+
+    public static final String BUNDLE_LIST_DATES_KEY ="BUNDLE_LIST_DATES_KEY";
+
+    public static final String BUNDLE_DISPLAYED_ROOMS_KEY ="BUNDLE_DISPLAYED_ROOMS_KEY";
+    public static final String BUNDLE_DISPLAYED_DATE_KEY ="BUNDLE_DISPLAYED_DATE_KEY";
+
+    public static final String BUNDLE_FRAGMENT_STATUS_KEY ="BUNDLE_FRAGMENT_STATUS_KEY";
+
+    public static final String BUNDLE_ACTIVITY_STATUS_KEY = "BUNDLE_ACTIVITY_STATUS_KEY";
 }

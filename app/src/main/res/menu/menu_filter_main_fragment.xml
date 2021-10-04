@@ -22,11 +22,11 @@
                 app:showAsAction="withText" />
             <item
                 android:id="@+id/tri_heure_croissante"
-                android:title="Heure par ordre croissant"
+                android:title="Date par ordre croissant"
                 app:showAsAction="withText" />
             <item
                 android:id="@+id/tri_heure_decroissante"
-                android:title="Heure par ordre décroissant"
+                android:title="Date par ordre décroissant"
                 app:showAsAction="withText" />
             <item
                 android:id="@+id/sans_tri"

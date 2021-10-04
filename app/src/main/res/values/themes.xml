@@ -17,7 +17,7 @@
 
     <style name="Theme.MaReuNoBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/blue_1</item>
+        <item name="colorPrimary">@color/flavor</item>
         <item name="colorPrimaryVariant">@color/blue_2</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -28,8 +28,7 @@
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="titleTextColor">@color/white</item>
-        <item name="homeAsUpIndicator">@color/blue_1</item>
-        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlNormal">@color/flavor</item>
 
         <!-- Customize the theme for fabs and date & time picker. -->
         <item name="colorOnSecondary">@color/white</item>

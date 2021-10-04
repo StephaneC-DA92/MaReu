@@ -39,9 +39,11 @@ Liste des technologies utilisées :
 * [Espresso](https://developer.android.com/training/testing/espresso) : Version 3.3.0
 
 Notes sur les méthodes utilisées :   
+* Communication entre viewHolder et fragment : via EventBus    
 * Communication entre fragments : FragmentManager pour transfert de lot de données via Bundle    
-* Communication entre fragment et activité : FragmentManager pour transfert de lot de données via Bundle, ou callback pour appliquer une méthode   
+* Communication entre fragment et activité : FragmentManager pour transfert de lot de données via Bundle ; via callback pour appliquer une méthode   
 * Gestion de changement de configuration : SharedPreferences pour sauvegarde temporaire de données individuelles partagées   
+* Stockage de données : via Bundle et SharedPreferences
 
 ### Démarrage
 Version de SdK min : 21
@@ -60,26 +62,37 @@ Prototype en cours de développement
 Stéphane C
 
 ## Screenshots
-* L'utilisateur filtre les réunions pour la consultation de liste, avec des options de tri. 
-
- <div style="display:flex;" >
- 	<img src="/vysor_list.PNG" width="24%">
- 	<img src="vysor_list_filtering.PNG" width="24%" style="margin-left:10px;" >
-    <img src="vysor_filtering.PNG" width="24%" style="margin-left:10px;" >
- </div>
-
-* L'utilisateur ajoute une réunion  
-
- <div style="display:flex;" >
- 	<img src="/vysor_list_add.PNG" width="24%">
- 	<img src="vysor_add_meeting.PNG" width="24%" style="margin-left:10px;" >
- </div>
  
-* L'utilisateur supprime une réunion 
+* L'utilisateur peut accéder aux fonctionnalités de filtre ou de tri (mode portrait). 
+ 
+    <div style="display:flex;" >
+    <img src="/menu_portrait.gif" width="24%">
+    </div> 
+  
+* L'utilisateur peut filtrer l'affichage (mode paysage). 
+   
+    <div style="display:flex;" >
+    <img src="/filtre_paysage.gif" width="24%">
+    </div>   
+  
+* L'utilisateur peut accéder ajouter une réunion et trier l'affichage (mode paysage). 
+   
+    <div style="display:flex;" >
+    <img src="/ajout_paysage.gif" width="24%">
+    <img src="/tri_paysage.gif" width="24%" style="margin-left:10px;" >
+    </div>     
 
- <div style="display:flex;" >
- 	<img src="/vysor_delete_meeting.PNG" width="24%">
- </div> 
+* Les données saisies par l'utilisateur sont automatiquement sauvegardées après changement d'orientation. 
+   
+    <div style="display:flex;" >
+    <img src="/sauvegarde_portrait_paysage.gif" width="24%">
+    </div>   
+       
+* L'utilisateur supprime une réunion (mode portrait).
+
+    <div style="display:flex;" >
+    <img src="/suppression_portrait.gif" width="24%">
+    </div> 
 
 ## Tests
 * Tests unitaires

@@ -53,4 +53,10 @@
         android:background="@color/blue_1"
         android:layout_below="@id/frame_texte_accueil" />
 
+    <View
+        android:id="@+id/border"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@color/flavor"/>
+
 </RelativeLayout>

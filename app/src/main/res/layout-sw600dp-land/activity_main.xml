@@ -53,7 +53,8 @@
         app:backgroundTint="@color/pink"
         app:layout_constraintEnd_toEndOf="@id/frame_layout_main"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="16dp"
+        android:layout_marginVertical="16dp"
+        android:layout_marginEnd="40dp"
         app:srcCompat="@drawable/ic_baseline_add_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

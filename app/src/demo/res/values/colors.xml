@@ -10,6 +10,6 @@
     <color name="blue_1">#0026FF</color>
     <color name="blue_2">#21359F</color>
     <color name="pink">#C9488A</color>
-    <color name="flavor">@color/blue_1</color>
+    <color name="flavor">@color/teal_700</color>
 
 </resources>

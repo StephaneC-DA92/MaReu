@@ -7,14 +7,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
-import com.companyx.mareu.AllFragmentFactory;
 import com.companyx.mareu.R;
 import com.companyx.mareu.controller.Utils;
 import com.companyx.mareu.controller.fragments.BaseFragment;
@@ -27,19 +26,11 @@ public class FilteringActivity extends AppCompatActivity implements BaseFragment
 
     private FilteringFragment mFilteringFragment;
 
-/*    private ApiServiceSalles mDummyApiServiceSalles;
-
-    private String mDateDebut;
-    public String mSequenceLieux;*/
-
     private Intent data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        Log.d("Track FilteringActivity","onCreate");
-
         mBinding = ActivityFilteringBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
@@ -47,14 +38,12 @@ public class FilteringActivity extends AppCompatActivity implements BaseFragment
         setSupportActionBar(mBinding.filterActionToolbar);
 
         ActionBar ab = getSupportActionBar();
-
         ab.setDisplayHomeAsUpEnabled(true);
         //ContentDescription : "Navigate up" par défaut
         ab.setHomeActionContentDescription("Revenir à la liste des réunions");
 
         //Capter l'intent à l'origine du lancement de l'activité
         data = this.getIntent();
-
         configureAndDisplayFilteringFragment(data.getStringArrayExtra(Utils.BUNDLE_FILTER_REUNIONS));
 
         //Recevoir bundle avec date et réunion en provenance du fragment Filtering
@@ -71,12 +60,15 @@ public class FilteringActivity extends AppCompatActivity implements BaseFragment
     @Override
     protected void onStart() {
         super.onStart();
-        // Mode landscape tablette : bascule de FilteringActivity à MainActivity avec FilteringFragment getResources().getDimension(R.dimen.tablet_size)
-        if(getResources().getConfiguration().screenWidthDp >= 600 &&
+
+        int size = (int) (getResources().getDimension(R.dimen.tablet_size)/getResources().getDisplayMetrics().density);
+
+        // Mode landscape tablette : bascule de FilteringActivity à MainActivity avec FilteringFragment
+        if(getResources().getConfiguration().screenWidthDp >= size &&
                 getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             Log.d("Track FilteringActivity","onStart");
 
-            navigateToOtherActivity();
+            NavigateToOtherActivity();
         }
     }
 
@@ -98,13 +90,9 @@ public class FilteringActivity extends AppCompatActivity implements BaseFragment
 
     //TODO : vérifier
     @Override
-    public void navigateToOtherActivity() {
-//        TODO : avec syst config handle!!
-//        MainActivity.navigateToMainActivity(this, AllFragmentFactory.FragmentType.FilteringFragment);
+    public void NavigateToOtherActivity() {
 //        ActivityCompat.finishAfterTransition(this);
 //        ActivityCompat.recreate(new MainActivity());
-
-
         setResult(RESULT_FIRST_USER,null);
         finish();
 
@@ -146,7 +134,6 @@ public class FilteringActivity extends AppCompatActivity implements BaseFragment
 
         if (mFilteringFragment == null) {
             mFilteringFragment = FilteringFragment.newInstance(mDates);
-
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.frame_layout_filtering, mFilteringFragment, Utils.TAG_FRAGMENT_ACTIVITY_FILTERING)
                     .commit();

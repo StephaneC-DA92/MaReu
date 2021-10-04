@@ -1,17 +1,18 @@
 package com.companyx.mareu.controller.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentResultListener;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.companyx.mareu.AllFragmentFactory;
 import com.companyx.mareu.R;
 import com.companyx.mareu.controller.Utils;
 import com.companyx.mareu.controller.fragments.AddMeetingFragment;
@@ -36,6 +37,11 @@ public class AddMeetingActivity extends AppCompatActivity implements BaseFragmen
 
         setSupportActionBar(mBinding.actionToolbar);
 
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        //ContentDescription : "Navigate up" par défaut
+        ab.setHomeActionContentDescription("Revenir à la liste des réunions");
+
         configurerEtAfficherAddMeetingFragment();
 
         //Recevoir bundle avec réunion en provenance du fragment AddMeeting
@@ -47,12 +53,29 @@ public class AddMeetingActivity extends AppCompatActivity implements BaseFragmen
                     saveActivityResultAndThenClose();
             }
         });
+
+        Log.d("Track AddMeetingActivit","onCreate with Task" + getTaskId());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        int size = (int) (getResources().getDimension(R.dimen.tablet_size)/getResources().getDisplayMetrics().density);
+
+        // Mode landscape tablette : bascule de AddMeetingActivity à MainActivity avec AddMeetingFragment
+        if(getResources().getConfiguration().screenWidthDp >= size &&
+                getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            Log.d("Track AddMeetingActivit","onStart");
+
+            NavigateToOtherActivity();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("AddMeetingActivity trk","destroy");
+        Log.d("Track AddMeetingActivit","destroy");
     }
 
     // --------------
@@ -66,8 +89,11 @@ public class AddMeetingActivity extends AppCompatActivity implements BaseFragmen
 
     //TODO : vérifier
     @Override
-    public void navigateToOtherActivity() {
-        MainActivity.navigateToMainActivity(this, AllFragmentFactory.FragmentType.AddMeetingFragment);
+    public void NavigateToOtherActivity() {
+        setResult(RESULT_FIRST_USER,null);
+        finish();
+
+        Log.d("Track AddMeetingActivit","back?");
     }
 
     @Override
@@ -104,9 +130,16 @@ public class AddMeetingActivity extends AppCompatActivity implements BaseFragmen
 
         if (mAddMeetingFragment == null) {
             mAddMeetingFragment = new AddMeetingFragment();
-        }
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.frame_layout_add_meeting, mAddMeetingFragment, Utils.TAG_FRAGMENT_ACTIVITY_MEETING)
                 .commit();
+        } else if(getSupportFragmentManager().findFragmentById(R.id.frame_layout_add_meeting)==null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frame_layout_add_meeting, mAddMeetingFragment, Utils.TAG_FRAGMENT_ACTIVITY_MEETING)
+                    .commit();
+        } else if(getSupportFragmentManager().findFragmentById(R.id.frame_layout_add_meeting)!=null){
+            Log.d("Track AddMeetingActivit","mAddMeetingFragment not null already in frame_layout_add_meeting" + mAddMeetingFragment.getId());
+        }
+
     }
 }

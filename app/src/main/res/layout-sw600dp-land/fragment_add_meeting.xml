@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".controller.activities.AddMeetingActivity">
+        tools:context=".controller.fragments.AddMeetingFragment">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/SujetBox"
@@ -35,10 +35,12 @@
             android:layout_margin="20dp"
             android:inputType="datetime"
             android:hint="Heure de début"
+            android:backgroundTint="@color/purple_200"
             android:clickable="false"
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:drawablePadding="10dp"
             android:drawableStart="@drawable/ic_baseline_access_time_24"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/DateHeureFin"
@@ -52,11 +54,13 @@
             android:layout_margin="20dp"
             android:inputType="datetime"
             android:hint="Heure de fin"
+            android:backgroundTint="@color/purple_200"
             android:clickable="false"
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:drawableStart="@drawable/ic_baseline_access_time_24"
+            android:drawablePadding="10dp"
             app:layout_constraintStart_toEndOf="@+id/DateHeureDebut"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/SujetBox"
@@ -71,10 +75,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/DateHeureDebut"
-            app:layout_constraintBottom_toTopOf="@id/multiAutoCompleteTextView">
+            app:layout_constraintBottom_toTopOf="@id/multiAutoCompleteParticipants">
 
             <AutoCompleteTextView
-                android:id="@+id/autoCompleteTextView"
+                android:id="@+id/autoCompleteRoom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Choisir la salle"
@@ -89,18 +93,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:layout_constraintBottom_toTopOf="@id/multiAutoCompleteTextView"
+                app:layout_constraintBottom_toTopOf="@id/multiAutoCompleteParticipants"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/autoCompleteTextView"
+                app:layout_constraintStart_toEndOf="@id/autoCompleteRoom"
                 app:layout_constraintTop_toBottomOf="@id/DateHeureFin" />
 
         </LinearLayout>
 
         <MultiAutoCompleteTextView
-            android:id="@+id/multiAutoCompleteTextView"
+            android:id="@+id/multiAutoCompleteParticipants"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Choisir les participants"
+            android:backgroundTint="@color/purple_200"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/frame_salle"
@@ -110,16 +115,29 @@
             android:gravity="bottom" />
 
         <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView2"
+            android:id="@+id/autoCompleteOrganisateur"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:hint="Choisir l'organisateur"
             android:gravity="bottom"
+            android:backgroundTint="@color/purple_200"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/multiAutoCompleteTextView"
-            android:drawableStart="@drawable/ic_baseline_person_24" />
+            app:layout_constraintTop_toBottomOf="@id/multiAutoCompleteParticipants"
+            android:drawableStart="@drawable/ic_baseline_person_24"
+            android:drawablePadding="10dp"
+            />
+
+        <View
+            android:id="@+id/addMeeting_border"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/flavor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="invisible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

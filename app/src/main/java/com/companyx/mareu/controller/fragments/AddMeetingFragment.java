@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -47,8 +48,7 @@ import java.util.List;
 
 public class AddMeetingFragment extends BaseFragment{
 
-    private FragmentAddMeetingBinding mBinding;
-//    private View mView;
+    private FragmentAddMeetingBinding mAddMeetingBinding;
 
     private ApiServiceSalles mDummyApiServiceSalles;
     private DummyApiServiceCollaborateurs mDummyApiServiceCollaborateurs;
@@ -102,34 +102,33 @@ public class AddMeetingFragment extends BaseFragment{
 
         setHasOptionsMenu(true);
 
-        //Check pref existant?
         AddMeetingSharedPref = requireActivity().getSharedPreferences(getString(R.string.addmeeting_preference_file_key),Context.MODE_PRIVATE);
         AddMeetingEditor = AddMeetingSharedPref.edit();
     }
 
     @Override
     protected void configureFragmentDesign(LayoutInflater inflater, ViewGroup container) {
-        mBinding = FragmentAddMeetingBinding.inflate(inflater, container, false);
-        mView = mBinding.getRoot();
+        mAddMeetingBinding = FragmentAddMeetingBinding.inflate(inflater, container, false);
+        mView = mAddMeetingBinding.getRoot();
 
         Context context = mView.getContext();
 
         mLieux = mDummyApiServiceSalles.getPlaceList();
         ArrayAdapter<String> adapterLieux = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, mLieux);
-        mBinding.autoCompleteTextView.setAdapter(adapterLieux);
-        mBinding.autoCompleteTextView.setThreshold(1);
+        mAddMeetingBinding.autoCompleteRoom.setAdapter(adapterLieux);
+        mAddMeetingBinding.autoCompleteRoom.setThreshold(1);
 
         mDummyApiServiceCollaborateurs = new DummyApiServiceCollaborateurs();
         String[] participants = mDummyApiServiceCollaborateurs.getListeParticipants();
         ArrayAdapter<String> adapterParticipants = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, participants);
-        mBinding.multiAutoCompleteTextView.setAdapter(adapterParticipants);
-        mBinding.multiAutoCompleteTextView.setThreshold(1);
-        mBinding.multiAutoCompleteTextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        mAddMeetingBinding.multiAutoCompleteParticipants.setAdapter(adapterParticipants);
+        mAddMeetingBinding.multiAutoCompleteParticipants.setThreshold(1);
+        mAddMeetingBinding.multiAutoCompleteParticipants.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         String[] organisateurs = participants;
         ArrayAdapter<String> adapterOrganisateurs = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, organisateurs);
-        mBinding.autoCompleteTextView2.setAdapter(adapterOrganisateurs);
-        mBinding.autoCompleteTextView2.setThreshold(1);
+        mAddMeetingBinding.autoCompleteOrganisateur.setAdapter(adapterOrganisateurs);
+        mAddMeetingBinding.autoCompleteOrganisateur.setThreshold(1);
 
         //        Configuration et éventuellement remplissage des box
         if(AddMeetingSharedPref.contains(getString(R.string.addmeeting_sujet_key))) {
@@ -142,16 +141,28 @@ public class AddMeetingFragment extends BaseFragment{
             participantString = AddMeetingSharedPref.getString(getString(R.string.addmeeting_participant_key), "");
             organisateurString = AddMeetingSharedPref.getString(getString(R.string.addmeeting_organisateur_key), "");
 
-            mBinding.Sujet.setText(mSujet.subSequence(0,mSujet.length()));
+            mAddMeetingBinding.Sujet.setText(mSujet.subSequence(0,mSujet.length()));
 
-            mBinding.DateHeureDebut.setText((dateDebut+" "+heureDebut).subSequence(0,(dateDebut+" "+heureDebut).length()));
-            mBinding.DateHeureFin.setText((dateFin+" "+heureFin).subSequence(0,(dateFin+" "+heureFin).length()));
+            mAddMeetingBinding.DateHeureDebut.setText((dateDebut+" "+heureDebut).subSequence(0,(dateDebut+" "+heureDebut).length()));
+            mDateHeureDebut = new DateHeure(dateDebut, heureDebut).formatParseDateHeure();
 
-            mBinding.autoCompleteTextView.setText(salleDeReunionString.subSequence(0,salleDeReunionString.length()));
+            mAddMeetingBinding.DateHeureFin.setText((dateFin+" "+heureFin).subSequence(0,(dateFin+" "+heureFin).length()));
+            mDateHeureFin = new DateHeure(dateFin, heureFin).formatParseDateHeure();
 
-            mBinding.autoCompleteTextView.setText(participantString.subSequence(0,participantString.length()));
+            mAddMeetingBinding.autoCompleteRoom.setText(salleDeReunionString.subSequence(0,salleDeReunionString.length()));
+            mSalleDeReunion = mDummyApiServiceSalles.createPlaceCatalogue().get(salleDeReunionString);
+            if(mSalleDeReunion!=null){
+                mAddMeetingBinding.Couleur.setImageResource(mSalleDeReunion.getIcone().valeur());
+            }
 
-            mBinding.autoCompleteTextView.setText(organisateurString.subSequence(0,organisateurString.length()));
+            mAddMeetingBinding.multiAutoCompleteParticipants.setText(participantString.subSequence(0,participantString.length()));
+            mParticipants = getListeParticipantsFromEmailSequence(participantString);
+
+            mAddMeetingBinding.autoCompleteOrganisateur.setText(organisateurString.subSequence(0,organisateurString.length()));
+            mOrganisateur = mDummyApiServiceCollaborateurs.creerCatalogueParticipant().get(organisateurString);
+
+            Toast.makeText(requireContext(), "Action en cours pour ajout de réunion", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -180,12 +191,20 @@ public class AddMeetingFragment extends BaseFragment{
     @Override
     public void onResume() {
         super.onResume();
+        //Bordure pour vue multifragments
+        int size = (int) (getResources().getDimension(R.dimen.tablet_size)/getResources().getDisplayMetrics().density);
+
+        if (getResources().getConfiguration().screenWidthDp >= size &&
+                getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mAddMeetingBinding.addMeetingBorder.setVisibility(View.VISIBLE);
+        }
+
         Context context = mView.getContext();
 
         setCalendarProps();
 
         //TODO : SharedPreferences à partager entre MainActivity et AddMeetingActivity
-        mBinding.Sujet.addTextChangedListener(new TextWatcher() {
+        mAddMeetingBinding.Sujet.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -200,7 +219,7 @@ public class AddMeetingFragment extends BaseFragment{
 
             @Override
             public void afterTextChanged(Editable editable) {
-                mSujet = mBinding.SujetBox.getEditText().getText().toString();
+                mSujet = mAddMeetingBinding.SujetBox.getEditText().getText().toString();
                     if(!mSujet.equals("")){
                         AddMeetingEditor.putString(getString(R.string.addmeeting_sujet_key), mSujet).apply();
                     }
@@ -208,23 +227,23 @@ public class AddMeetingFragment extends BaseFragment{
         });
 
 
-        mBinding.DateHeureDebut.setOnClickListener(new View.OnClickListener() {
+        mAddMeetingBinding.DateHeureDebut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                onDateTimePickerDialogDebut(context);
-                SetDateTimeOnDateTimePickerDialog(context, mBinding.DateHeureDebut);
+                SetDateTimeOnDateTimePickerDialog(context, mAddMeetingBinding.DateHeureDebut);
             }
         });
 
-        mBinding.DateHeureFin.setOnClickListener(new View.OnClickListener() {
+        mAddMeetingBinding.DateHeureFin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                onDateTimePickerDialogFin(context);
-                SetDateTimeOnDateTimePickerDialog(context, mBinding.DateHeureFin);
+                SetDateTimeOnDateTimePickerDialog(context, mAddMeetingBinding.DateHeureFin);
             }
         });
 
-        mBinding.autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAddMeetingBinding.autoCompleteRoom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -234,14 +253,14 @@ public class AddMeetingFragment extends BaseFragment{
                     }
                 mSalleDeReunion = mDummyApiServiceSalles.createPlaceCatalogue().get(parent.getItemAtPosition(position).toString());
 
-                mBinding.Couleur.setImageResource(mSalleDeReunion.getIcone().valeur());
+                mAddMeetingBinding.Couleur.setImageResource(mSalleDeReunion.getIcone().valeur());
             }
         });
 
-        mBinding.multiAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAddMeetingBinding.multiAutoCompleteParticipants.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                participantString = mBinding.multiAutoCompleteTextView.getText().toString();
+                participantString = mAddMeetingBinding.multiAutoCompleteParticipants.getText().toString();
                     if(!participantString.equals("")) {
                         AddMeetingEditor.putString(getString(R.string.addmeeting_participant_key), participantString).apply();
                     }
@@ -249,7 +268,7 @@ public class AddMeetingFragment extends BaseFragment{
             }
         });
 
-        mBinding.autoCompleteTextView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAddMeetingBinding.autoCompleteOrganisateur.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 organisateurString = parent.getItemAtPosition(position).toString();
@@ -265,7 +284,7 @@ public class AddMeetingFragment extends BaseFragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBinding = null;
+        mAddMeetingBinding = null;
     }
 
     @Override
@@ -299,7 +318,7 @@ public class AddMeetingFragment extends BaseFragment{
 
                                         textDateTime.setText(setDate + " " + setTime);
 
-                                        if (textDateTime.getId() == mBinding.DateHeureDebut.getId()) {
+                                        if (textDateTime.getId() == mAddMeetingBinding.DateHeureDebut.getId()) {
                                             dateDebut = setDate;
                                             heureDebut = setTime;
                                                 if(!dateDebut.equals("")&&!heureDebut.equals("")) {
@@ -307,7 +326,7 @@ public class AddMeetingFragment extends BaseFragment{
                                                     AddMeetingEditor.putString(getString(R.string.addmeeting_heureDebut_key), heureDebut).apply();
                                                 }
                                             mDateHeureDebut = new DateHeure(dateDebut, heureDebut).formatParseDateHeure();
-                                        } else if (textDateTime.getId() == mBinding.DateHeureFin.getId()) {
+                                        } else if (textDateTime.getId() == mAddMeetingBinding.DateHeureFin.getId()) {
                                             dateFin = setDate;
                                             heureFin = setTime;
                                                 if(!dateFin.equals("")&&!heureFin.equals("")) {
@@ -340,17 +359,19 @@ public class AddMeetingFragment extends BaseFragment{
     private List<Collaborateur> getListeParticipantsFromEmailSequence(String mailListWithComma) {
         List<Collaborateur> participantList = new ArrayList<>();
 
-        mEmailList = Arrays.asList(mailListWithComma.split(", "));
+        if (mailListWithComma.contains(",")) {
+            mEmailList = Arrays.asList(mailListWithComma.split(", "));
 
-        for (String email : mEmailList) {
+            for (String email : mEmailList) {
 //            if (email == "") {
-            if (email.isEmpty()) {
-                mEmailList.remove(email);
+                if (email.isEmpty()) {
+                    mEmailList.remove(email);
+                }
             }
-        }
 
-        for (String email : mEmailList) {
-            participantList.add(mDummyApiServiceCollaborateurs.creerCatalogueParticipant().get(email));
+            for (String email : mEmailList) {
+                participantList.add(mDummyApiServiceCollaborateurs.creerCatalogueParticipant().get(email));
+            }
         }
         return participantList;
     }

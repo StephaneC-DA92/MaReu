@@ -46,12 +46,14 @@ public class MainFragment extends BaseFragment{
     private List<Reunion> mReunionsAffichees, mReunionsTriees;
     private ApiServiceReunions mDummyApiServiceReunions;
 
+    private String sequenceLieux = null, dateDebut = null;
+
     private final MeetingListAdapter adapter = new MeetingListAdapter(mReunionsAffichees);
 
     private Date mDateDebutFiltre;
     private List<Salle> sallesFiltre;
 
-    private String[] mDates;
+    public String[] mDates;
 
     private Statut mFragmentStatut;
 
@@ -71,7 +73,6 @@ public class MainFragment extends BaseFragment{
         return new MainFragment();
     }
 
-
     private enum Statut {
         SansFiltre,
         FiltreSalle, FiltreDate, FiltreSalleEtDate
@@ -83,14 +84,43 @@ public class MainFragment extends BaseFragment{
 
     @Override
     protected void setCallback() {
-
+        try{
+            this.callback = (FragmentActionListener) getActivity();
+        }catch(ClassCastException e){
+            Log.d("MainFragment","No Listener found");
+        }
     }
 
     @Override
     protected void configureFragmentSettings(Bundle savedInstanceState) {
         mDummyApiServiceReunions = DI_Reunions.getServiceReunions();
 
-        mFragmentStatut = Statut.SansFiltre;
+        try{
+            if(savedInstanceState.getString(Utils.BUNDLE_FRAGMENT_STATUS_KEY)!=null) {
+                this.mFragmentStatut = Statut.valueOf(savedInstanceState.getString(Utils.BUNDLE_FRAGMENT_STATUS_KEY));
+            }
+        } catch (NullPointerException e) {
+            Log.e("Track MainFragment","BUNDLE_FRAGMENT_STATUS_KEY exception : "+e);
+        }
+
+        if(this.mFragmentStatut == null){
+            this.mFragmentStatut = Statut.SansFiltre;
+        } else if(this.mFragmentStatut != Statut.SansFiltre){
+            try{
+                if(savedInstanceState.getString(Utils.BUNDLE_DISPLAYED_ROOMS_KEY)!=null){
+                    this.sequenceLieux = savedInstanceState.getString(Utils.BUNDLE_DISPLAYED_ROOMS_KEY);
+
+                    Log.d("Track MainFragment", Utils.BUNDLE_DISPLAYED_ROOMS_KEY);
+                }
+                if(savedInstanceState.getString(Utils.BUNDLE_DISPLAYED_DATE_KEY)!=null){
+                    this.dateDebut = savedInstanceState.getString(Utils.BUNDLE_DISPLAYED_DATE_KEY);
+
+                    Log.d("Track MainFragment", Utils.BUNDLE_DISPLAYED_DATE_KEY);
+                }
+            } catch (NullPointerException e) {
+                Log.e("Track MainFragment","BUNDLE_DISPLAYED_..._KEY exception : "+e);
+            }
+        }
 
         setHasOptionsMenu(true);
 
@@ -99,8 +129,11 @@ public class MainFragment extends BaseFragment{
         getParentFragmentManager().setFragmentResultListener(Utils.NEW_MEETING_INTER_FRAGMENTS, this, (requestKey, bundle) -> {
             mNouvelleReunion = (Reunion) bundle.getSerializable(Utils.BUNDLE_EXTRA_MEETING);
             addNewMeeting(mNouvelleReunion);
-            //Contrôle par le fragment
+
             callback.ManageOtherFragment();
+
+            Log.d("Track MainFragment","on addNewMeeting Result");
+
         });
 
         //Recevoir bundle avec critères filtre en provenance du fragment Filtering
@@ -108,16 +141,18 @@ public class MainFragment extends BaseFragment{
         getParentFragmentManager().setFragmentResultListener(Utils.FILTERING_INTER_FRAGMENTS, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                String sequenceLieux = bundle.getString(Utils.BUNDLE_FILTER_ROOM);
-                String dateDebut = bundle.getString(Utils.BUNDLE_FILTER_DATE_START);
+                sequenceLieux = bundle.getString(Utils.BUNDLE_FILTER_ROOM);
+                dateDebut = bundle.getString(Utils.BUNDLE_FILTER_DATE_START);
+
                 filterWithSelection(sequenceLieux, dateDebut);
 
                 refreshDisplay();
 
+                callback.ManageOtherFragment();
+
                 Log.d("Track MainFragment","on Filter Result");
             }
         });
-
         mDummyApiServiceSalles = DI_Salles.getServiceSalles();
     }
 
@@ -128,39 +163,19 @@ public class MainFragment extends BaseFragment{
 
         Context context = mView.getContext();
         mRecyclerView = mBinding.meetingItemList;
-//        mRecyclerView = (RecyclerView) mView.findViewById(R.id.meeting_item_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         mDates = mDummyApiServiceReunions.getListeDate(mDummyApiServiceReunions.getListeReunions());
+
+        mRecyclerView.setAdapter(adapter);
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
-        mRecyclerView.setAdapter(adapter);
 
         refreshDisplay();
-
-        if(this.isAdded()){
-            Log.d("Track MainFragment","isAdded on Resume");
-        }
-        //Not visible on resume  in m activity!
-        if(this.isVisible()){
-            Log.d("Track MainFragment","isVisible on Resume");
-        }
-        //Not Detached on resume!
-        if(this.isDetached()){
-            Log.d("Track MainFragment","isDetached on Resume");
-        }
-        if(this.isInLayout()){
-            Log.d("Track MainFragment","isInLayout on Resume");
-        }
-        if(this.isHidden()){
-            Log.d("Track MainFragment","isHidden on Resume");
-        }
-
-        Log.d("Track MainFragment","MainFragment Host : "+this.getHost().toString());
-
     }
 
     @Override
@@ -209,7 +224,6 @@ public class MainFragment extends BaseFragment{
 
     @Override
     protected void saveResultAndThenClose() {
-
     }
 
     @Override
@@ -219,14 +233,22 @@ public class MainFragment extends BaseFragment{
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(this.sequenceLieux!=null)
+            outState.putString(Utils.BUNDLE_DISPLAYED_ROOMS_KEY, this.sequenceLieux);
+
+        if(this.dateDebut!=null)
+            outState.putString(Utils.BUNDLE_DISPLAYED_DATE_KEY, this.dateDebut);
+
+        outState.putString(Utils.BUNDLE_FRAGMENT_STATUS_KEY, mFragmentStatut.name());
     }
 
     // --------------
-    // CHANGE METHODS
+    // ACTION METHODS
     // --------------
 
+    //Gestion par eventBus
     /**
      * Déclenché si on supprime une réunion
      *
@@ -239,6 +261,7 @@ public class MainFragment extends BaseFragment{
         updateAdapter("ADAPTER_DELETION", mReunionsAffichees);
     }
 
+    //Gestion par fragment manager
     public void addNewMeeting(Reunion reunion) {
         mDummyApiServiceReunions.addReunionItem(reunion);
         mReunionsAffichees = mDummyApiServiceReunions.getListeReunions();
@@ -266,13 +289,14 @@ public class MainFragment extends BaseFragment{
                 updateAdapter("ADAPTER_SALLE_HEURE", mReunionsAffichees);
                 break;
         }
+
+        Log.d("Track MainFragment","refreshDisplay");
     }
 
     private void updateAdapter(String msg, List<Reunion> reunions) {
         if (reunions.size()!= 0) {
             adapter.updateReunions(reunions);
-            //Dates de toutes réunions existantes
-//            mDates = mDummyApiServiceReunions.getListeDate(reunions);
+
             Log.d("MainFragment",msg);
         } else {
             mBinding.messageAccueil.setText(R.string.message_accueil);
@@ -285,9 +309,19 @@ public class MainFragment extends BaseFragment{
     // FILTERING METHODS
     // --------------
 
-    public void filterWithSelection(String listeLieux, String dateDebut) {
+    public void displayAndFilterWithSelection(String listeLieux, String dateDebut){
+        filterWithSelection(listeLieux, dateDebut);
+
+        refreshDisplay();
+    }
+
+    private void filterWithSelection(String listeLieux, String dateDebut) {
+
+        this.sequenceLieux=listeLieux;
+        this.dateDebut=dateDebut;
+
         if (listeLieux!=null) {
-            sallesFiltre = getListeSallesFromLieuxSequence(listeLieux);
+            sallesFiltre = mDummyApiServiceSalles.getSallesFromLieux(listeLieux);
             if (dateDebut!=null) {
                 mDateDebutFiltre = new DateHeure(dateDebut).formatParseDate();
                 filterRoomsDate(sallesFiltre, mDateDebutFiltre);
@@ -307,20 +341,21 @@ public class MainFragment extends BaseFragment{
     //Pattern comportement
     public void noFilter() {
         mFragmentStatut = Statut.SansFiltre;
+
         refreshDisplay();
     }
 
-    public void filterRooms(List<Salle> sallesFiltre) {
+    private void filterRooms(List<Salle> sallesFiltre) {
         mFragmentStatut = Statut.FiltreSalle;
         mReunionsAffichees = mDummyApiServiceReunions.filterPlace(mDummyApiServiceReunions.getListeReunions(), sallesFiltre);
     }
 
-    public void filterDate(Date mDate) {
+    private void filterDate(Date mDate) {
         mFragmentStatut = Statut.FiltreDate;
         mReunionsAffichees = mDummyApiServiceReunions.filterDate(mDummyApiServiceReunions.getListeReunions(), mDate);
     }
 
-    public void filterRoomsDate(List<Salle> sallesFiltre, Date mDate) {
+    private void filterRoomsDate(List<Salle> sallesFiltre, Date mDate) {
         mFragmentStatut = Statut.FiltreSalleEtDate;
         mReunionsAffichees = mDummyApiServiceReunions.filterPlaceDate(mDummyApiServiceReunions.getListeReunions(), sallesFiltre, mDate);
     }
@@ -358,22 +393,9 @@ public class MainFragment extends BaseFragment{
     // OTHER METHODS
     // --------------
 
-    //Inspiré de com/companyx/mareu/controller/fragments/AddMeetingFragment.java:179
-    private List<Salle> getListeSallesFromLieuxSequence(String ListeLieuxAvecVirgule) {
-        List<Salle> listeSalles = new ArrayList<>();
 
-        List<String> listeLieux = Arrays.asList(ListeLieuxAvecVirgule.split(", "));
-
-        for (String lieu : listeLieux) {
-            if (lieu.equals("")) {
-                listeLieux.remove(lieu);
-            }
-            listeSalles.add(mDummyApiServiceSalles.createPlaceCatalogue().get(lieu));
-        }
-        return listeSalles;
-    }
-
-    public String[] getListDates(){
+    public String[] getmDates() {
         return mDates;
     }
+
 }

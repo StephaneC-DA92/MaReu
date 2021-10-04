@@ -3,17 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <!--    <View
-            android:id="@+id/meeting_frame"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@id/meeting_icon"
-            app:layout_constraintTop_toTopOf="@id/meeting_details"
-            app:layout_constraintBottom_toBottomOf="@id/meeting_participants"
-            app:layout_constraintEnd_toStartOf="@id/item_delete_button"
-            />-->
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="5dp">
 
     <ImageView
         android:id="@+id/meeting_icon"
@@ -58,7 +49,6 @@
         app:layout_constraintStart_toEndOf="@id/meeting_icon"
         app:layout_constraintTop_toBottomOf="@id/meeting_details"
         app:layout_constraintEnd_toStartOf="@id/item_delete_button" />
-
 
     <ImageButton
         android:id="@+id/item_delete_button"

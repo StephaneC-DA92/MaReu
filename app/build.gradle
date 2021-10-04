@@ -36,7 +36,13 @@ android {
         demo {
             applicationIdSuffix ".demo"
             versionNameSuffix "-demo"
+            dimension "version"
+        }
 
+        prod {
+            applicationIdSuffix ".prod"
+            versionNameSuffix "-prod"
+            dimension "version"
         }
 
     }

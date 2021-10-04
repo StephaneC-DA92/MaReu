@@ -17,4 +17,6 @@ public interface ApiServiceSalles {
 
     String[] getPlaceList();
 
+    List<Salle> getSallesFromLieux(String ListeLieuxAvecVirgule);
+
 }

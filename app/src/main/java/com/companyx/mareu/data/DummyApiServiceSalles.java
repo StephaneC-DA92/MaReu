@@ -2,6 +2,8 @@ package com.companyx.mareu.data;
 
 import com.companyx.mareu.model.Salle;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,5 +36,23 @@ public class DummyApiServiceSalles implements ApiServiceSalles {
             choix[i] = salles.get(i).getLieu();
         }
         return choix;
+    }
+
+    //Inspiré de com/companyx/mareu/controller/fragments/AddMeetingFragment.java:179
+    public List<Salle> getSallesFromLieux(String LieuxAvecVirgule) {
+        List<Salle> listeSalles = new ArrayList<>();
+
+        if (LieuxAvecVirgule.contains(",")) {
+
+            List<String> listeLieux = Arrays.asList(LieuxAvecVirgule.split(", "));
+
+            for (String lieu : listeLieux) {
+                if (lieu.equals("")) {
+                    listeLieux.remove(lieu);
+                }
+                listeSalles.add(createPlaceCatalogue().get(lieu));
+            }
+        }
+        return listeSalles;
     }
 }
