@@ -1,7 +1,5 @@
 package com.companyx.mareu;
 
-//https://guides.codepath.com/android/Understanding-the-Android-Application-Class
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,8 +23,6 @@ public class MaReuApplication extends Application {
     // --------------
     // REINIT
     // --------------
-
-//    /data/data/com.companyx.mareu.demo.debug/shared_prefs
 
     private void ManageSharedPreferences(){
 

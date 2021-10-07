@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentResultListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,8 @@ public class AddMeetingActivity extends AppCompatActivity implements BaseFragmen
 
     private Reunion mNouvelleReunion = null;
 
+    private Bundle myBundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,17 +42,20 @@ public class AddMeetingActivity extends AppCompatActivity implements BaseFragmen
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
+        //Set action bar arrow
+        ab.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24);
         //ContentDescription : "Navigate up" par défaut
         ab.setHomeActionContentDescription("Revenir à la liste des réunions");
 
         configurerEtAfficherAddMeetingFragment();
 
         //Recevoir bundle avec réunion en provenance du fragment AddMeeting
-        getSupportFragmentManager().setFragmentResultListener(Utils.NEW_MEETING_ACTIVITY_FRAGMENT, this, new FragmentResultListener() {
+        getSupportFragmentManager().setFragmentResultListener(Utils.NEW_MEETING_ACTIVITY_FRAGMENT_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 //mNouvelleReunion par construction de AddMeetingFragment
-                    mNouvelleReunion = (Reunion) bundle.getSerializable(Utils.BUNDLE_EXTRA_MEETING);
+
+                    myBundle = bundle;
                     saveActivityResultAndThenClose();
             }
         });
@@ -87,7 +93,6 @@ public class AddMeetingActivity extends AppCompatActivity implements BaseFragmen
         ActivityCompat.startActivityForResult(activity, intent, RequestCode, null);
     }
 
-    //TODO : vérifier
     @Override
     public void NavigateToOtherActivity() {
         setResult(RESULT_FIRST_USER,null);
@@ -108,7 +113,8 @@ public class AddMeetingActivity extends AppCompatActivity implements BaseFragmen
     //Envoyer résultat succès à activité appelante
     private void saveActivityResultAndThenClose() {
             Intent intent = new Intent();
-            intent.putExtra(Utils.BUNDLE_EXTRA_MEETING, mNouvelleReunion);
+
+            intent.putExtras(myBundle);
             setResult(RESULT_OK, intent);
             finish();
     }

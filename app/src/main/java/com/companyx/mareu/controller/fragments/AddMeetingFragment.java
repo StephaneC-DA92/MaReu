@@ -162,7 +162,6 @@ public class AddMeetingFragment extends BaseFragment{
             mOrganisateur = mDummyApiServiceCollaborateurs.creerCatalogueParticipant().get(organisateurString);
 
             Toast.makeText(requireContext(), "Action en cours pour ajout de réunion", Toast.LENGTH_SHORT).show();
-
         }
     }
 
@@ -181,7 +180,6 @@ public class AddMeetingFragment extends BaseFragment{
                 return true;
             case R.id.filter_action_close:
                 closeWithoutResult(R.string.addmeeting_preference_file_key,AddMeetingEditor);
-//                closeWithoutResult(Utils.NEW_MEETING_ACTIVITY_FRAGMENT);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -203,7 +201,6 @@ public class AddMeetingFragment extends BaseFragment{
 
         setCalendarProps();
 
-        //TODO : SharedPreferences à partager entre MainActivity et AddMeetingActivity
         mAddMeetingBinding.Sujet.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -230,7 +227,6 @@ public class AddMeetingFragment extends BaseFragment{
         mAddMeetingBinding.DateHeureDebut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                onDateTimePickerDialogDebut(context);
                 SetDateTimeOnDateTimePickerDialog(context, mAddMeetingBinding.DateHeureDebut);
             }
         });
@@ -238,7 +234,6 @@ public class AddMeetingFragment extends BaseFragment{
         mAddMeetingBinding.DateHeureFin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                onDateTimePickerDialogFin(context);
                 SetDateTimeOnDateTimePickerDialog(context, mAddMeetingBinding.DateHeureFin);
             }
         });
@@ -382,8 +377,6 @@ public class AddMeetingFragment extends BaseFragment{
 
     @Override
     protected void saveResultAndThenClose() {
-//        mSujet = mBinding.SujetBox.getEditText().getText().toString();
-
         if(mSalleDeReunion == null||mSujet.isEmpty()||mParticipants==null||mDateHeureDebut==null||mDateHeureFin==null||mOrganisateur==null){
             Toast.makeText(getContext(), "Veuillez saisir tous les détails de la réunion", Toast.LENGTH_LONG).show();
         } else {
@@ -395,11 +388,10 @@ public class AddMeetingFragment extends BaseFragment{
                     mDateHeureFin,
                     mOrganisateur);
 
-            //TODO : vérif
             Bundle resultat = new Bundle();
             resultat.putSerializable(Utils.BUNDLE_EXTRA_MEETING, mReunion);
 
-            sendResultToFragmentManager(resultat, Utils.NEW_MEETING_ACTIVITY_FRAGMENT, Utils.NEW_MEETING_INTER_FRAGMENTS);
+            sendResultToFragmentManager(resultat, Utils.NEW_MEETING_ACTIVITY_FRAGMENT_KEY, Utils.NEW_MEETING_INTER_FRAGMENTS_KEY);
 
             ManageSharedPreferences();
         }

@@ -37,12 +37,6 @@ public class MainActivity extends AppCompatActivity  implements BaseFragment.Fra
     private AddMeetingFragment mAddMeetingFragment;
     private FilteringFragment mFilteringFragment;
 
-    public void setmDates(String[] mDates) {
-        this.mDates = mDates;
-    }
-
-    private String[] mDates;
-
     private String listeLieux, dateDebut;
 
     private otherFragmentType mStepStatus;
@@ -106,10 +100,6 @@ public class MainActivity extends AppCompatActivity  implements BaseFragment.Fra
 
         configureAndDisplayMainFragment();
 
-        /*this.mDates = mMainFragment.getmDates();
-        this.mDates = mMainFragment.mDates;
-        setmDates(mMainFragment.getmDates());*/
-
         //Mode paysage
         if(findViewById(R.id.frame_layout_other) != null){
             configureAndDisplayOtherFragment();
@@ -167,7 +157,7 @@ public class MainActivity extends AppCompatActivity  implements BaseFragment.Fra
 
                 if (findViewById(R.id.frame_layout_other) == null) {
                     FilteringActivity.navigateToFilteringActivity(MainActivity.this,
-                            Utils.FILTER_ACTIVITY_CODE, Utils.BUNDLE_FILTER_REUNIONS,
+                            Utils.FILTER_ACTIVITY_CODE, Utils.BUNDLE_FILTER_DATES,
                             mMainFragment.getmDates());
                 } else {
                     //Fragment AddMeetingFragment pour tablette sw600dp en mode paysage
@@ -205,9 +195,13 @@ public class MainActivity extends AppCompatActivity  implements BaseFragment.Fra
                 this.mStepStatus = otherFragmentType.FilteringFragment;
             } else {
                     if(resultCode == RESULT_OK) {
-                    listeLieux = data.getStringExtra(Utils.BUNDLE_FILTER_ROOM);
+                    /*listeLieux = data.getStringExtra(Utils.BUNDLE_FILTER_ROOM);
                     dateDebut = data.getStringExtra(Utils.BUNDLE_FILTER_DATE_START);
-                    mMainFragment.displayAndFilterWithSelection(listeLieux, dateDebut);
+
+                    mMainFragment.filterWOSelectionAndDisplay(listeLieux, dateDebut);*/
+
+                    mMainFragment.filterWithDefinedSpecs(data.getExtras());
+
                     }
                     this.mStepStatus = otherFragmentType.FragmentAccueil;
             }
@@ -226,7 +220,7 @@ public class MainActivity extends AppCompatActivity  implements BaseFragment.Fra
             BaseFragment notVisibleFragment = (BaseFragment) getSupportFragmentManager().findFragmentByTag(tag);
 
             if (findViewById(R.id.frame_layout_other) == null && notVisibleFragment != null){
-//               TODO : voir Fragment.setMenuVisibility(false)
+//              notVisibleFragment.setMenuVisibility(false)
                 myFragmentManager.beginTransaction().remove(notVisibleFragment).commit();
 
                 Log.d("Track MainActivity", "onResumeFragments : notVisibleFragment "+notVisibleFragment.getClass().toString()+" removed");
@@ -249,7 +243,7 @@ public class MainActivity extends AppCompatActivity  implements BaseFragment.Fra
         }
         else if(this.mStepStatus == otherFragmentType.FilteringFragment){
             FilteringActivity.navigateToFilteringActivity(MainActivity.this,
-                    Utils.FILTER_ACTIVITY_CODE, Utils.BUNDLE_FILTER_REUNIONS,
+                    Utils.FILTER_ACTIVITY_CODE, Utils.BUNDLE_FILTER_DATES,
                     mMainFragment.getmDates());
             Toast.makeText(this, "Action en cours pour filtre des réunions", Toast.LENGTH_SHORT).show();
         }
@@ -293,7 +287,7 @@ public class MainActivity extends AppCompatActivity  implements BaseFragment.Fra
                     setAddMeetingButtonVisible(false);
                     break;
                 /*default:
-                    configureAndDisplayFragmentAccueil();*/ //TODO : revoir
+                    configureAndDisplayFragmentAccueil();*/
             }
         }
     }
@@ -306,8 +300,6 @@ public class MainActivity extends AppCompatActivity  implements BaseFragment.Fra
             mBinding.addMeeting.setVisibility(View.INVISIBLE);
         }
     }
-
-    //TODO : add button invisible pour FilteringFragment
 
     private void configureAndDisplayFragmentAccueil(){
             mFragmentAccueil = (FragmentAccueil) getSupportFragmentManager().findFragmentByTag(Utils.TAG_FRAGMENT_ACCUEIL);

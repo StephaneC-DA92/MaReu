@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentResultListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
@@ -39,15 +39,17 @@ public class FilteringActivity extends AppCompatActivity implements BaseFragment
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
+        //Set action bar arrow
+        ab.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24);
         //ContentDescription : "Navigate up" par défaut
         ab.setHomeActionContentDescription("Revenir à la liste des réunions");
 
         //Capter l'intent à l'origine du lancement de l'activité
         data = this.getIntent();
-        configureAndDisplayFilteringFragment(data.getStringArrayExtra(Utils.BUNDLE_FILTER_REUNIONS));
+        configureAndDisplayFilteringFragment(data.getStringArrayExtra(Utils.BUNDLE_FILTER_DATES));
 
         //Recevoir bundle avec date et réunion en provenance du fragment Filtering
-        getSupportFragmentManager().setFragmentResultListener(Utils.FILTERING_ACTIVITY_FRAGMENT, this, new FragmentResultListener() {
+        getSupportFragmentManager().setFragmentResultListener(Utils.FILTERING_ACTIVITY_FRAGMENT_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 saveActivityResultAndThenClose(bundle);
@@ -88,11 +90,8 @@ public class FilteringActivity extends AppCompatActivity implements BaseFragment
         ActivityCompat.startActivityForResult(activity, intent, RequestCode, null);
     }
 
-    //TODO : vérifier
     @Override
     public void NavigateToOtherActivity() {
-//        ActivityCompat.finishAfterTransition(this);
-//        ActivityCompat.recreate(new MainActivity());
         setResult(RESULT_FIRST_USER,null);
         finish();
 

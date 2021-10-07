@@ -28,9 +28,6 @@ public abstract class BaseFragment extends Fragment { //implements AllFragmentFa
 //    protected ViewBinding mBinding;
     protected View mView;
 
-    //TODO : vérifier
-//    protected boolean EnableSaveInstance;
-
     // --------------
     // INTERFACE
     // --------------
@@ -47,13 +44,9 @@ public abstract class BaseFragment extends Fragment { //implements AllFragmentFa
     // BASE METHODS
     // --------------
 
-//    protected abstract void configureFragmentSettings();
     protected abstract void configureFragmentSettings(Bundle savedInstanceState); //can be used for implementation for factory
 
     protected abstract void configureFragmentDesign(LayoutInflater inflater, ViewGroup container);
-
-    //TODO : vérifier
-//    protected abstract void writeBundle(Bundle bundle);
 
     protected abstract void saveResultAndThenClose();
 
@@ -83,8 +76,6 @@ public abstract class BaseFragment extends Fragment { //implements AllFragmentFa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        EnableSaveInstance = true;
-
         configureFragmentSettings(savedInstanceState);
 
         Log.d("Track BaseFragment","onCreate "+ getClass().toString()+" Id "+this.getId() +" in "+requireActivity().getLocalClassName());
@@ -94,7 +85,6 @@ public abstract class BaseFragment extends Fragment { //implements AllFragmentFa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         configureFragmentDesign(inflater, container);
 
@@ -175,23 +165,8 @@ public abstract class BaseFragment extends Fragment { //implements AllFragmentFa
         }
     }
 
-    /*private void saveFragmentResult(){
-        //TODO : vérifier
-//        EnableSaveInstance = false ;
-
-        saveResultAndThenClose();
-    }*/
-
-/*    protected void closeWithoutResult(@StringRes int ResId, SharedPreferences.Editor editor){
-        //TODO : vérifier
-//        EnableSaveInstance = false ;
-
-        closeWithoutFragmentResult(ResId, editor);
-    }*/
-
     //Fermeture et actions de l'activité hôte
     protected void closeWithoutResult(@StringRes int ResId, SharedPreferences.Editor editor) {
-//        EnableSaveInstance = false ;
 
         if (requireActivity().getClass() != MainActivity.class) {
 

@@ -21,27 +21,31 @@ public class Utils {
     public static final String TAG_FRAGMENT_ACTIVITY_MEETING = "TAG_FRAGMENT_ACTIVITY_MEETING";
     public static final String TAG_FRAGMENT_ACTIVITY_FILTERING = "TAG_FRAGMENT_ACTIVITY_FILTERING";
 
+    //Activity codes
     public static final int NEW_MEETING_ACTIVITY_CODE = 98;
     public static final int FILTER_ACTIVITY_CODE = 90;
 
-    public static final String BUNDLE_FILTER_REUNIONS = "BUNDLE_FILTER_REUNIONS";
-    public static final String BUNDLE_EXTRA_MEETING = "BUNDLE_EXTRA_MEETING";
+    //Bundle for navigation to filtering activity
+    public static final String BUNDLE_FILTER_DATES = "BUNDLE_FILTER_DATES";
 
-    public static final String NEW_MEETING_INTER_FRAGMENTS = "NEW_MEETING_INTER_FRAGMENTS";
-    public static final String NEW_MEETING_ACTIVITY_FRAGMENT = "NEW_MEETING_ACTIVITY_FRAGMENT";
+    //Bundle for new meeting : communication of fragment result
+    public static final String BUNDLE_EXTRA_MEETING = "com.companyx.mareu.BUNDLE_EXTRA_MEETING";
 
-    public static final String FILTERING_INTER_FRAGMENTS = "FILTERING_INTER_FRAGMENTS";
-    public static final String FILTERING_ACTIVITY_FRAGMENT = "FILTERING_ACTIVITY_FRAGMENT";
+    //Request keys
+    public static final String NEW_MEETING_INTER_FRAGMENTS_KEY = "NEW_MEETING_INTER_FRAGMENTS";
+    public static final String NEW_MEETING_ACTIVITY_FRAGMENT_KEY = "NEW_MEETING_ACTIVITY_FRAGMENT";
 
+    public static final String FILTERING_INTER_FRAGMENTS_KEY = "FILTERING_INTER_FRAGMENTS";
+    public static final String FILTERING_ACTIVITY_FRAGMENT_KEY = "FILTERING_ACTIVITY_FRAGMENT";
+
+    //Data storage for restoration
     public static final String BUNDLE_FILTER_ROOM = "BUNDLE_FILTER_ROOM";
     public static final String BUNDLE_FILTER_DATE_START = "BUNDLE_FILTER_DATE_START";
 
-    public static final String BUNDLE_LIST_DATES_KEY ="BUNDLE_LIST_DATES_KEY";
+    //Data storage for restoration
+    public static final String BUNDLE_DISPLAYED_SPECS ="BUNDLE_DISPLAYED_SPECS";
 
-    public static final String BUNDLE_DISPLAYED_ROOMS_KEY ="BUNDLE_DISPLAYED_ROOMS_KEY";
-    public static final String BUNDLE_DISPLAYED_DATE_KEY ="BUNDLE_DISPLAYED_DATE_KEY";
-
+    //Status keys
     public static final String BUNDLE_FRAGMENT_STATUS_KEY ="BUNDLE_FRAGMENT_STATUS_KEY";
-
     public static final String BUNDLE_ACTIVITY_STATUS_KEY = "BUNDLE_ACTIVITY_STATUS_KEY";
 }

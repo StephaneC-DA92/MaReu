@@ -34,7 +34,6 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
         mReunions.remove(reunion);
     }
 
-    //TODO : Pattern strategy
     @Override
     public List<Reunion> filterPlace(List<Reunion> reunions, List<Salle> salles) {
         List<Reunion> reunionsFiltreesLieu = new ArrayList<Reunion>();
@@ -122,7 +121,6 @@ public class DummyApiServiceReunions implements ApiServiceReunions {
         return reunionsTriees;
     }
 
-    //TODO : à améliorer /fait
     public String[] getListeDate(List<Reunion> reunions) {
         /*List<Reunion> reunionsTriees = sortTimeDown(reunions);
         int n = reunionsTriees.size();

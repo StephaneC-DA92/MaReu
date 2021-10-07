@@ -32,8 +32,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +58,12 @@ public class MainFragment extends BaseFragment{
     private Reunion mNouvelleReunion = null;
 
     private ApiServiceSalles mDummyApiServiceSalles;
+
+    private Bundle myBundle;
+
+    public void setMyBundle(Bundle myBundle) {
+        this.myBundle = myBundle;
+    }
 
     public MainFragment() {
         // Required empty public constructor
@@ -107,15 +111,9 @@ public class MainFragment extends BaseFragment{
             this.mFragmentStatut = Statut.SansFiltre;
         } else if(this.mFragmentStatut != Statut.SansFiltre){
             try{
-                if(savedInstanceState.getString(Utils.BUNDLE_DISPLAYED_ROOMS_KEY)!=null){
-                    this.sequenceLieux = savedInstanceState.getString(Utils.BUNDLE_DISPLAYED_ROOMS_KEY);
+                if(savedInstanceState.getBundle(Utils.BUNDLE_DISPLAYED_SPECS)!=null){
 
-                    Log.d("Track MainFragment", Utils.BUNDLE_DISPLAYED_ROOMS_KEY);
-                }
-                if(savedInstanceState.getString(Utils.BUNDLE_DISPLAYED_DATE_KEY)!=null){
-                    this.dateDebut = savedInstanceState.getString(Utils.BUNDLE_DISPLAYED_DATE_KEY);
-
-                    Log.d("Track MainFragment", Utils.BUNDLE_DISPLAYED_DATE_KEY);
+                    setMyBundle(savedInstanceState.getBundle(Utils.BUNDLE_DISPLAYED_SPECS));
                 }
             } catch (NullPointerException e) {
                 Log.e("Track MainFragment","BUNDLE_DISPLAYED_..._KEY exception : "+e);
@@ -126,7 +124,7 @@ public class MainFragment extends BaseFragment{
 
         //Recevoir bundle avec réunion en provenance du fragment Addmeeting
         //Expression lambda
-        getParentFragmentManager().setFragmentResultListener(Utils.NEW_MEETING_INTER_FRAGMENTS, this, (requestKey, bundle) -> {
+        getParentFragmentManager().setFragmentResultListener(Utils.NEW_MEETING_INTER_FRAGMENTS_KEY, this, (requestKey, bundle) -> {
             mNouvelleReunion = (Reunion) bundle.getSerializable(Utils.BUNDLE_EXTRA_MEETING);
             addNewMeeting(mNouvelleReunion);
 
@@ -138,15 +136,11 @@ public class MainFragment extends BaseFragment{
 
         //Recevoir bundle avec critères filtre en provenance du fragment Filtering
         //Classe anonyme new FragmentResultListener()
-        getParentFragmentManager().setFragmentResultListener(Utils.FILTERING_INTER_FRAGMENTS, this, new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener(Utils.FILTERING_INTER_FRAGMENTS_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                sequenceLieux = bundle.getString(Utils.BUNDLE_FILTER_ROOM);
-                dateDebut = bundle.getString(Utils.BUNDLE_FILTER_DATE_START);
 
-                filterWithSelection(sequenceLieux, dateDebut);
-
-                refreshDisplay();
+                filterWithDefinedSpecs(bundle);
 
                 callback.ManageOtherFragment();
 
@@ -170,6 +164,16 @@ public class MainFragment extends BaseFragment{
         mRecyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+
+        if(mFragmentStatut!=Statut.SansFiltre){
+            defineSpecsFromBundle(myBundle);
+            filterWithSpecs();
+        }
+    }
 
     @Override
     public void onResume() {
@@ -211,12 +215,6 @@ public class MainFragment extends BaseFragment{
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
@@ -235,11 +233,8 @@ public class MainFragment extends BaseFragment{
     @Override
     public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(this.sequenceLieux!=null)
-            outState.putString(Utils.BUNDLE_DISPLAYED_ROOMS_KEY, this.sequenceLieux);
-
-        if(this.dateDebut!=null)
-            outState.putString(Utils.BUNDLE_DISPLAYED_DATE_KEY, this.dateDebut);
+        if(this.myBundle!=null)
+            outState.putBundle(Utils.BUNDLE_DISPLAYED_SPECS, this.myBundle);
 
         outState.putString(Utils.BUNDLE_FRAGMENT_STATUS_KEY, mFragmentStatut.name());
     }
@@ -303,25 +298,28 @@ public class MainFragment extends BaseFragment{
         }
     }
 
-//TODO :  pattern strategy
-
     // --------------
     // FILTERING METHODS
     // --------------
 
-    public void displayAndFilterWithSelection(String listeLieux, String dateDebut){
-        filterWithSelection(listeLieux, dateDebut);
+    public void filterWithDefinedSpecs(Bundle bundle){
+        setMyBundle(bundle);
 
-        refreshDisplay();
+        defineSpecsFromBundle(bundle);
+
+        filterWithSpecs();
     }
 
-    private void filterWithSelection(String listeLieux, String dateDebut) {
+    private void defineSpecsFromBundle(Bundle bundle){
 
-        this.sequenceLieux=listeLieux;
-        this.dateDebut=dateDebut;
+        this.sequenceLieux = bundle.getString(Utils.BUNDLE_FILTER_ROOM);
+        this.dateDebut = bundle.getString(Utils.BUNDLE_FILTER_DATE_START);
+    }
 
-        if (listeLieux!=null) {
-            sallesFiltre = mDummyApiServiceSalles.getSallesFromLieux(listeLieux);
+    private void filterWithSpecs() {
+
+        if (sequenceLieux!=null) {
+            sallesFiltre = mDummyApiServiceSalles.getSallesFromLieux(sequenceLieux);
             if (dateDebut!=null) {
                 mDateDebutFiltre = new DateHeure(dateDebut).formatParseDate();
                 filterRoomsDate(sallesFiltre, mDateDebutFiltre);
@@ -341,6 +339,10 @@ public class MainFragment extends BaseFragment{
     //Pattern comportement
     public void noFilter() {
         mFragmentStatut = Statut.SansFiltre;
+
+        if(!myBundle.isEmpty()) {
+            myBundle.clear();
+        }
 
         refreshDisplay();
     }
@@ -392,7 +394,6 @@ public class MainFragment extends BaseFragment{
     // --------------
     // OTHER METHODS
     // --------------
-
 
     public String[] getmDates() {
         return mDates;
