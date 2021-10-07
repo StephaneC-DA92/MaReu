@@ -1,17 +1,20 @@
 # OpenClassrooms
-Ce dépôt contient une application pour le P4 du parcours **PRFE3**.
+Ce dépôt **https://github.com/StephaneC-DA92/MaReu** contient une application démo réalisée à partir du projet P4 du parcours **PRFE3**.
+
 # MaRéu
 
 ![MaRéu](app/src/main/res/ic_logo_accueil.png)
 
 ## Table des matières
-1. [Informations générales]
-2. [Technologies]
-3. [Tests]
-4. [Screenshots]
-5. [Crédits]
+1. Informations générales
+2. Technologies
+3. Installation
+4. Screenshots
+5. Tests
+6. Crédits
 
-## Informations générales
+## 1. Informations générales
+
 Nom du projet : **MaRéu**   
 Version : 2.0
 ***
@@ -29,7 +32,8 @@ Application de gestion de réunions
 * Gestion de l’affichage responsive sur toutes les tailles de téléphone et de tablette Android, en modes portrait et paysage.
 
 
-## Technologies
+## 2. Technologies
+
 Liste des technologies utilisées : 
 * [Android Studio](https://developer.android.com/studio/) : Version 4.1.3
 * [viewBinding](https://developer.android.com/topic/libraries/view-binding) : since Android Studio 3.6
@@ -61,7 +65,17 @@ Prototype en cours de développement
 ### Auteur :
 Stéphane C
 
-## Screenshots
+## 3. Installation
+
+Cloner en local le projet hébergé sur GitHub en suivant ces étapes :
+1. Aller à l'URL : **https://github.com/StephaneC-DA92/MaReu**
+2. En haut de la liste de fichiers, cliquer sur "Code" 
+3. Cliquer sur l'icône "Copier" de l'option "Clone" afin de cloner le projet à partir du lien URL "Https"
+4. Dans Android Studio, aller dans le menu : VCS/Git/Clone...
+5. Coller le lien https dans le champ "URL" et choisir le répertoire de destination dans le champ "Directory"
+6. Cliquer sur "Clone" pour lancer le clonage.
+
+## 4. Screenshots
  
 * L'utilisateur peut accéder aux fonctionnalités de filtre ou de tri (mode portrait). 
  
@@ -94,7 +108,8 @@ Stéphane C
     <img src="/suppression_portrait.gif" width="24%">
     </div> 
 
-## Tests
+## 5. Tests
+
 * Tests unitaires
     * com\companyx\mareu\data\DummyApiServiceReunionsTest.java
         * filtrerLieu()
@@ -124,7 +139,8 @@ Stéphane C
         * onFilterCancellationOriginalListShouldBeDisplayed()
         * onDateFilteredActionFilteredListShouldBeDisplayed()
 
-## Crédits
+## 6. Crédits
+
 Les guides et questions/réponses disponibles aux URL suivants:
 * https://devstory.net/10559/android-autocompletetextview-multiautocompletetextview
 * https://www.jmdoudoux.fr/java/dej/chap-utilisation_dates.htm#utilisation_dates-2
